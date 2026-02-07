@@ -180,7 +180,7 @@ export default function TryResumeBuilder() {
     setResult(null);
 
     const validTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'image/jpeg', 'image/png'];
-    const isValidType = validTypes.some(t => selectedFile.type.includes(t.split('/')[1])) ||
+    const isValidType = validTypes.some(t => selectedFile.type.includes(t.split('/')[1] ?? '')) ||
                         selectedFile.name.endsWith('.pdf') ||
                         selectedFile.name.endsWith('.doc') ||
                         selectedFile.name.endsWith('.docx');
@@ -248,9 +248,10 @@ export default function TryResumeBuilder() {
 
     let stepIndex = 0;
     const progressInterval = setInterval(() => {
-      if (stepIndex < progressSteps.length) {
-        setProgress(progressSteps[stepIndex].pct);
-        setProgressText(progressSteps[stepIndex].text);
+      const step = progressSteps[stepIndex];
+      if (stepIndex < progressSteps.length && step) {
+        setProgress(step.pct);
+        setProgressText(step.text);
         stepIndex++;
       }
     }, 1500);

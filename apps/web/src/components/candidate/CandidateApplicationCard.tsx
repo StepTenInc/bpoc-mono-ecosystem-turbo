@@ -312,7 +312,7 @@ export function CandidateApplicationCard({ application, onExpand, onRefresh, pro
                   bgGradient: 'from-emerald-500/10 to-cyan-500/10',
                   borderColor: 'border-emerald-500/30',
               }
-            : (STAGE_EXPLANATIONS[application.status] || STAGE_EXPLANATIONS.submitted);
+            : (STAGE_EXPLANATIONS[application.status] ?? STAGE_EXPLANATIONS.submitted)!;
     const isNegative = application.status === 'rejected';
     const isHired = application.status === 'hired';
     const isOffer = application.status === 'offer_sent';

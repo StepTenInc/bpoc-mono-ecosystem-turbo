@@ -223,7 +223,7 @@ export default function TalentSearchPage() {
                          getRank(candidate.overallScore).rank === '🏅 Bronze' ? 'border-orange-400 ring-2 ring-orange-400/30' :
                          'border-white/20'
                        } ${candidate.avatar && candidate.avatar.startsWith('http') ? 'hidden' : ''}`}>
-                        {candidate.name.split(' ')[0][0].toUpperCase()}
+                        {(candidate.name.split(' ')[0]?.[0] ?? '').toUpperCase()}
                       </div>
                     </div>
 

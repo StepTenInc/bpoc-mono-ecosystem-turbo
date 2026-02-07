@@ -116,7 +116,7 @@ const getStageIndex = (status: string): number => {
   // Check aliases
   for (let i = 0; i < PIPELINE_STAGES.length; i++) {
     const stage = PIPELINE_STAGES[i];
-    if (stage.aliases?.some(alias => alias.toLowerCase().replace(/[_\s-]/g, '_') === normalizedStatus)) {
+    if (stage?.aliases?.some(alias => alias.toLowerCase().replace(/[_\s-]/g, '_') === normalizedStatus)) {
       return i;
     }
   }

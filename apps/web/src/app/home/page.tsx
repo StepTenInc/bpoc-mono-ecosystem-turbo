@@ -271,6 +271,9 @@ function LiveActivityFeed() {
 
   const activity = activities[currentActivity]
 
+  // Guard against undefined activity
+  if (!activity) return null
+
   return (
     <AnimatePresence mode="wait">
       {isVisible && (
@@ -504,7 +507,7 @@ function HomePageContent() {
                 ))}
                 <span className="ml-2 text-sm">
                   <span className="font-bold text-white">4.8/5</span> from{' '}
-                  {stats[0].value > 0 ? stats[0].value.toLocaleString() : '1,000+'} job seekers
+                  {(stats[0]?.value ?? 0) > 0 ? stats[0]?.value.toLocaleString() : '1,000+'} job seekers
                 </span>
               </div>
             </motion.div>
@@ -1070,7 +1073,7 @@ function HomePageContent() {
               <p className="text-2xl md:text-3xl text-gray-100 mb-16 max-w-4xl mx-auto leading-relaxed font-light">
                 Join{' '}
                 <span className="font-black text-white text-4xl">
-                  {stats[0].value > 0 ? stats[0].value.toLocaleString() : '1,000+'}
+                  {(stats[0]?.value ?? 0) > 0 ? stats[0]?.value.toLocaleString() : '1,000+'}
                 </span>{' '}
                 job seekers already building better careers on{' '}
                 <span className="font-black bg-gradient-to-r from-cyan-300 to-purple-300 bg-clip-text text-transparent">

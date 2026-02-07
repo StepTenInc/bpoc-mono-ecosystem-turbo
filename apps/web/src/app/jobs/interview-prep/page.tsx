@@ -79,7 +79,7 @@ const sampleQuestions: InterviewQuestion[] = [
 export default function InterviewPrepPage() {
   const router = useRouter();
   const [selectedRole, setSelectedRole] = useState<string>('business-analyst');
-  const [currentQuestion, setCurrentQuestion] = useState<InterviewQuestion>(sampleQuestions[0]);
+  const [currentQuestion, setCurrentQuestion] = useState<InterviewQuestion>(sampleQuestions[0]!);
   const [isRecording, setIsRecording] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
   const [maxTime] = useState(180); // 3 minutes
@@ -157,11 +157,11 @@ export default function InterviewPrepPage() {
     setShowCustomInput(false);
     // In a real implementation, this would generate new questions based on the role
     if (roleId === 'customer-service') {
-      setCurrentQuestion(sampleQuestions[1]);
+      setCurrentQuestion(sampleQuestions[1]!);
     } else if (roleId === 'business-analyst') {
-      setCurrentQuestion(sampleQuestions[0]);
+      setCurrentQuestion(sampleQuestions[0]!);
     } else {
-      setCurrentQuestion(sampleQuestions[2]);
+      setCurrentQuestion(sampleQuestions[2]!);
     }
     handleResetRecording();
   };
@@ -197,7 +197,7 @@ export default function InterviewPrepPage() {
     ];
     
     setCustomQuestions(generatedQuestions);
-    setCurrentQuestion(generatedQuestions[0]);
+    setCurrentQuestion(generatedQuestions[0]!);
     setSelectedRole('custom');
     setIsGeneratingQuestion(false);
     setShowCustomInput(false);
@@ -507,12 +507,12 @@ export default function InterviewPrepPage() {
                      if (selectedRole === 'custom' && customQuestions.length > 0) {
                        const availableQuestions = customQuestions.filter(q => q.id !== currentQuestion.id);
                        if (availableQuestions.length > 0) {
-                         nextQuestion = availableQuestions[Math.floor(Math.random() * availableQuestions.length)];
+                         nextQuestion = availableQuestions[Math.floor(Math.random() * availableQuestions.length)]!;
                        } else {
-                         nextQuestion = customQuestions[Math.floor(Math.random() * customQuestions.length)];
+                         nextQuestion = customQuestions[Math.floor(Math.random() * customQuestions.length)]!;
                        }
                      } else {
-                       nextQuestion = sampleQuestions[Math.floor(Math.random() * sampleQuestions.length)];
+                       nextQuestion = sampleQuestions[Math.floor(Math.random() * sampleQuestions.length)]!;
                      }
                      setCurrentQuestion(nextQuestion);
                      handleResetRecording();

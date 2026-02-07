@@ -181,7 +181,7 @@ export default function ArticleGenerator() {
         articleId: a.id,
         title: a.title,
         slug: a.slug,
-        anchorText: a.title.split(':')[0].trim()
+        anchorText: (a.title.split(':')[0] ?? a.title).trim()
       }));
     
     setSuggestedLinks(links);
@@ -1152,7 +1152,7 @@ export default function ArticleGenerator() {
                     <p className="text-xs text-red-300 mt-1 font-mono">{saveStatus.error}</p>
                   )}
                 </div>
-                {saveStatus.stage !== 'idle' && saveStatus.stage !== 'done' && saveStatus.stage !== 'error' && (
+                {saveStatus.stage !== 'done' && saveStatus.stage !== 'error' && (
                   <div className="flex gap-1">
                     <div className={`w-2 h-2 rounded-full ${saveStatus.stage === 'checking' ? 'bg-blue-400' : 'bg-white/20'}`} />
                     <div className={`w-2 h-2 rounded-full ${saveStatus.stage === 'creating' ? 'bg-blue-400' : 'bg-white/20'}`} />

@@ -206,7 +206,9 @@ function parseInlineFormatting(text: string, keyPrefix: string): React.ReactNode
 }
 
 export default function ChatWidget({ pageContext = 'unknown' }: ChatWidgetProps) {
-  const { user, isAuthenticated, userType } = useAuth();
+  const { user } = useAuth();
+  const isAuthenticated = !!user;
+  const userType = user?.user_metadata?.admin_level || 'user';
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);

@@ -1517,8 +1517,8 @@ export default function InsightsEditor({ post, isNew = false }: InsightsEditorPr
                     cardType="content"
                     hasChanges={hasCardChanges.content}
                     onSave={saveContent}
-                    isSaving={cardSaving.content}
-                    isSaved={cardSaved.content}
+                    isSaving={cardSaving.content ?? false}
+                    isSaved={cardSaved.content ?? false}
                   >
                     <Button
                       size="sm"
@@ -1856,8 +1856,8 @@ export default function InsightsEditor({ post, isNew = false }: InsightsEditorPr
                     cardType="meta"
                     hasChanges={hasCardChanges.meta}
                     onSave={saveMeta}
-                    isSaving={cardSaving.meta}
-                    isSaved={cardSaved.meta}
+                    isSaving={cardSaving.meta ?? false}
+                    isSaved={cardSaved.meta ?? false}
                   />
                   <CardContent className="space-y-4">
                     <div className="flex items-center justify-between p-3 rounded-lg bg-black/20 border border-white/5">
@@ -1999,8 +1999,8 @@ export default function InsightsEditor({ post, isNew = false }: InsightsEditorPr
                     cardType="heroMedia"
                     hasChanges={hasCardChanges.heroMedia}
                     onSave={saveHeroMedia}
-                    isSaving={cardSaving.heroMedia}
-                    isSaved={cardSaved.heroMedia}
+                    isSaving={cardSaving.heroMedia ?? false}
+                    isSaved={cardSaved.heroMedia ?? false}
                   />
                   <CardContent className="space-y-4">
 
@@ -2701,8 +2701,8 @@ export default function InsightsEditor({ post, isNew = false }: InsightsEditorPr
                     cardType="bodyImages"
                     hasChanges={hasCardChanges.bodyImages}
                     onSave={saveBodyImages}
-                    isSaving={cardSaving.bodyImages}
-                    isSaved={cardSaved.bodyImages}
+                    isSaving={cardSaving.bodyImages ?? false}
+                    isSaved={cardSaved.bodyImages ?? false}
                   />
                   <CardContent className="space-y-4">
                     {/* Body Image 0 - After Title, Before Section 1 */}

@@ -1,3 +1,5 @@
+import React from 'react';
+
 /**
  * Formats AI markdown response into beautiful styled HTML
  * Removes raw markdown and applies proper styling
@@ -11,7 +13,7 @@ interface FormattedContentProps {
 export function FormattedAIResponse({ content, accentColor }: FormattedContentProps) {
   // Parse markdown-style content
   const lines = content.split('\n');
-  const elements: JSX.Element[] = [];
+  const elements: React.JSX.Element[] = [];
   let currentList: string[] = [];
   let listType: 'ordered' | 'unordered' | null = null;
 
