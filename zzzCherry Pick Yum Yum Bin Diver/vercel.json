@@ -1,0 +1,81 @@
+{
+  "buildCommand": "npm run build",
+  "installCommand": "npm install",
+  "framework": "nextjs",
+  "regions": [
+    "iad1"
+  ],
+  "functions": {
+    "src/app/api/resume/export-pdf/route.ts": {
+      "maxDuration": 60,
+      "memory": 2048
+    },
+    "src/app/api/marketing/analyze-resume/route.ts": {
+      "maxDuration": 120,
+      "memory": 1024
+    },
+    "src/app/api/admin/insights/pipeline/write-article/route.ts": {
+      "maxDuration": 300,
+      "memory": 1024
+    },
+    "src/app/api/admin/insights/pipeline/generate-plan/route.ts": {
+      "maxDuration": 120,
+      "memory": 1024
+    },
+    "src/app/api/admin/insights/pipeline/seo-optimize/route.ts": {
+      "maxDuration": 300,
+      "memory": 1024
+    },
+    "src/app/api/admin/insights/pipeline/humanize/route.ts": {
+      "maxDuration": 300,
+      "memory": 1024
+    },
+    "src/app/api/admin/insights/pipeline/orchestrate/route.ts": {
+      "maxDuration": 800
+    },
+    "src/app/api/admin/insights/pipeline/finalize/route.ts": {
+      "maxDuration": 300
+    },
+    "src/app/api/admin/insights/production-queue/process/route.ts": {
+      "maxDuration": 800
+    },
+    "src/app/api/admin/insights/pipeline/generate-media/route.ts": {
+      "maxDuration": 800,
+      "memory": 1024
+    },
+    "src/app/api/admin/insights/pipeline/publish/route.ts": {
+      "maxDuration": 120,
+      "memory": 1024
+    }
+  },
+  "crons": [
+    {
+      "path": "/api/cron/insights-engine",
+      "schedule": "*/30 * * * *"
+    },
+    {
+      "path": "/api/cron/cleanup-old-recordings",
+      "schedule": "0 2 * * *"
+    },
+    {
+      "path": "/api/cron/reminders",
+      "schedule": "*/15 * * * *"
+    },
+    {
+      "path": "/api/cron/webhook-retries",
+      "schedule": "*/5 * * * *"
+    },
+    {
+      "path": "/api/cron/expire-offers",
+      "schedule": "0 * * * *"
+    },
+    {
+      "path": "/api/cron/remind-expiring-offers",
+      "schedule": "0 8 * * *"
+    },
+    {
+      "path": "/api/cron/remind-onboarding-deadlines",
+      "schedule": "0 9 * * *"
+    }
+  ]
+}
