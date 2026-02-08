@@ -17,20 +17,20 @@ import Link from 'next/link';
 
 interface OnboardingCandidate {
   id: string;
-  candidateId: string;
-  applicationId: string;
-  firstName: string;
-  lastName: string;
+  candidate_id: string;
+  application_id: string;
+  first_name: string;
+  last_name: string;
   email: string;
   position: string;
   company: string;
-  jobId: string;
+  job_id: string;
   completionPercent: number;
   isComplete: boolean;
   contractSigned: boolean;
   employmentStarted: boolean;
-  startDate: string | null;
-  createdAt: string;
+  start_date: string | null;
+  created_at: string;
   checklist: {
     personalInfo: string;
     govId: string;
@@ -75,7 +75,7 @@ export default function RecruiterOnboardingPage() {
   };
 
   const filtered = onboardings.filter((o) => {
-    const name = `${o.firstName} ${o.lastName}`.toLowerCase();
+    const name = `${o.first_name} ${o.last_name}`.toLowerCase();
     const matchesSearch = name.includes(searchQuery.toLowerCase()) || 
                           o.position?.toLowerCase().includes(searchQuery.toLowerCase()) ||
                           o.company?.toLowerCase().includes(searchQuery.toLowerCase());
@@ -207,20 +207,20 @@ export default function RecruiterOnboardingPage() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-cyan-500 rounded-full flex items-center justify-center text-white font-bold">
-                      {onboarding.firstName[0]}{onboarding.lastName[0]}
+                      {onboarding.first_name[0]}{onboarding.last_name[0]}
                     </div>
                     <div>
                       <h3 className="font-semibold text-white">
-                        {onboarding.firstName} {onboarding.lastName}
+                        {onboarding.first_name} {onboarding.last_name}
                       </h3>
                       <p className="text-sm text-gray-400 flex items-center gap-2">
                         <Briefcase className="h-3 w-3" />
                         {onboarding.position} at {onboarding.company}
                       </p>
-                      {onboarding.startDate && (
+                      {onboarding.start_date && (
                         <p className="text-xs text-gray-500 flex items-center gap-1 mt-1">
                           <Calendar className="h-3 w-3" />
-                          Start: {new Date(onboarding.startDate).toLocaleDateString()}
+                          Start: {new Date(onboarding.start_date).toLocaleDateString()}
                         </p>
                       )}
                     </div>
@@ -228,7 +228,7 @@ export default function RecruiterOnboardingPage() {
                   
                   <div className="flex items-center gap-4">
                     {getStatusBadge(onboarding)}
-                    <Link href={`/recruiter/applications/${onboarding.applicationId}`}>
+                    <Link href={`/recruiter/applications/${onboarding.application_id}`}>
                       <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white">
                         View <ChevronRight className="h-4 w-4 ml-1" />
                       </Button>

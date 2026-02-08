@@ -24,7 +24,7 @@ import { useAuth } from '@/contexts/AuthContext';
 
 interface ScanResult {
   docType: string;
-  companyName: string;
+  company_name: string;
   valid: boolean;
 }
 
@@ -97,7 +97,7 @@ export default function DocumentUploadPage() {
           scanning: false,
           scanResult: {
             docType: scan.documentType ?? scan.docType ?? scan.label ?? 'Unknown',
-            companyName: scan.companyName ?? scan.company_name ?? '—',
+            company_name: scan.company_name ?? scan.company_name ?? '—',
             valid: scan.isValid ?? scan.valid ?? scan.is_valid ?? false,
           },
         });
@@ -435,7 +435,7 @@ function Dropzone({ index, label, description, slot, onFile, onRemove }: Dropzon
                   </div>
                   <div className="flex items-center gap-1.5 text-gray-400">
                     <Building2 className="w-3.5 h-3.5" />
-                    Company: <span className="text-gray-300">{slot.scanResult.companyName}</span>
+                    Company: <span className="text-gray-300">{slot.scanResult.company_name}</span>
                   </div>
                 </div>
               </motion.div>

@@ -11,10 +11,10 @@ import { Button } from '@/components/shared/ui/button';
 
 interface Recruiter {
   id: string;
-  firstName: string;
-  lastName: string;
+  first_name: string;
+  last_name: string;
   email: string;
-  agencyId: string;
+  agency_id: string;
   verificationStatus?: string;
   agency?: {
     id: string;
@@ -200,7 +200,7 @@ export default function RecruiterLayoutClient({
         recruiter={recruiter ? {
           ...recruiter,
           id: recruiter.id,
-          agencyId: recruiter.agencyId,
+          agency_id: recruiter.agency_id,
         } : undefined} 
         onSignOut={handleSignOut}
         collapsed={sidebarCollapsed}

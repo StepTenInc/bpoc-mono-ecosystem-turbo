@@ -21,13 +21,13 @@ import { useRouter } from 'next/navigation';
 
 interface DocumentVerificationDoc {
   documentType: string;
-  fileUrl: string;
+  file_url: string;
   originalFileName: string;
   confidence: string;
   expiryDate: string | null;
   isExpired: boolean;
   extractedInfo?: {
-    companyName?: string;
+    company_name?: string;
     registrationNumber?: string;
     [key: string]: any;
   };
@@ -48,14 +48,14 @@ interface Agency {
   email: string;
   phone: string;
   website: string;
-  logoUrl: string;
+  logo_url: string;
   description: string;
   address: string;
   city: string;
   country: string;
-  isActive: boolean;
+  is_active: boolean;
   isVerified: boolean;
-  createdAt: string;
+  created_at: string;
   tinNumber: string | null;
   secRegistrationUrl: string | null;
   dtiCertificateUrl: string | null;
@@ -116,7 +116,7 @@ export default function AgencyPage() {
     email: '',
     phone: '',
     website: '',
-    logoUrl: '',
+    logo_url: '',
     description: '',
     // Profile fields
     foundedYear: '',
@@ -158,7 +158,7 @@ export default function AgencyPage() {
           email: data.agency.email || '',
           phone: data.agency.phone || '',
           website: data.agency.website || '',
-          logoUrl: data.agency.logoUrl || '',
+          logo_url: data.agency.logo_url || '',
           description: data.agency.description || '',
           foundedYear: data.profile?.foundedYear?.toString() || '',
           employeeCount: data.profile?.employeeCount || '',
@@ -215,7 +215,7 @@ export default function AgencyPage() {
         .from('recruiter')
         .getPublicUrl(filePath);
 
-      setFormData(prev => ({ ...prev, logoUrl: publicUrl }));
+      setFormData(prev => ({ ...prev, logo_url: publicUrl }));
       toast.success('Logo uploaded successfully');
       
     } catch (error) {
@@ -394,8 +394,8 @@ export default function AgencyPage() {
                       {formData.website ? <CheckCircle className="h-3 w-3 mr-1" /> : null}
                       Website
                     </Badge>
-                    <Badge variant="outline" className={formData.logoUrl ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' : 'bg-white/5 text-gray-400 border-white/10'}>
-                      {formData.logoUrl ? <CheckCircle className="h-3 w-3 mr-1" /> : null}
+                    <Badge variant="outline" className={formData.logo_url ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' : 'bg-white/5 text-gray-400 border-white/10'}>
+                      {formData.logo_url ? <CheckCircle className="h-3 w-3 mr-1" /> : null}
                       Logo
                     </Badge>
                   </div>
@@ -419,7 +419,7 @@ export default function AgencyPage() {
           <div className="flex items-center gap-6 pb-6 border-b border-white/10">
             <div className="relative">
               <Avatar className="h-24 w-24 rounded-xl">
-                <AvatarImage src={formData.logoUrl} alt={formData.name} className="object-cover" />
+                <AvatarImage src={formData.logo_url} alt={formData.name} className="object-cover" />
                 <AvatarFallback className="bg-gradient-to-br from-orange-500 to-amber-600 text-white text-2xl rounded-xl">
                   {formData.name?.substring(0, 2).toUpperCase() || 'AG'}
                 </AvatarFallback>
@@ -783,8 +783,8 @@ export default function AgencyPage() {
                         {doc.originalFileName && (
                           <span className="truncate max-w-[200px]">{doc.originalFileName}</span>
                         )}
-                        {doc.extractedInfo?.companyName && (
-                          <span className="text-gray-400">• {doc.extractedInfo.companyName}</span>
+                        {doc.extractedInfo?.company_name && (
+                          <span className="text-gray-400">• {doc.extractedInfo.company_name}</span>
                         )}
                         {doc.extractedInfo?.registrationNumber && (
                           <span className="font-mono text-gray-400">• {doc.extractedInfo.registrationNumber}</span>
@@ -811,9 +811,9 @@ export default function AgencyPage() {
                     </div>
 
                     {/* View Link */}
-                    {doc.fileUrl && (
+                    {doc.file_url && (
                       <a
-                        href={doc.fileUrl}
+                        href={doc.file_url}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex-shrink-0 p-2 rounded-lg bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-colors"

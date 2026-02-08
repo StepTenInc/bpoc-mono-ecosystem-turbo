@@ -47,18 +47,18 @@ import { VideoCallButton } from '@/components/video';
 
 interface PipelineCandidate {
   id: string;
-  candidateId: string;
-  candidateName: string;
-  candidateEmail: string;
-  candidateAvatar?: string;
-  candidateLocation?: string;
-  jobId: string;
-  jobTitle: string;
+  candidate_id: string;
+  candidate_name: string;
+  candidate_email: string;
+  candidate_avatar?: string;
+  candidate_location?: string;
+  job_id: string;
+  job_title: string;
   clientName?: string;
   stage: string;
   status: string;
-  appliedAt: string;
-  updatedAt: string;
+  applied_at: string;
+  updated_at: string;
   daysInStage: number;
   interviewCount: number;
   latestInterview?: {
@@ -68,8 +68,8 @@ interface PipelineCandidate {
     outcome?: string;
   };
   interviewOutcome?: string;
-  hasOffer: boolean;
-  offerStatus?: string;
+  has_offer: boolean;
+  offer_status?: string;
   offerAmount?: number;
   offerCurrency?: string;
   videoCallCount: number;
@@ -125,8 +125,8 @@ export default function RecruiterPipelinePage() {
 
   // Get unique jobs from candidates for filter
   const allJobs = Object.values(stages).flatMap(s => s.candidates).reduce((acc, c) => {
-    if (!acc.find(j => j.id === c.jobId)) {
-      acc.push({ id: c.jobId, title: c.jobTitle });
+    if (!acc.find(j => j.id === c.job_id)) {
+      acc.push({ id: c.job_id, title: c.job_title });
     }
     return acc;
   }, [] as { id: string; title: string }[]);
@@ -215,13 +215,13 @@ export default function RecruiterPipelinePage() {
           'x-user-id': user?.id || '',
         },
         body: JSON.stringify({
-          applicationId: draggedCandidate.id,
+          application_id: draggedCandidate.id,
           newStage,
         }),
       });
 
       if (response.ok) {
-        toast.success(`Moved ${draggedCandidate.candidateName} to ${STAGE_CONFIG[newStage]?.label || newStage}`);
+        toast.success(`Moved ${draggedCandidate.candidate_name} to ${STAGE_CONFIG[newStage]?.label || newStage}`);
       } else {
         // Revert on error
         fetchPipeline();
@@ -240,10 +240,10 @@ export default function RecruiterPipelinePage() {
   const filterCandidates = (candidates: PipelineCandidate[]) => {
     return candidates.filter(c => {
       const matchesSearch = searchQuery === '' || 
-        (c.candidateName || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (c.jobTitle || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (c.candidateEmail || '').toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesJob = jobFilter === 'all' || c.jobId === jobFilter;
+        (c.candidate_name || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (c.job_title || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (c.candidate_email || '').toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesJob = jobFilter === 'all' || c.job_id === jobFilter;
       return matchesSearch && matchesJob;
     });
   };
@@ -418,22 +418,22 @@ function CandidateCard({
             <GripVertical className="h-4 w-4" />
           </div>
           
-          <Link href={`/recruiter/talent/${candidate.candidateId}`} className="flex-shrink-0">
+          <Link href={`/recruiter/talent/${candidate.candidate_id}`} className="flex-shrink-0">
             <Avatar className="h-10 w-10 hover:ring-2 hover:ring-cyber-blue/50 transition-all">
-              <AvatarImage src={candidate.candidateAvatar} />
+              <AvatarImage src={candidate.candidate_avatar} />
               <AvatarFallback className="bg-gradient-to-br from-cyan-500 to-blue-600 text-white text-sm">
-                {candidate.candidateName.split(' ').map(n => n[0]).join('')}
+                {candidate.candidate_name.split(' ').map(n => n[0]).join('')}
               </AvatarFallback>
             </Avatar>
           </Link>
 
           <div className="flex-1 min-w-0">
-            <Link href={`/recruiter/talent/${candidate.candidateId}`}>
+            <Link href={`/recruiter/talent/${candidate.candidate_id}`}>
               <h4 className="text-white font-medium text-sm truncate hover:text-cyber-blue transition-colors">
-                {candidate.candidateName}
+                {candidate.candidate_name}
               </h4>
             </Link>
-            <p className="text-gray-500 text-xs truncate">{candidate.candidateEmail}</p>
+            <p className="text-gray-500 text-xs truncate">{candidate.candidate_email}</p>
           </div>
 
           {/* Days in Stage Badge */}
@@ -452,20 +452,20 @@ function CandidateCard({
         {/* Job Info */}
         <div className="mt-3 flex items-center gap-2 text-xs text-gray-400">
           <Briefcase className="h-3 w-3 flex-shrink-0 text-cyber-blue" />
-          <span className="truncate">{candidate.jobTitle}</span>
-          {candidate.clientName && (
+          <span className="truncate">{candidate.job_title}</span>
+          {candidate.client_name && (
             <>
               <span>•</span>
-              <span className="truncate text-gray-500">{candidate.clientName}</span>
+              <span className="truncate text-gray-500">{candidate.client_name}</span>
             </>
           )}
         </div>
 
         {/* Location */}
-        {candidate.candidateLocation && (
+        {candidate.candidate_location && (
           <div className="mt-1 flex items-center gap-2 text-xs text-gray-500">
             <MapPin className="h-3 w-3 flex-shrink-0" />
-            <span className="truncate">{candidate.candidateLocation}</span>
+            <span className="truncate">{candidate.candidate_location}</span>
           </div>
         )}
 
@@ -490,10 +490,10 @@ function CandidateCard({
           )}
 
           {/* Offer */}
-          {candidate.hasOffer && (
+          {candidate.has_offer && (
             <Badge variant="outline" className={`text-xs ${
-              candidate.offerStatus === 'accepted' ? 'bg-green-500/10 text-neon-green border-green-500/30' :
-              candidate.offerStatus === 'rejected' ? 'bg-red-500/10 text-bpoc-red border-red-500/30' :
+              candidate.offer_status === 'accepted' ? 'bg-green-500/10 text-neon-green border-green-500/30' :
+              candidate.offer_status === 'rejected' ? 'bg-red-500/10 text-bpoc-red border-red-500/30' :
               'bg-emerald-500/10 text-neon-green border-emerald-500/30'
             }`}>
               <Gift className="h-3 w-3 mr-1" />
@@ -520,26 +520,26 @@ function CandidateCard({
         <div className="mt-3 pt-3 border-t border-white/5 flex items-center gap-2">
           {/* Video Call */}
           <VideoCallButton
-            candidateUserId={candidate.candidateId}
-            candidateName={candidate.candidateName}
-            candidateEmail={candidate.candidateEmail}
-            candidateAvatar={candidate.candidateAvatar}
-            jobId={candidate.jobId}
-            jobTitle={candidate.jobTitle}
+            candidateUserId={candidate.candidate_id}
+            candidateName={candidate.candidate_name}
+            candidateEmail={candidate.candidate_email}
+            candidateAvatar={candidate.candidate_avatar}
+            jobId={candidate.job_id}
+            jobTitle={candidate.job_title}
             applicationId={candidate.id}
             variant="icon"
             context={callContext}
           />
 
           {/* Email */}
-          <a href={`mailto:${candidate.candidateEmail}`}>
+          <a href={`mailto:${candidate.candidate_email}`}>
             <Button size="sm" variant="ghost" className="h-8 w-8 p-0 text-gray-400 hover:text-white hover:bg-white/10 rounded-full">
               <Mail className="h-4 w-4" />
             </Button>
           </a>
 
           {/* View Profile */}
-          <Link href={`/recruiter/talent/${candidate.candidateId}`}>
+          <Link href={`/recruiter/talent/${candidate.candidate_id}`}>
             <Button size="sm" variant="ghost" className="h-8 w-8 p-0 text-gray-400 hover:text-white hover:bg-white/10 rounded-full">
               <User className="h-4 w-4" />
             </Button>

@@ -36,7 +36,7 @@ interface ClientDetail {
   primaryContactEmail: string;
   primaryContactPhone: string;
   notes: string;
-  createdAt: string;
+  created_at: string;
   totalApplicants?: number;
   activeJobCount?: number;
   placementCount?: number;
@@ -47,7 +47,7 @@ interface ClientDetail {
     slug: string;
     email: string;
     phone: string;
-    logoUrl: string;
+    logo_url: string;
     website: string;
     industry: string;
     companySize: string;
@@ -58,7 +58,7 @@ interface ClientDetail {
     title: string;
     status: string;
     applicantsCount: number;
-    createdAt: string;
+    created_at: string;
   }[];
 }
 
@@ -238,7 +238,7 @@ export default function ClientDetailPage() {
           <CardContent className="p-8">
             <div className="flex items-start gap-6">
               <Avatar className="h-20 w-20 rounded-xl">
-                <AvatarImage src={client.company?.logoUrl} />
+                <AvatarImage src={client.company?.logo_url} />
                 <AvatarFallback className="bg-gradient-to-br from-orange-500 to-amber-600 text-white text-2xl rounded-xl">
                   {client.company?.name?.substring(0, 2).toUpperCase() || 'CO'}
                 </AvatarFallback>
@@ -321,7 +321,7 @@ export default function ClientDetailPage() {
 
                 <div className="mt-3 flex flex-wrap gap-2 text-sm">
                   <Badge variant="outline" className="bg-white/5 text-gray-300 border-white/10">
-                    Last activity: {formatTimeAgo(client.lastActivityAt || client.createdAt)}
+                    Last activity: {formatTimeAgo(client.lastActivityAt || client.created_at)}
                   </Badge>
                 </div>
               </div>
@@ -358,7 +358,7 @@ export default function ClientDetailPage() {
                             <div>
                               <h4 className="text-white font-medium">{job.title}</h4>
                               <p className="text-gray-400 text-sm">
-                                {job.applicantsCount || 0} applicants • Posted {new Date(job.createdAt).toLocaleDateString()}
+                                {job.applicantsCount || 0} applicants • Posted {new Date(job.created_at).toLocaleDateString()}
                               </p>
                             </div>
                             {getJobStatusBadge(job.status)}

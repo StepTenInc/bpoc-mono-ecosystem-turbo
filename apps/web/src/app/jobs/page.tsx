@@ -27,17 +27,17 @@ interface Job {
   title: string;
   description: string;
   agency: string;
-  workType: string;
-  workArrangement: string;
+  work_type: string;
+  work_arrangement: string;
   shift: string;
-  experienceLevel: string;
-  salaryMin?: number;
-  salaryMax?: number;
+  experience_level: string;
+  salary_min?: number;
+  salary_max?: number;
   currency: string;
   skills: string[];
-  createdAt: string;
+  created_at: string;
   views: number;
-  applicantsCount: number;
+  applicants_count: number;
 }
 
 export default function JobsPage() {
@@ -63,11 +63,11 @@ export default function JobsPage() {
   }, []);
 
   const formatSalary = (job: Job) => {
-    if (job.salaryMin && job.salaryMax) {
-      return `${job.currency} ${job.salaryMin.toLocaleString()} - ${job.salaryMax.toLocaleString()}`;
+    if (job.salary_min && job.salary_max) {
+      return `${job.currency} ${job.salary_min.toLocaleString()} - ${job.salary_max.toLocaleString()}`;
     }
-    if (job.salaryMin) {
-      return `${job.currency} ${job.salaryMin.toLocaleString()}+`;
+    if (job.salary_min) {
+      return `${job.currency} ${job.salary_min.toLocaleString()}+`;
     }
     return 'Competitive';
   };
@@ -205,7 +205,7 @@ export default function JobsPage() {
                         <div className="grid grid-cols-2 gap-2 mb-4">
                           <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10">
                             <MapPin className="h-3.5 w-3.5 text-purple-400 flex-shrink-0" />
-                            <span className="capitalize text-xs text-gray-300 font-semibold">{job.workArrangement}</span>
+                            <span className="capitalize text-xs text-gray-300 font-semibold">{job.work_arrangement}</span>
                           </div>
                           <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10">
                             <Clock className="h-3.5 w-3.5 text-cyan-400 flex-shrink-0" />
@@ -213,11 +213,11 @@ export default function JobsPage() {
                           </div>
                           <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10">
                             <Briefcase className="h-3.5 w-3.5 text-emerald-400 flex-shrink-0" />
-                            <span className="capitalize text-xs text-gray-300 font-semibold">{job.workType.replace('_', ' ')}</span>
+                            <span className="capitalize text-xs text-gray-300 font-semibold">{job.work_type.replace('_', ' ')}</span>
                           </div>
                           <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10">
                             <Users className="h-3.5 w-3.5 text-orange-400 flex-shrink-0" />
-                            <span className="capitalize text-xs text-gray-300 font-semibold text-[11px]">{job.experienceLevel?.replace('_', ' ')}</span>
+                            <span className="capitalize text-xs text-gray-300 font-semibold text-[11px]">{job.experience_level?.replace('_', ' ')}</span>
                           </div>
                         </div>
 
@@ -250,14 +250,14 @@ export default function JobsPage() {
                               </span>
                               <span className="flex items-center gap-1.5 justify-end">
                                 <Users className="h-3.5 w-3.5" />
-                                <span className="font-semibold">{job.applicantsCount || 0} applicants</span>
+                                <span className="font-semibold">{job.applicants_count || 0} applicants</span>
                               </span>
                             </div>
                           </div>
 
                           {/* Posted time */}
                           <div className="flex items-center justify-between">
-                            <p className="text-xs text-gray-500">Posted {getTimeAgo(job.createdAt)}</p>
+                            <p className="text-xs text-gray-500">Posted {getTimeAgo(job.created_at)}</p>
                             <div className="flex items-center gap-1 text-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity">
                               <span className="text-xs font-bold">View Details</span>
                               <ChevronRight className="h-3 w-3" />

@@ -285,7 +285,7 @@ export default function InterviewRecordingsPage() {
           'Authorization': `Bearer ${session.access_token}`,
         },
         credentials: 'include',
-        body: JSON.stringify({ roomId: recording.room_id }),
+        body: JSON.stringify({ room_id: recording.room_id }),
       });
 
       const data = await response.json();

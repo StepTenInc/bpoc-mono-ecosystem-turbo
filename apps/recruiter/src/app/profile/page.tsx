@@ -19,18 +19,18 @@ import { toast } from '@/components/shared/ui/toast';
 interface RecruiterProfile {
   id: string;
   userId: string;
-  agencyId: string;
+  agency_id: string;
   email: string;
-  firstName: string;
-  lastName: string;
+  first_name: string;
+  last_name: string;
   fullName: string;
   phone: string;
-  avatarUrl: string;
+  avatar_url: string;
   role: string;
   position: string;
   linkedIn: string;
   bio: string;
-  isActive: boolean;
+  is_active: boolean;
   canPostJobs: boolean;
   canManageApplications: boolean;
   canInviteRecruiters: boolean;
@@ -56,13 +56,13 @@ export default function RecruiterProfilePage() {
   
   // Form state
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
+    first_name: '',
+    last_name: '',
     phone: '',
     position: '',
     linkedIn: '',
     bio: '',
-    avatarUrl: '',
+    avatar_url: '',
   });
 
   useEffect(() => {
@@ -84,13 +84,13 @@ export default function RecruiterProfilePage() {
       if (response.ok && data.profile) {
         setProfile(data.profile);
         setFormData({
-          firstName: data.profile.firstName || '',
-          lastName: data.profile.lastName || '',
+          first_name: data.profile.first_name || '',
+          last_name: data.profile.last_name || '',
           phone: data.profile.phone || '',
           position: data.profile.position || '',
           linkedIn: data.profile.linkedIn || '',
           bio: data.profile.bio || '',
-          avatarUrl: data.profile.avatarUrl || '',
+          avatar_url: data.profile.avatar_url || '',
         });
       }
     } catch (error) {
@@ -143,7 +143,7 @@ export default function RecruiterProfilePage() {
         .getPublicUrl(filePath);
 
       // Update form state
-      setFormData(prev => ({ ...prev, avatarUrl: publicUrl }));
+      setFormData(prev => ({ ...prev, avatar_url: publicUrl }));
       toast.success('Image uploaded successfully');
       
     } catch (error) {
@@ -192,7 +192,7 @@ export default function RecruiterProfilePage() {
     );
   }
 
-  const initials = `${formData.firstName?.[0] || ''}${formData.lastName?.[0] || ''}`.toUpperCase() || 'R';
+  const initials = `${formData.first_name?.[0] || ''}${formData.last_name?.[0] || ''}`.toUpperCase() || 'R';
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
@@ -207,7 +207,7 @@ export default function RecruiterProfilePage() {
           <CardContent className="p-6 text-center">
             <div className="relative inline-block mb-4">
               <Avatar className="h-32 w-32 mx-auto">
-                <AvatarImage src={formData.avatarUrl} alt={formData.firstName} />
+                <AvatarImage src={formData.avatar_url} alt={formData.first_name} />
                 <AvatarFallback className="bg-gradient-to-br from-orange-500 to-amber-600 text-white text-3xl">
                   {initials}
                 </AvatarFallback>
@@ -233,7 +233,7 @@ export default function RecruiterProfilePage() {
             </div>
             
             <h2 className="text-xl font-semibold text-white">
-              {formData.firstName} {formData.lastName}
+              {formData.first_name} {formData.last_name}
             </h2>
             <p className="text-gray-400">{formData.position || 'Recruiter'}</p>
             
@@ -308,8 +308,8 @@ export default function RecruiterProfilePage() {
                 <div className="relative">
                   <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                   <Input 
-                    value={formData.firstName} 
-                    onChange={(e) => setFormData(p => ({ ...p, firstName: e.target.value }))} 
+                    value={formData.first_name} 
+                    onChange={(e) => setFormData(p => ({ ...p, first_name: e.target.value }))} 
                     placeholder="First name"
                     className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-gray-500" 
                   />
@@ -320,8 +320,8 @@ export default function RecruiterProfilePage() {
                 <div className="relative">
                   <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                   <Input 
-                    value={formData.lastName} 
-                    onChange={(e) => setFormData(p => ({ ...p, lastName: e.target.value }))} 
+                    value={formData.last_name} 
+                    onChange={(e) => setFormData(p => ({ ...p, last_name: e.target.value }))} 
                     placeholder="Last name"
                     className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-gray-500" 
                   />

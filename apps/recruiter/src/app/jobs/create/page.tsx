@@ -46,7 +46,7 @@ export default function CreateJobPage() {
   const [loadingClients, setLoadingClients] = useState(true);
   
   const [formData, setFormData] = useState({
-    clientId: searchParams.get('clientId') || '',
+    client_id: searchParams.get('clientId') || '',
     title: '',
     briefDescription: '',
     description: '',
@@ -54,8 +54,8 @@ export default function CreateJobPage() {
     responsibilities: [] as string[],
     benefits: [] as string[],
     skills: [] as string[],
-    salaryMin: '',
-    salaryMax: '',
+    salary_min: '',
+    salary_max: '',
     currency: 'PHP',
     workType: 'full_time',
     workArrangement: 'remote',
@@ -117,7 +117,7 @@ export default function CreateJobPage() {
       toast.error('Please enter job title and description');
       return;
     }
-    if (!formData.clientId) {
+    if (!formData.client_id) {
       toast.error('Please select a client');
       return;
     }
@@ -163,7 +163,7 @@ export default function CreateJobPage() {
   };
 
   const handleSubmit = async () => {
-    if (!formData.clientId) {
+    if (!formData.client_id) {
       toast.error('Please select a client');
       return;
     }
@@ -180,9 +180,9 @@ export default function CreateJobPage() {
         },
         body: JSON.stringify({
           ...formData,
-          agency_client_id: formData.clientId,
-          salaryMin: formData.salaryMin ? parseInt(formData.salaryMin) : null,
-          salaryMax: formData.salaryMax ? parseInt(formData.salaryMax) : null,
+          agency_client_id: formData.client_id,
+          salary_min: formData.salary_min ? parseInt(formData.salary_min) : null,
+          salary_max: formData.salary_max ? parseInt(formData.salary_max) : null,
         }),
       });
 
@@ -205,7 +205,7 @@ export default function CreateJobPage() {
     }
   };
 
-  const selectedClient = clients.find(c => c.id === formData.clientId);
+  const selectedClient = clients.find(c => c.id === formData.client_id);
 
   // Show loading while checking verification
   if (checkingVerification) {
@@ -333,8 +333,8 @@ export default function CreateJobPage() {
                     </div>
                   ) : (
                     <select
-                      value={formData.clientId}
-                      onChange={(e) => setFormData(prev => ({ ...prev, clientId: e.target.value }))}
+                      value={formData.client_id}
+                      onChange={(e) => setFormData(prev => ({ ...prev, client_id: e.target.value }))}
                       className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-orange-500/50"
                     >
                       <option value="">-- Select a client --</option>
@@ -415,7 +415,7 @@ export default function CreateJobPage() {
 
                 <Button
                   onClick={handleGenerateWithAI}
-                  disabled={!formData.title || !formData.briefDescription || !formData.clientId || generating}
+                  disabled={!formData.title || !formData.briefDescription || !formData.client_id || generating}
                   className="w-full bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 py-6"
                 >
                   {generating ? (
@@ -433,7 +433,7 @@ export default function CreateJobPage() {
 
                 <div className="text-center">
                   <button
-                    onClick={() => formData.clientId ? setStep(2) : toast.error('Please select a client')}
+                    onClick={() => formData.client_id ? setStep(2) : toast.error('Please select a client')}
                     className="text-gray-400 hover:text-white text-sm"
                   >
                     Skip AI and write manually →
@@ -561,8 +561,8 @@ export default function CreateJobPage() {
                       <Input
                         type="number"
                         placeholder="30000"
-                        value={formData.salaryMin}
-                        onChange={(e) => setFormData(prev => ({ ...prev, salaryMin: e.target.value }))}
+                        value={formData.salary_min}
+                        onChange={(e) => setFormData(prev => ({ ...prev, salary_min: e.target.value }))}
                         className="pl-10 bg-white/5 border-white/10 text-white"
                       />
                     </div>
@@ -574,8 +574,8 @@ export default function CreateJobPage() {
                       <Input
                         type="number"
                         placeholder="50000"
-                        value={formData.salaryMax}
-                        onChange={(e) => setFormData(prev => ({ ...prev, salaryMax: e.target.value }))}
+                        value={formData.salary_max}
+                        onChange={(e) => setFormData(prev => ({ ...prev, salary_max: e.target.value }))}
                         className="pl-10 bg-white/5 border-white/10 text-white"
                       />
                     </div>

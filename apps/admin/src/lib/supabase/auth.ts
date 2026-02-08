@@ -8,7 +8,7 @@
  * USE these utilities instead.
  */
 
-import { supabaseAdmin } from './admin'
+import { supabase } from './admin'
 import type { User } from '@supabase/supabase-js'
 
 /**
@@ -45,7 +45,7 @@ export async function verifyAuthToken(token: string): Promise<User> {
     throw new Error('No authentication token provided')
   }
 
-  const { data: { user }, error } = await supabaseAdmin.auth.getUser(cleanToken)
+  const { data: { user }, error } = await supabase.auth.getUser(cleanToken)
   
   if (error) {
     throw new Error(`Authentication failed: ${error.message}`)

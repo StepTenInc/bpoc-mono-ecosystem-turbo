@@ -10,11 +10,11 @@ import { Badge } from '@/components/shared/ui/badge';
 interface RecruiterData {
   id: string;
   email: string;
-  firstName: string;
-  lastName: string;
+  first_name: string;
+  last_name: string;
   role: string;
   verificationStatus: string;
-  agencyId: string;
+  agency_id: string;
   agencyName: string;
 }
 

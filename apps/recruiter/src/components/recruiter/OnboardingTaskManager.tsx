@@ -45,7 +45,7 @@ import { toast } from '@/components/shared/ui/toast';
 
 interface OnboardingTask {
   id: string;
-  applicationId: string;
+  application_id: string;
   taskType: string;
   title: string;
   description: string | null;
@@ -53,11 +53,11 @@ interface OnboardingTask {
   dueDate: string | null;
   status: string;
   submittedAt: string | null;
-  reviewedAt: string | null;
+  reviewed_at: string | null;
   reviewerNotes: string | null;
   attachments: any;
   formData: any;
-  createdAt: string;
+  created_at: string;
 }
 
 interface OnboardingProgress {
@@ -70,9 +70,9 @@ interface OnboardingProgress {
 }
 
 interface OnboardingTaskManagerProps {
-  applicationId: string;
-  candidateName: string;
-  jobTitle: string;
+  application_id: string;
+  candidate_name: string;
+  job_title: string;
   onTaskUpdated?: () => void;
 }
 
@@ -722,14 +722,14 @@ export function OnboardingTaskManager({
                     {selectedTask.attachments.map((file: any, index: number) => (
                       <a
                         key={index}
-                        href={file.fileUrl}
+                        href={file.file_url}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center gap-2 p-3 rounded-lg bg-white/5 border border-white/10 hover:border-cyan-500/30 transition-colors"
                       >
                         <Upload className="h-4 w-4 text-cyan-400" />
                         <span className="text-sm text-cyan-400 hover:text-cyan-300">
-                          {file.fileName}
+                          {file.file_name}
                         </span>
                       </a>
                     ))}

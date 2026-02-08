@@ -119,7 +119,7 @@ export default function CandidateProfilePage() {
   })
   const AUTO_SAVE_ENABLED = true
   const formDataRef = useRef(formData)
-  const autoSaveTimeoutRef = useRef<NodeJS.Timeout>()
+  const autoSaveTimeoutRef = useRef<NodeJS.Timeout>(undefined)
   const saveQueueRef = useRef<{ section: ProfileSection; data: any } | null>(null)
   const isSavingRef = useRef(false)
   const retryCountRef = useRef(0)
@@ -788,17 +788,13 @@ export default function CandidateProfilePage() {
 
   // Enhanced field change handler with auto-save
   const handleFieldChange = useCallback((field: string, value: any, section: ProfileSection) => {
-    let nextSnapshot: typeof formData
-    setFormData(prev => {
-      nextSnapshot = { ...prev, [field]: value }
-      formDataRef.current = nextSnapshot
-      return nextSnapshot
-    })
+    const nextSnapshot = { ...formDataRef.current, [field]: value }
+    formDataRef.current = nextSnapshot
+    setFormData(nextSnapshot)
 
     // Optional debounced auto-save (disabled by default)
-    const snapshot = nextSnapshot ?? { ...formDataRef.current, [field]: value }
     if (AUTO_SAVE_ENABLED) {
-      triggerAutoSave(section, snapshot)
+      triggerAutoSave(section, nextSnapshot)
     }
   }, [triggerAutoSave])
 

@@ -47,25 +47,25 @@ interface JobDashboardData {
   statistics: {
     totalApplicants: number;
     shortlisted: number;
-    releasedToClient: number;
+    released_to_client: number;
     interviewed: number;
     offered: number;
     hired: number;
   };
   releasedCandidates: Array<{
-    applicationId: string;
-    candidateId: string;
+    application_id: string;
+    candidate_id: string;
     candidateSlug: string;
     fullName: string;
     headline: string;
     avatar: string | null;
     status: string;
-    releasedAt: string;
-    profileUrl: string;
+    released_at: string;
+    profile_url: string;
   }>;
   upcomingInterviews: Array<{
     id: string;
-    candidateName: string;
+    candidate_name: string;
     scheduledAt: string;
     scheduledAtClientLocal?: string;
     scheduledAtPh?: string;
@@ -249,7 +249,7 @@ export default function ClientJobDashboard() {
             />
             <StatCard
               icon={Gift}
-              value={data.statistics.releasedToClient}
+              value={data.statistics.released_to_client}
               label="Released to You"
               colorClass="bg-emerald-500/20 text-emerald-400"
             />
@@ -287,9 +287,9 @@ export default function ClientJobDashboard() {
             <div className="divide-y divide-white/5">
               {data.upcomingInterviews.map((interview) => {
                 const times = formatDualTimezone(
-                  interview.scheduledAt,
-                  interview.scheduledAtClientLocal,
-                  interview.scheduledAtPh
+                  interview.scheduled_at,
+                  interview.scheduled_atClientLocal,
+                  interview.scheduled_atPh
                 );
                 return (
                   <div 
@@ -302,7 +302,7 @@ export default function ClientJobDashboard() {
                           <Clock className="h-5 w-5 text-emerald-400" />
                         </div>
                         <div>
-                          <p className="font-semibold text-white">{interview.candidateName}</p>
+                          <p className="font-semibold text-white">{interview.candidate_name}</p>
                           <p className="text-sm text-cyan-400">
                             {times.client} (Your time)
                           </p>
@@ -350,7 +350,7 @@ export default function ClientJobDashboard() {
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 p-5">
               {data.releasedCandidates.map((candidate) => (
                 <Link
-                  key={candidate.applicationId}
+                  key={candidate.application_id}
                   href={candidate.profileUrl}
                   className="group p-4 rounded-xl bg-white/5 border border-white/10 hover:border-purple-500/30 hover:bg-white/10 transition-all duration-300"
                 >
@@ -381,7 +381,7 @@ export default function ClientJobDashboard() {
                           {candidate.status}
                         </span>
                         <span className="text-xs text-gray-500">
-                          {new Date(candidate.releasedAt).toLocaleDateString()}
+                          {new Date(candidate.released_at).toLocaleDateString()}
                         </span>
                       </div>
                     </div>

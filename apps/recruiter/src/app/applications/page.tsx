@@ -37,35 +37,35 @@ import Link from 'next/link';
 
 interface Application {
   id: string;
-  candidateId: string;
-  candidateName: string;
-  candidateEmail: string;
-  candidatePhone?: string;
-  candidateAvatar?: string;
-  candidateLocation?: string;
-  jobId: string;
-  jobTitle: string;
+  candidate_id: string;
+  candidate_name: string;
+  candidate_email: string;
+  candidate_phone?: string;
+  candidate_avatar?: string;
+  candidate_location?: string;
+  job_id: string;
+  job_title: string;
   status: string;
-  appliedAt: string;
-  recruiterNotes?: string;
-  hasResume: boolean;
-  resumeUrl?: string | null;
-  resumeFileName?: string | null;
-  hasAiAnalysis: boolean;
-  aiScore?: number;
-  matchScore?: number;
+  applied_at: string;
+  recruiter_notes?: string;
+  has_resume: boolean;
+  resume_url?: string | null;
+  resume_file_name?: string | null;
+  has_ai_analysis: boolean;
+  ai_score?: number;
+  match_score?: number;
   skills: string[];
-  experienceYears?: number;
-  hasOffer: boolean;
-  offerStatus?: string;
+  experience_years?: number;
+  has_offer: boolean;
+  offer_status?: string;
   // Recruiter gate + review tracking
-  reviewedBy?: string | null;
-  reviewedAt?: string | null;
-  releasedToClient?: boolean;
-  releasedAt?: string | null;
-  releasedBy?: string | null;
-  sharePrescreenVideo?: boolean;
-  sharePrescreenNotes?: boolean;
+  reviewed_by?: string | null;
+  reviewed_at?: string | null;
+  released_to_client?: boolean;
+  released_at?: string | null;
+  released_by?: string | null;
+  share_prescreen_video?: boolean;
+  share_prescreen_notes?: boolean;
 }
 
 // Status step configuration for the pipeline stepper
@@ -183,7 +183,7 @@ export default function RecruiterApplicationsPage() {
   const [notesDraft, setNotesDraft] = useState<Record<string, string>>({});
   const [notesSaving, setNotesSaving] = useState<string | null>(null);
   const [notesJustSaved, setNotesJustSaved] = useState<Record<string, boolean>>({});
-  const [rejectDialog, setRejectDialog] = useState<{ open: boolean; appId?: string; candidateName?: string }>({ open: false });
+  const [rejectDialog, setRejectDialog] = useState<{ open: boolean; appId?: string; candidate_name?: string }>({ open: false });
   const [rejectReason, setRejectReason] = useState('');
   const [rejecting, setRejecting] = useState(false);
   
@@ -213,7 +213,7 @@ export default function RecruiterApplicationsPage() {
     }
   };
 
-  const handleRequestInterview = async (applicationId: string, candidateName: string) => {
+  const handleRequestInterview = async (application_id: string, candidate_name: string) => {
     setActionLoading(applicationId);
     try {
       const token = await getSessionToken();
@@ -242,7 +242,7 @@ export default function RecruiterApplicationsPage() {
     }
   };
 
-  const handleUpdateStatus = async (applicationId: string, newStatus: string, candidateName: string) => {
+  const handleUpdateStatus = async (application_id: string, newStatus: string, candidate_name: string) => {
     setActionLoading(applicationId);
     try {
       const token = await getSessionToken();
@@ -273,14 +273,14 @@ export default function RecruiterApplicationsPage() {
     }
   };
 
-  const openReject = (applicationId: string, candidateName: string) => {
+  const openReject = (application_id: string, candidate_name: string) => {
     setRejectReason('');
     setRejectDialog({ open: true, appId: applicationId, candidateName });
   };
 
   const handleReject = async () => {
     const applicationId = rejectDialog.appId;
-    const candidateName = rejectDialog.candidateName || 'candidate';
+    const candidateName = rejectDialog.candidate_name || 'candidate';
     if (!applicationId) return;
     if (!rejectReason.trim()) {
       toast.error('Rejection reason is required');
@@ -317,7 +317,7 @@ export default function RecruiterApplicationsPage() {
     }
   };
 
-  const handleSaveNotes = async (applicationId: string) => {
+  const handleSaveNotes = async (application_id: string) => {
     setNotesSaving(applicationId);
     try {
       const token = await getSessionToken();
@@ -363,7 +363,7 @@ export default function RecruiterApplicationsPage() {
     for (const id of selectedIds) {
       const app = applications.find(a => a.id === id);
       if (app) {
-        await handleUpdateStatus(id, newStatus, app.candidateName);
+        await handleUpdateStatus(id, newStatus, app.candidate_name);
       }
     }
     
@@ -467,9 +467,9 @@ export default function RecruiterApplicationsPage() {
   const statuses = ['all', 'invited', 'submitted', 'under_review', 'shortlisted', 'interview_scheduled', 'hired', 'rejected'];
   
   const filtered = applications.filter(a => {
-    const matchesSearch = (a.candidateName || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (a.jobTitle || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (a.candidateEmail || '').toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch = (a.candidate_name || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (a.job_title || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (a.candidate_email || '').toLowerCase().includes(searchQuery.toLowerCase());
     const matchesStatus = statusFilter === 'all' || a.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
@@ -666,7 +666,7 @@ export default function RecruiterApplicationsPage() {
             const statusConfig = getStatusConfig(app.status);
             const isExpanded = expandedApp === app.id;
             const isSelected = selectedIds.has(app.id);
-            const currentNotes = app.recruiterNotes ?? '';
+            const currentNotes = app.recruiter_notes ?? '';
             const draftNotes = notesDraft[app.id] ?? currentNotes;
             const notesDirty = (draftNotes ?? '') !== (currentNotes ?? '');
             
@@ -713,17 +713,17 @@ export default function RecruiterApplicationsPage() {
 
                         {/* Avatar with Score Ring */}
                         <div className="relative">
-                          <Link href={`/recruiter/talent/${app.candidateId}`}>
+                          <Link href={`/recruiter/talent/${app.candidate_id}`}>
                             <Avatar className="h-14 w-14 cursor-pointer hover:ring-2 hover:ring-orange-500/50 transition-all">
-                              <AvatarImage src={app.candidateAvatar} />
+                              <AvatarImage src={app.candidate_avatar} />
                               <AvatarFallback className="bg-gradient-to-br from-orange-500 to-amber-600 text-white text-lg">
-                                {app.candidateName.split(' ').map(n => n[0]).join('')}
+                                {app.candidate_name.split(' ').map(n => n[0]).join('')}
                               </AvatarFallback>
                             </Avatar>
                           </Link>
-                          {app.aiScore && (
+                          {app.ai_score && (
                             <div className="absolute -bottom-1 -right-1">
-                              <ScoreRing score={app.aiScore} size={28} />
+                              <ScoreRing score={app.ai_score} size={28} />
                             </div>
                           )}
                         </div>
@@ -732,7 +732,7 @@ export default function RecruiterApplicationsPage() {
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-3 mb-2">
                             <Link href={`/recruiter/applications/${app.id}`} className="hover:text-orange-400 transition-colors">
-                              <h3 className="text-white font-semibold text-lg">{app.candidateName}</h3>
+                              <h3 className="text-white font-semibold text-lg">{app.candidate_name}</h3>
                             </Link>
                             <Badge variant="outline" className={`${statusConfig.bg} ${statusConfig.color} text-xs`}>
                               {statusConfig.icon}
@@ -743,16 +743,16 @@ export default function RecruiterApplicationsPage() {
                           <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-gray-400 mb-3">
                             <span className="flex items-center gap-1">
                               <Briefcase className="h-3.5 w-3.5 flex-shrink-0" />
-                              <span className="truncate max-w-[150px] sm:max-w-none">{app.jobTitle}</span>
+                              <span className="truncate max-w-[150px] sm:max-w-none">{app.job_title}</span>
                             </span>
                             <span className="flex items-center gap-1">
                               <Clock className="h-3.5 w-3.5 flex-shrink-0" />
-                              {getTimeAgo(app.appliedAt)}
+                              {getTimeAgo(app.applied_at)}
                             </span>
-                            {app.candidateLocation && (
+                            {app.candidate_location && (
                               <span className="flex items-center gap-1 hidden sm:flex">
                                 <MapPin className="h-3.5 w-3.5 flex-shrink-0" />
-                                {app.candidateLocation}
+                                {app.candidate_location}
                               </span>
                             )}
                           </div>
@@ -764,21 +764,21 @@ export default function RecruiterApplicationsPage() {
 
                           {/* Quick Info Badges */}
                           <div className="flex flex-wrap gap-2">
-                            {app.hasResume && (
+                            {app.has_resume && (
                               <Badge variant="outline" className="bg-emerald-500/10 text-emerald-400 border-emerald-500/30 text-xs">
                                 <FileText className="h-3 w-3 mr-1" />
                                 Resume
                               </Badge>
                             )}
-                            {app.experienceYears && (
+                            {app.experience_years && (
                               <Badge variant="outline" className="bg-white/5 text-gray-300 border-white/20 text-xs">
-                                {app.experienceYears}+ years
+                                {app.experience_years}+ years
                               </Badge>
                             )}
-                            {app.matchScore && (
+                            {app.match_score && (
                               <Badge variant="outline" className="bg-cyan-500/10 text-cyan-400 border-cyan-500/30 text-xs font-bold">
                                 <Target className="h-3 w-3 mr-1" />
-                                {app.matchScore}% match
+                                {app.match_score}% match
                               </Badge>
                             )}
                           </div>
@@ -790,7 +790,7 @@ export default function RecruiterApplicationsPage() {
                           {app.status === 'submitted' && (
                             <Button 
                               size="sm" 
-                              onClick={() => handleUpdateStatus(app.id, 'under_review', app.candidateName)}
+                              onClick={() => handleUpdateStatus(app.id, 'under_review', app.candidate_name)}
                               className="h-8 px-3 min-w-[100px] justify-center bg-cyan-500/20 text-cyan-400 hover:bg-cyan-500/30 border border-cyan-500/30"
                               disabled={actionLoading === app.id}
                             >
@@ -807,7 +807,7 @@ export default function RecruiterApplicationsPage() {
                           {app.status === 'under_review' && (
                             <Button 
                               size="sm" 
-                              onClick={() => handleUpdateStatus(app.id, 'shortlisted', app.candidateName)}
+                              onClick={() => handleUpdateStatus(app.id, 'shortlisted', app.candidate_name)}
                               className="h-8 px-3 min-w-[100px] justify-center bg-purple-500/20 text-purple-400 hover:bg-purple-500/30 border border-purple-500/30"
                               disabled={actionLoading === app.id}
                             >
@@ -824,12 +824,12 @@ export default function RecruiterApplicationsPage() {
                           {(app.status === 'under_review' || app.status === 'shortlisted') && (
                             <>
                               <VideoCallButton
-                                candidateUserId={app.candidateId}
-                                candidateName={app.candidateName}
-                                candidateEmail={app.candidateEmail}
-                                candidateAvatar={app.candidateAvatar}
-                                jobId={app.jobId}
-                                jobTitle={app.jobTitle}
+                                candidateUserId={app.candidate_id}
+                                candidateName={app.candidate_name}
+                                candidateEmail={app.candidate_email}
+                                candidateAvatar={app.candidate_avatar}
+                                jobId={app.job_id}
+                                jobTitle={app.job_title}
                                 applicationId={app.id}
                                 variant="compact"
                                 context="applications"
@@ -837,7 +837,7 @@ export default function RecruiterApplicationsPage() {
                               />
                               <Button 
                                 size="sm" 
-                                onClick={() => handleRequestInterview(app.id, app.candidateName)}
+                                onClick={() => handleRequestInterview(app.id, app.candidate_name)}
                                 className="h-8 px-3 min-w-[100px] justify-center bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700"
                                 disabled={actionLoading === app.id}
                               >
@@ -855,7 +855,7 @@ export default function RecruiterApplicationsPage() {
                           {app.status !== 'hired' && app.status !== 'rejected' && (
                             <Button
                               size="sm"
-                              onClick={() => openReject(app.id, app.candidateName)}
+                              onClick={() => openReject(app.id, app.candidate_name)}
                               className="h-8 px-3 min-w-[100px] justify-center bg-red-500 hover:bg-red-600 text-white"
                             >
                               <XCircle className="h-4 w-4 mr-1.5" />
@@ -890,7 +890,7 @@ export default function RecruiterApplicationsPage() {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end" className="bg-[#0a0a0f] border-white/10 w-48">
                               <DropdownMenuItem asChild>
-                                <Link href={`/recruiter/talent/${app.candidateId}`} className="text-gray-300 hover:text-white cursor-pointer flex items-center">
+                                <Link href={`/recruiter/talent/${app.candidate_id}`} className="text-gray-300 hover:text-white cursor-pointer flex items-center">
                                   <User className="h-4 w-4 mr-2" />
                                   View Full Profile
                                 </Link>
@@ -910,7 +910,7 @@ export default function RecruiterApplicationsPage() {
                               {app.status !== 'hired' && app.status !== 'rejected' && (
                                 <DropdownMenuItem 
                                   className="text-red-400 hover:text-red-300 cursor-pointer"
-                                  onClick={() => openReject(app.id, app.candidateName)}
+                                  onClick={() => openReject(app.id, app.candidate_name)}
                                 >
                                   <XCircle className="h-4 w-4 mr-2" />
                                   Decline Application
@@ -938,14 +938,14 @@ export default function RecruiterApplicationsPage() {
                                 <div className="space-y-2 text-sm">
                                   <div className="flex items-center gap-2 text-gray-400">
                                     <Mail className="h-4 w-4" />
-                                    <a href={`mailto:${app.candidateEmail}`} className="text-orange-400 hover:text-orange-300">
-                                      {app.candidateEmail}
+                                    <a href={`mailto:${app.candidate_email}`} className="text-orange-400 hover:text-orange-300">
+                                      {app.candidate_email}
                                     </a>
                                   </div>
-                                  {app.candidatePhone && (
+                                  {app.candidate_phone && (
                                     <div className="flex items-center gap-2 text-gray-400">
                                       <Phone className="h-4 w-4" />
-                                      {app.candidatePhone}
+                                      {app.candidate_phone}
                                     </div>
                                   )}
                                 </div>
@@ -981,7 +981,7 @@ export default function RecruiterApplicationsPage() {
                                   />
                                   <div className="flex items-center justify-between">
                                     <div className="text-xs text-gray-500">
-                                      {app.reviewedAt ? `Reviewed: ${new Date(app.reviewedAt).toLocaleString()}` : 'Not reviewed yet'}
+                                      {app.reviewed_at ? `Reviewed: ${new Date(app.reviewed_at).toLocaleString()}` : 'Not reviewed yet'}
                                     </div>
                                     <Button
                                       size="sm"
@@ -1007,15 +1007,15 @@ export default function RecruiterApplicationsPage() {
 
                             <div className="mt-4 pt-4 border-t border-white/10 flex justify-end">
                               <div className="flex items-center gap-2">
-                                {app.resumeUrl && (
-                                  <a href={app.resumeUrl} target="_blank" rel="noreferrer">
+                                {app.resume_url && (
+                                  <a href={app.resume_url} target="_blank" rel="noreferrer">
                                     <Button size="sm" variant="outline" className="border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/10">
                                       <FileText className="h-4 w-4 mr-2" />
-                                      {app.resumeFileName ? 'Resume' : 'Open Resume'}
+                                      {app.resume_file_name ? 'Resume' : 'Open Resume'}
                                     </Button>
                                   </a>
                                 )}
-                                <Link href={`/recruiter/talent/${app.candidateId}`}>
+                                <Link href={`/recruiter/talent/${app.candidate_id}`}>
                                   <Button size="sm" variant="outline" className="border-orange-500/30 text-orange-400 hover:bg-orange-500/10">
                                     View Complete Profile
                                     <ExternalLink className="h-4 w-4 ml-2" />

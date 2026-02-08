@@ -20,7 +20,7 @@ type Notification = {
   metadata?: any;
   isRead: boolean;
   isUrgent?: boolean;
-  createdAt: string;
+  created_at: string;
 };
 
 export default function RecruiterNotificationsPage() {
@@ -153,7 +153,7 @@ export default function RecruiterNotificationsPage() {
                         {!n.isRead && <Badge className="bg-orange-500/20 text-orange-300 border-none">New</Badge>}
                       </div>
                       <span className="text-xs text-gray-500">
-                        {formatDistanceToNow(new Date(n.createdAt), { addSuffix: true })}
+                        {formatDistanceToNow(new Date(n.created_at), { addSuffix: true })}
                       </span>
                     </div>
 

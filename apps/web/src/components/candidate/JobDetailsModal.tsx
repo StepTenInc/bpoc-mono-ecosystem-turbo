@@ -33,17 +33,17 @@ interface Job {
     benefits: string[];
     company: string;
     agency: string;
-    workType: string;
-    workArrangement: string;
+    work_type: string;
+    work_arrangement: string;
     shift: string;
-    experienceLevel: string;
-    salaryMin?: number;
-    salaryMax?: number;
+    experience_level: string;
+    salary_min?: number;
+    salary_max?: number;
     currency: string;
     skills: string[];
-    createdAt: string;
+    created_at: string;
     views: number;
-    applicantsCount: number;
+    applicants_count: number;
 }
 
 interface JobDetailsModalProps {
@@ -86,11 +86,11 @@ export function JobDetailsModal({ jobId, isOpen, onClose }: JobDetailsModalProps
 
     const formatSalary = () => {
         if (!job) return 'Competitive';
-        if (job.salaryMin && job.salaryMax) {
-            return `${job.currency} ${job.salaryMin.toLocaleString()} - ${job.salaryMax.toLocaleString()}`;
+        if (job.salary_min && job.salary_max) {
+            return `${job.currency} ${job.salary_min.toLocaleString()} - ${job.salary_max.toLocaleString()}`;
         }
-        if (job.salaryMin) {
-            return `${job.currency} ${job.salaryMin.toLocaleString()}+`;
+        if (job.salary_min) {
+            return `${job.currency} ${job.salary_min.toLocaleString()}+`;
         }
         return 'Competitive';
     };
@@ -159,7 +159,7 @@ export function JobDetailsModal({ jobId, isOpen, onClose }: JobDetailsModalProps
                                     <span>•</span>
                                     <span className="flex items-center gap-1">
                                         <Calendar className="h-4 w-4" />
-                                        Posted {getTimeAgo(job.createdAt)}
+                                        Posted {getTimeAgo(job.created_at)}
                                     </span>
                                 </div>
                             </div>
@@ -173,11 +173,11 @@ export function JobDetailsModal({ jobId, isOpen, onClose }: JobDetailsModalProps
                             </div>
                             <div className="p-3 rounded-lg bg-white/5 border border-white/10">
                                 <p className="text-gray-400 text-xs mb-1">Work Type</p>
-                                <p className="text-white font-medium text-sm capitalize">{job.workType?.replace('_', ' ')}</p>
+                                <p className="text-white font-medium text-sm capitalize">{job.work_type?.replace('_', ' ')}</p>
                             </div>
                             <div className="p-3 rounded-lg bg-white/5 border border-white/10">
                                 <p className="text-gray-400 text-xs mb-1">Arrangement</p>
-                                <p className="text-white font-medium text-sm capitalize">{job.workArrangement}</p>
+                                <p className="text-white font-medium text-sm capitalize">{job.work_arrangement}</p>
                             </div>
                             <div className="p-3 rounded-lg bg-white/5 border border-white/10">
                                 <p className="text-gray-400 text-xs mb-1">Shift</p>
@@ -259,7 +259,7 @@ export function JobDetailsModal({ jobId, isOpen, onClose }: JobDetailsModalProps
                             <div className="flex items-center gap-4 text-sm text-gray-400">
                                 <span className="flex items-center gap-1">
                                     <Users className="h-4 w-4" />
-                                    {job.applicantsCount || 0} applicants
+                                    {job.applicants_count || 0} applicants
                                 </span>
                             </div>
                             <Button
@@ -278,4 +278,3 @@ export function JobDetailsModal({ jobId, isOpen, onClose }: JobDetailsModalProps
 }
 
 export default JobDetailsModal;
-

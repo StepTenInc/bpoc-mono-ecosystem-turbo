@@ -233,7 +233,7 @@ export default function ApplicationDetailPage() {
           'x-user-id': user?.id || '',
         },
         body: JSON.stringify({
-          applicationId: application.id,
+          application_id: application.id,
           status: nextStatus,
         }),
       });
@@ -266,7 +266,7 @@ export default function ApplicationDetailPage() {
           'x-user-id': user?.id || '',
         },
         body: JSON.stringify({
-          applicationId: application.id,
+          application_id: application.id,
           notes: notesDraft,
         }),
       });
@@ -363,7 +363,7 @@ export default function ApplicationDetailPage() {
           'x-user-id': user?.id || '',
         },
         body: JSON.stringify({
-          applicationId: application.id,
+          application_id: application.id,
           interviewType: scheduleType,
           scheduledAt: new Date(scheduleAt).toISOString(),
           durationMinutes: scheduleDuration,

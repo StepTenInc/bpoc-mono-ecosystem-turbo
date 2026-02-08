@@ -70,11 +70,11 @@ interface NotificationBadges {
 
 interface RecruiterSidebarProps {
   recruiter?: {
-    firstName: string;
-    lastName: string;
+    first_name: string;
+    last_name: string;
     email: string;
     id?: string;
-    agencyId?: string;
+    agency_id?: string;
     agency?: {
       name: string;
       logo_url?: string;
@@ -114,7 +114,7 @@ export default function RecruiterSidebar({
         const response = await fetch('/api/recruiter/dashboard/stats', {
           headers: {
             'x-user-id': recruiter.id,
-            'x-agency-id': recruiter.agencyId || '',
+            'x-agency-id': recruiter.agency_id || '',
           },
         });
         
@@ -136,7 +136,7 @@ export default function RecruiterSidebar({
     // Refresh every 30 seconds
     const interval = setInterval(fetchBadges, 30000);
     return () => clearInterval(interval);
-  }, [recruiter?.id, recruiter?.agencyId]);
+  }, [recruiter?.id, recruiter?.agency_id]);
 
   const isActive = (href: string) => {
     if (href === '/recruiter') {
@@ -360,8 +360,8 @@ export default function RecruiterSidebar({
       <div className="p-4 border-t border-white/10">
         <div className={`flex items-center gap-3 mb-3 ${collapsed ? 'justify-center' : ''}`}>
           <div className="w-10 h-10 rounded-full bg-gradient-to-br from-orange-500 to-amber-600 flex items-center justify-center text-white font-semibold flex-shrink-0">
-            {recruiter?.firstName?.[0] || 'R'}
-            {recruiter?.lastName?.[0] || ''}
+            {recruiter?.first_name?.[0] || 'R'}
+            {recruiter?.last_name?.[0] || ''}
           </div>
           <AnimatePresence>
             {!collapsed && (
@@ -372,7 +372,7 @@ export default function RecruiterSidebar({
                 className="flex-1 min-w-0 overflow-hidden"
               >
                 <p className="text-white font-medium truncate">
-                  {recruiter ? `${recruiter.firstName} ${recruiter.lastName}` : 'Recruiter'}
+                  {recruiter ? `${recruiter.first_name} ${recruiter.last_name}` : 'Recruiter'}
                 </p>
                 <p className="text-gray-400 text-xs truncate">
                   {recruiter?.agency?.name || 'Agency'}

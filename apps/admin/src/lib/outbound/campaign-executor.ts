@@ -3,7 +3,7 @@
  * Handles batch sending of email campaigns with rate limiting
  */
 
-import { supabaseAdmin } from '@/lib/supabase/admin';
+import { supabase } from '@/lib/supabase/admin';
 import { sendEmail } from '@/lib/email';
 import { renderEmailTemplate } from './email-templates';
 
@@ -33,7 +33,7 @@ export async function executeCampaign(campaignId: string): Promise<CampaignExecu
 
   try {
     // 1. Get campaign details
-    const { data: campaign, error: campaignError } = await supabaseAdmin
+    const { data: campaign, error: campaignError } = await supabase
       .from('email_campaigns')
       .select('*')
       .eq('id', campaignId)
@@ -44,7 +44,7 @@ export async function executeCampaign(campaignId: string): Promise<CampaignExecu
     }
 
     // 2. Update campaign status to 'sending'
-    await supabaseAdmin
+    await supabase
       .from('email_campaigns')
       .update({
         status: 'sending',
@@ -53,7 +53,7 @@ export async function executeCampaign(campaignId: string): Promise<CampaignExecu
       .eq('id', campaignId);
 
     // 3. Get all pending recipients
-    const { data: recipients, error: recipientsError } = await supabaseAdmin
+    const { data: recipients, error: recipientsError } = await supabase
       .from('campaign_recipients')
       .select(`
         id,
@@ -79,7 +79,7 @@ export async function executeCampaign(campaignId: string): Promise<CampaignExecu
 
     if (!recipients || recipients.length === 0) {
       console.log('[Campaign] No pending recipients found');
-      await supabaseAdmin
+      await supabase
         .from('email_campaigns')
         .update({
           status: 'completed',
@@ -138,7 +138,7 @@ export async function executeCampaign(campaignId: string): Promise<CampaignExecu
     }
 
     // 5. Update campaign status to 'completed'
-    await supabaseAdmin
+    await supabase
       .from('email_campaigns')
       .update({
         status: 'completed',
@@ -153,7 +153,7 @@ export async function executeCampaign(campaignId: string): Promise<CampaignExecu
     console.error('[Campaign] Execution failed:', error);
 
     // Update campaign status to 'failed'
-    await supabaseAdmin
+    await supabase
       .from('email_campaigns')
       .update({
         status: 'draft', // Revert to draft so it can be retried
@@ -246,7 +246,7 @@ async function sendCampaignEmail(
     await updateRecipientStatus(recipient.id, 'sent', null, subject, html);
 
     // 5. Update contact metrics
-    await supabaseAdmin
+    await supabase
       .from('outbound_contacts')
       .update({
         total_emails_sent: (contact.total_emails_sent || 0) + 1,
@@ -311,10 +311,10 @@ async function updateRecipientStatus(
 
   if (status === 'failed' && errorMessage) {
     updates.error_message = errorMessage;
-    updates.retry_count = supabaseAdmin.sql`retry_count + 1`;
+    updates.retry_count = supabase.sql`retry_count + 1`;
   }
 
-  await supabaseAdmin
+  await supabase
     .from('campaign_recipients')
     .update(updates)
     .eq('id', recipientId);
@@ -333,7 +333,7 @@ async function logEmailActivity(data: {
   from_email?: string;
   to_email?: string;
 }) {
-  await supabaseAdmin.from('email_activity_log').insert({
+  await supabase.from('email_activity_log').insert({
     contact_id: data.contact_id,
     campaign_id: data.campaign_id,
     recipient_id: data.recipient_id,
@@ -356,7 +356,7 @@ function sleep(ms: number): Promise<void> {
  * Pause a running campaign
  */
 export async function pauseCampaign(campaignId: string): Promise<void> {
-  await supabaseAdmin
+  await supabase
     .from('email_campaigns')
     .update({
       status: 'paused',
@@ -369,7 +369,7 @@ export async function pauseCampaign(campaignId: string): Promise<void> {
  * Resume a paused campaign
  */
 export async function resumeCampaign(campaignId: string): Promise<void> {
-  await supabaseAdmin
+  await supabase
     .from('email_campaigns')
     .update({
       status: 'sending',

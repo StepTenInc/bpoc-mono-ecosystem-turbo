@@ -41,17 +41,17 @@ interface Job {
   benefits: string[];
   company: string;
   agency: string;
-  workType: string;
-  workArrangement: string;
+  work_type: string;
+  work_arrangement: string;
   shift: string;
-  experienceLevel: string;
-  salaryMin?: number;
-  salaryMax?: number;
+  experience_level: string;
+  salary_min?: number;
+  salary_max?: number;
   currency: string;
   skills: string[];
-  createdAt: string;
+  created_at: string;
   views: number;
-  applicantsCount: number;
+  applicants_count: number;
 }
 
 interface JobDetailClientProps {
@@ -89,11 +89,11 @@ export default function JobDetailClient({ jobId }: JobDetailClientProps) {
 
   const formatSalary = () => {
     if (!job) return 'Competitive';
-    if (job.salaryMin && job.salaryMax) {
-      return `${job.currency} ${job.salaryMin.toLocaleString()} - ${job.salaryMax.toLocaleString()}`;
+    if (job.salary_min && job.salary_max) {
+      return `${job.currency} ${job.salary_min.toLocaleString()} - ${job.salary_max.toLocaleString()}`;
     }
-    if (job.salaryMin) {
-      return `${job.currency} ${job.salaryMin.toLocaleString()}+`;
+    if (job.salary_min) {
+      return `${job.currency} ${job.salary_min.toLocaleString()}+`;
     }
     return 'Competitive';
   };
@@ -127,9 +127,9 @@ export default function JobDetailClient({ jobId }: JobDetailClientProps) {
         name: 'BPOC.IO',
         value: job.id
       },
-      datePosted: job.createdAt,
+      datePosted: job.created_at,
       validThrough: validThrough.toISOString(),
-      employmentType: job.workType.toUpperCase().replace('_', '_'),
+      employmentType: job.work_type.toUpperCase().replace('_', '_'),
       hiringOrganization: {
         '@type': 'Organization',
         name: 'BPOC.IO - BPO Careers Philippines',
@@ -145,18 +145,18 @@ export default function JobDetailClient({ jobId }: JobDetailClientProps) {
           addressLocality: 'Philippines'
         }
       },
-      ...(job.workArrangement === 'remote' && {
+      ...(job.work_arrangement === 'remote' && {
         jobLocationType: 'TELECOMMUTE'
       }),
-      ...(job.salaryMin && {
+      ...(job.salary_min && {
         baseSalary: {
           '@type': 'MonetaryAmount',
           currency: job.currency,
           value: {
             '@type': 'QuantitativeValue',
-            value: job.salaryMin,
-            minValue: job.salaryMin,
-            ...(job.salaryMax && { maxValue: job.salaryMax }),
+            value: job.salary_min,
+            minValue: job.salary_min,
+            ...(job.salary_max && { maxValue: job.salary_max }),
             unitText: 'MONTH'
           }
         }
@@ -276,7 +276,7 @@ export default function JobDetailClient({ jobId }: JobDetailClientProps) {
                         </div>
                         <div className="flex items-center gap-2 text-gray-400">
                           <Calendar className="h-4 w-4" />
-                          <span className="text-sm">Posted {getTimeAgo(job.createdAt)}</span>
+                          <span className="text-sm">Posted {getTimeAgo(job.created_at)}</span>
                         </div>
                         <div className="flex items-center gap-2 text-gray-400">
                           <Eye className="h-4 w-4" />
@@ -284,7 +284,7 @@ export default function JobDetailClient({ jobId }: JobDetailClientProps) {
                         </div>
                         <div className="flex items-center gap-2 text-gray-400">
                           <Users className="h-4 w-4" />
-                          <span className="text-sm">{job.applicantsCount || 0} applicants</span>
+                          <span className="text-sm">{job.applicants_count || 0} applicants</span>
                         </div>
                       </div>
 
@@ -306,7 +306,7 @@ export default function JobDetailClient({ jobId }: JobDetailClientProps) {
                           <Briefcase className="h-4 w-4 text-cyan-400" />
                           <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider">Type</p>
                         </div>
-                        <p className="text-white font-bold capitalize">{job.workType?.replace('_', ' ')}</p>
+                        <p className="text-white font-bold capitalize">{job.work_type?.replace('_', ' ')}</p>
                       </div>
 
                       <div className="p-4 rounded-xl bg-white/5 border border-white/10 backdrop-blur-sm hover:border-purple-500/30 transition-colors">
@@ -314,7 +314,7 @@ export default function JobDetailClient({ jobId }: JobDetailClientProps) {
                           <MapPin className="h-4 w-4 text-purple-400" />
                           <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider">Location</p>
                         </div>
-                        <p className="text-white font-bold capitalize">{job.workArrangement}</p>
+                        <p className="text-white font-bold capitalize">{job.work_arrangement}</p>
                       </div>
 
                       <div className="p-4 rounded-xl bg-white/5 border border-white/10 backdrop-blur-sm hover:border-orange-500/30 transition-colors">
@@ -330,7 +330,7 @@ export default function JobDetailClient({ jobId }: JobDetailClientProps) {
                           <TrendingUp className="h-4 w-4 text-emerald-400" />
                           <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider">Level</p>
                         </div>
-                        <p className="text-white font-bold capitalize text-sm">{job.experienceLevel?.replace('_', ' ')}</p>
+                        <p className="text-white font-bold capitalize text-sm">{job.experience_level?.replace('_', ' ')}</p>
                       </div>
                     </div>
 

@@ -34,9 +34,9 @@ interface InterviewSchedulerModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess: () => void;
-  applicationId: string;
-  candidateId: string;
-  candidateName: string;
+  application_id: string;
+  candidate_id: string;
+  candidate_name: string;
 }
 
 const INTERVIEW_TYPES = [

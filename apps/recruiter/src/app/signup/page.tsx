@@ -84,8 +84,8 @@ function RecruiterSignupContent() {
   const [inviteError, setInviteError] = useState('');
 
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
+    first_name: '',
+    last_name: '',
     email: '',
     password: '',
     agencyName: '',
@@ -434,8 +434,8 @@ function RecruiterSignupContent() {
                               <Input
                                 type="text"
                                 placeholder="John"
-                                value={formData.firstName}
-                                onChange={(e) => setFormData(prev => ({ ...prev, firstName: e.target.value }))}
+                                value={formData.first_name}
+                                onChange={(e) => setFormData(prev => ({ ...prev, first_name: e.target.value }))}
                                 className="bg-white/5 border-white/10 text-white focus:border-orange-500/50 focus:ring-orange-500/20"
                                 required
                               />
@@ -445,8 +445,8 @@ function RecruiterSignupContent() {
                               <Input
                                 type="text"
                                 placeholder="Doe"
-                                value={formData.lastName}
-                                onChange={(e) => setFormData(prev => ({ ...prev, lastName: e.target.value }))}
+                                value={formData.last_name}
+                                onChange={(e) => setFormData(prev => ({ ...prev, last_name: e.target.value }))}
                                 className="bg-white/5 border-white/10 text-white focus:border-orange-500/50 focus:ring-orange-500/20"
                                 required
                               />
@@ -475,8 +475,8 @@ function RecruiterSignupContent() {
                               <Input
                                 type="text"
                                 placeholder="John"
-                                value={formData.firstName}
-                                onChange={(e) => setFormData(prev => ({ ...prev, firstName: e.target.value }))}
+                                value={formData.first_name}
+                                onChange={(e) => setFormData(prev => ({ ...prev, first_name: e.target.value }))}
                                 className="bg-white/5 border-white/10 text-white focus:border-orange-500/50 focus:ring-orange-500/20"
                                 required
                               />
@@ -486,8 +486,8 @@ function RecruiterSignupContent() {
                               <Input
                                 type="text"
                                 placeholder="Doe"
-                                value={formData.lastName}
-                                onChange={(e) => setFormData(prev => ({ ...prev, lastName: e.target.value }))}
+                                value={formData.last_name}
+                                onChange={(e) => setFormData(prev => ({ ...prev, last_name: e.target.value }))}
                                 className="bg-white/5 border-white/10 text-white focus:border-orange-500/50 focus:ring-orange-500/20"
                                 required
                               />
@@ -1254,7 +1254,7 @@ const jobs = await fetch('https://bpoc.io/api/v1/jobs', {
     'Content-Type': 'application/json'
   },
   params: {
-    clientId: 'client_123',
+    client_id: 'client_123',
     status: 'active'
   }
 });

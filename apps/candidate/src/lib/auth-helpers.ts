@@ -1,4 +1,6 @@
-import { supabase } from './supabase'
+import { createClient } from './supabase/client'
+
+const supabase = createClient()
 
 export async function getSessionToken(): Promise<string | null> {
   try {

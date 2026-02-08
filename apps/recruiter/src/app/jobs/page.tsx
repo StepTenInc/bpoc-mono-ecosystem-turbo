@@ -59,13 +59,13 @@ interface Job {
   rejectionReason?: string | null;
   workType: string;
   workArrangement: string;
-  salaryMin?: number;
-  salaryMax?: number;
+  salary_min?: number;
+  salary_max?: number;
   currency: string;
   views: number;
   applicantsCount: number;
-  createdAt: string;
-  clientName: string;
+  created_at: string;
+  client_name: string;
   shortlistedCount?: number;
   interviewsCount?: number;
   conversionRate?: number;
@@ -197,7 +197,7 @@ export default function RecruiterJobsPage() {
 
   const filteredJobs = jobs.filter(job =>
     (job.title || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
-    (job.clientName || '').toLowerCase().includes(searchQuery.toLowerCase())
+    (job.client_name || '').toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   // Stats
@@ -474,12 +474,12 @@ export default function RecruiterJobsPage() {
                             <div className="flex items-center gap-4 mb-3 flex-wrap">
                               <div className="flex items-center gap-2 px-3 py-1 rounded-lg bg-purple-500/10 border border-purple-500/20">
                                 <Building2 className="h-4 w-4 text-purple-400" />
-                                <span className="text-sm text-purple-300 font-medium">{job.clientName}</span>
+                                <span className="text-sm text-purple-300 font-medium">{job.client_name}</span>
                               </div>
                               <span className="text-gray-500 text-sm">•</span>
                               <span className="text-sm text-gray-400 flex items-center gap-1.5">
                                 <Clock className="h-4 w-4" />
-                                Posted {getTimeAgo(job.createdAt)}
+                                Posted {getTimeAgo(job.created_at)}
                               </span>
                               {job.expiresAt && (
                                 <>
@@ -504,7 +504,7 @@ export default function RecruiterJobsPage() {
                               </span>
                               <span className="flex items-center gap-1.5">
                                 <DollarSign className="h-4 w-4 text-green-400" />
-                                {formatSalary(job.salaryMin, job.salaryMax, job.currency)}
+                                {formatSalary(job.salary_min, job.salary_max, job.currency)}
                               </span>
                             </div>
                           </div>

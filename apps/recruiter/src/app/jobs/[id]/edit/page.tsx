@@ -39,8 +39,8 @@ export default function EditJobPage() {
     responsibilities: [] as string[],
     benefits: [] as string[],
     skills: [] as string[],
-    salaryMin: '',
-    salaryMax: '',
+    salary_min: '',
+    salary_max: '',
     currency: 'PHP',
     workType: 'full_time',
     workArrangement: 'remote',
@@ -53,7 +53,7 @@ export default function EditJobPage() {
     if (user?.id && jobId) {
       fetchJob();
     }
-  }, [user?.id, jobId]);
+  }, [user?.id, job_id]);
 
   const fetchJob = async () => {
     try {
@@ -76,8 +76,8 @@ export default function EditJobPage() {
           responsibilities: data.job.responsibilities || [],
           benefits: data.job.benefits || [],
           skills: data.job.skills || [],
-          salaryMin: data.job.salary_min?.toString() || '',
-          salaryMax: data.job.salary_max?.toString() || '',
+          salary_min: data.job.salary_min?.toString() || '',
+          salary_max: data.job.salary_max?.toString() || '',
           currency: data.job.currency || 'PHP',
           workType: data.job.work_type || 'full_time',
           workArrangement: data.job.work_arrangement || 'remote',
@@ -110,8 +110,8 @@ export default function EditJobPage() {
         },
         body: JSON.stringify({
           ...formData,
-          salary_min: formData.salaryMin ? parseFloat(formData.salaryMin) : null,
-          salary_max: formData.salaryMax ? parseFloat(formData.salaryMax) : null,
+          salary_min: formData.salary_min ? parseFloat(formData.salary_min) : null,
+          salary_max: formData.salary_max ? parseFloat(formData.salary_max) : null,
         }),
       });
 
@@ -150,10 +150,10 @@ export default function EditJobPage() {
           <h1 className="text-3xl font-bold text-white">Edit Job</h1>
           <p className="text-gray-400 mt-1">Update your job posting details</p>
         </div>
-        {job?.clientName && (
+        {job?.client_name && (
           <Badge variant="outline" className="bg-purple-500/10 text-purple-400 border-purple-500/30">
             <Building2 className="h-3 w-3 mr-1" />
-            {job.clientName}
+            {job.client_name}
           </Badge>
         )}
       </div>
@@ -268,8 +268,8 @@ export default function EditJobPage() {
               <label className="block text-gray-400 text-sm mb-2">Min Salary</label>
               <Input
                 type="number"
-                value={formData.salaryMin}
-                onChange={(e) => setFormData(f => ({ ...f, salaryMin: e.target.value }))}
+                value={formData.salary_min}
+                onChange={(e) => setFormData(f => ({ ...f, salary_min: e.target.value }))}
                 placeholder="30000"
                 className="bg-white/5 border-white/10 text-white"
               />
@@ -278,8 +278,8 @@ export default function EditJobPage() {
               <label className="block text-gray-400 text-sm mb-2">Max Salary</label>
               <Input
                 type="number"
-                value={formData.salaryMax}
-                onChange={(e) => setFormData(f => ({ ...f, salaryMax: e.target.value }))}
+                value={formData.salary_max}
+                onChange={(e) => setFormData(f => ({ ...f, salary_max: e.target.value }))}
                 placeholder="50000"
                 className="bg-white/5 border-white/10 text-white"
               />

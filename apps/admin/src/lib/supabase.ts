@@ -2,7 +2,7 @@
  * @deprecated This file is deprecated. Use the centralized clients instead:
  * - Browser client: import { supabase } from '@/lib/supabase/client'
  * - Server client: import { createClient } from '@/lib/supabase/server'  
- * - Admin client: import { supabaseAdmin } from '@/lib/supabase/admin'
+ * - Admin client: import { supabase } from '@/lib/supabase/admin'
  * 
  * This file is kept for backward compatibility but will be removed in a future version.
  */

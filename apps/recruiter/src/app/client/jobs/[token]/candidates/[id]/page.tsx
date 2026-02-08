@@ -53,7 +53,7 @@ interface CounterOffer {
   employerResponse: string | null;
   responseType: string | null;
   status: string;
-  createdAt: string;
+  created_at: string;
   respondedAt: string | null;
 }
 
@@ -64,7 +64,7 @@ interface PreScreen {
   date: string;
   endedAt: string | null;
   durationSeconds: number | null;
-  recordingUrl: string | null;
+  recording_url: string | null;
   recordingDuration: number | null;
   transcription: string | null;
   summary: string | null;
@@ -88,7 +88,7 @@ interface Offer {
   id: string;
   salaryOffered: number;
   currency: string;
-  startDate: string;
+  start_date: string;
   benefits: string[] | null;
   additionalTerms: string | null;
   status: string;
@@ -108,7 +108,7 @@ interface OnboardingDocument {
 
 interface Onboarding {
   id: string;
-  candidateName: string;
+  candidate_name: string;
   email: string;
   phone: string | null;
   completionPercent: number;
@@ -118,7 +118,7 @@ interface Onboarding {
   contractPdfUrl: string | null;
   employmentStarted: boolean;
   employmentStartDate: string | null;
-  startDate: string | null;
+  start_date: string | null;
   salary: number | null;
   position: string | null;
   workSchedule: string | null;
@@ -133,8 +133,8 @@ interface Onboarding {
     emergencyContact: string;
   };
   documents: OnboardingDocument[];
-  createdAt: string;
-  updatedAt: string;
+  created_at: string;
+  updated_at: string;
 }
 
 interface CandidateProfile {
@@ -142,8 +142,8 @@ interface CandidateProfile {
     id: string;
     slug: string;
     fullName: string;
-    firstName: string;
-    lastName: string;
+    first_name: string;
+    last_name: string;
     headline: string | null;
     email: string;
     phone: string | null;
@@ -167,8 +167,8 @@ interface CandidateProfile {
     experience: Array<{
       company: string;
       title: string;
-      startDate: string;
-      endDate: string | null;
+      start_date: string;
+      end_date: string | null;
       isCurrent: boolean;
       description: string | null;
     }>;
@@ -176,8 +176,8 @@ interface CandidateProfile {
       institution: string;
       degree: string;
       fieldOfStudy: string | null;
-      startDate: string;
-      endDate: string | null;
+      start_date: string;
+      end_date: string | null;
     }>;
   };
   resume: {
@@ -189,8 +189,8 @@ interface CandidateProfile {
   application: {
     id: string;
     status: string;
-    appliedAt: string;
-    releasedAt: string;
+    applied_at: string;
+    released_at: string;
     clientDecision: 'accept' | 'reject' | null;
     clientDecisionAt: string | null;
     clientNotes: string | null;
@@ -464,10 +464,10 @@ export default function CandidateProfilePage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          applicationId: data.application.id,
+          application_id: data.application.id,
           salary: parseFloat(offerSalary),
           currency: 'PHP',
-          startDate: offerStartDate,
+          start_date: offerStartDate,
           message: offerMessage || null,
           token,
         }),
@@ -504,8 +504,8 @@ export default function CandidateProfilePage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          interviewId: data.upcomingInterview.id,
-          applicationId: data.application.id,
+          interview_id: data.upcomingInterview.id,
+          application_id: data.application.id,
           rating: feedbackRating || null,
           notes: feedbackNotes || null,
           outcome: feedbackOutcome,
@@ -560,7 +560,7 @@ export default function CandidateProfilePage() {
     if (token && candidateId) {
       fetchProfile();
     }
-  }, [token, candidateId]);
+  }, [token, candidate_id]);
 
   if (loading) {
     return (
@@ -742,7 +742,7 @@ export default function CandidateProfilePage() {
                   </div>
                   <div>
                     <p className="text-xs text-gray-400">Start Date</p>
-                    <p className="text-white">{new Date(latestOffer.startDate).toLocaleDateString()}</p>
+                    <p className="text-white">{new Date(latestOffer.start_date).toLocaleDateString()}</p>
                   </div>
                   <div>
                     <p className="text-xs text-gray-400">Sent</p>
@@ -908,7 +908,7 @@ export default function CandidateProfilePage() {
             </div>
 
             {/* Employment Details */}
-            {(data.onboarding.startDate || data.onboarding.salary || data.onboarding.position) && (
+            {(data.onboarding.start_date || data.onboarding.salary || data.onboarding.position) && (
               <div className="mt-6 pt-4 border-t border-white/10 grid grid-cols-2 md:grid-cols-4 gap-4">
                 {data.onboarding.position && (
                   <div>
@@ -922,10 +922,10 @@ export default function CandidateProfilePage() {
                     <p className="text-white">₱{data.onboarding.salary.toLocaleString()}/mo</p>
                   </div>
                 )}
-                {data.onboarding.startDate && (
+                {data.onboarding.start_date && (
                   <div>
                     <p className="text-xs text-gray-400">Start Date</p>
-                    <p className="text-white">{new Date(data.onboarding.startDate).toLocaleDateString()}</p>
+                    <p className="text-white">{new Date(data.onboarding.start_date).toLocaleDateString()}</p>
                   </div>
                 )}
                 {data.onboarding.workSchedule && (
@@ -1068,7 +1068,7 @@ export default function CandidateProfilePage() {
                             <h4 className="font-semibold text-white">{exp.title}</h4>
                             <p className="text-purple-400">{exp.company}</p>
                             <p className="text-sm text-gray-400 mt-1">
-                              {new Date(exp.startDate).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })} - {exp.isCurrent ? 'Present' : exp.endDate ? new Date(exp.endDate).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : 'N/A'}
+                              {new Date(exp.start_date).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })} - {exp.isCurrent ? 'Present' : exp.end_date ? new Date(exp.end_date).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : 'N/A'}
                             </p>
                             {exp.description && (
                               <p className="text-gray-300 mt-3 text-sm leading-relaxed">{exp.description}</p>
@@ -1096,7 +1096,7 @@ export default function CandidateProfilePage() {
                             <p className="text-sm text-gray-400">{edu.fieldOfStudy}</p>
                           )}
                           <p className="text-sm text-gray-500 mt-1">
-                            {new Date(edu.startDate).getFullYear()} - {edu.endDate ? new Date(edu.endDate).getFullYear() : 'Present'}
+                            {new Date(edu.start_date).getFullYear()} - {edu.end_date ? new Date(edu.end_date).getFullYear() : 'Present'}
                           </p>
                         </div>
                       ))}
@@ -1157,7 +1157,7 @@ export default function CandidateProfilePage() {
                         {expandedPreScreen === preScreen.id && (
                           <div className="mt-6 space-y-6 pt-6 border-t border-white/10">
                             {/* Recording */}
-                            {preScreen.recordingUrl && (
+                            {preScreen.recording_url && (
                               <div>
                                 <h5 className="font-medium text-gray-300 mb-3 flex items-center gap-2">
                                   <Video className="h-4 w-4 text-purple-400" />
@@ -1165,7 +1165,7 @@ export default function CandidateProfilePage() {
                                 </h5>
                                 <div className="rounded-xl overflow-hidden border border-white/10">
                                   <VideoPlayer
-                                    src={preScreen.recordingUrl}
+                                    src={preScreen.recording_url}
                                     title={preScreen.title}
                                   />
                                 </div>
@@ -1300,7 +1300,7 @@ export default function CandidateProfilePage() {
                   Upcoming Interview
                 </h3>
                 <p className="text-gray-300 mb-2">
-                  {new Date(data.upcomingInterview.scheduledAt).toLocaleString()}
+                  {new Date(data.upcomingInterview.scheduled_at).toLocaleString()}
                 </p>
                 <p className="text-sm text-gray-400 mb-2">
                   Duration: {data.upcomingInterview.duration} minutes
@@ -1360,13 +1360,13 @@ export default function CandidateProfilePage() {
                 <div className="flex justify-between">
                   <span className="text-gray-400">Applied</span>
                   <span className="text-gray-200">
-                    {new Date(data.application.appliedAt).toLocaleDateString()}
+                    {new Date(data.application.applied_at).toLocaleDateString()}
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-400">Released</span>
                   <span className="text-gray-200">
-                    {new Date(data.application.releasedAt).toLocaleDateString()}
+                    {new Date(data.application.released_at).toLocaleDateString()}
                   </span>
                 </div>
               </div>
@@ -1448,7 +1448,7 @@ export default function CandidateProfilePage() {
                   const res = await fetch('/api/client/onboarding/start', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ applicationId: data.application.id, token }),
+                    body: JSON.stringify({ application_id: data.application.id, token }),
                   });
                   if (!res.ok) throw new Error('Failed to start onboarding');
                   alert('Onboarding started!');
@@ -1528,7 +1528,7 @@ export default function CandidateProfilePage() {
     
     // Stage: Interview scheduled - can join or cancel
     if (hasInterview && data.upcomingInterview?.status === 'scheduled') {
-      const interviewDate = new Date(data.upcomingInterview.scheduledAt);
+      const interviewDate = new Date(data.upcomingInterview.scheduled_at);
       const isToday = interviewDate.toDateString() === new Date().toDateString();
       const isPast = interviewDate < new Date();
       
@@ -2119,8 +2119,8 @@ export default function CandidateProfilePage() {
 }
 
 interface InterviewRequestModalProps {
-  candidateName: string;
-  applicationId: string;
+  candidate_name: string;
+  application_id: string;
   token: string;
   onClose: () => void;
   onSuccess: () => void;

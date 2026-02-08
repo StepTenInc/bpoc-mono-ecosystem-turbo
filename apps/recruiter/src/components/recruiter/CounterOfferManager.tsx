@@ -31,7 +31,7 @@ import { toast } from '@/components/shared/ui/toast';
 
 interface CounterOffer {
   id: string;
-  offerId: string;
+  offer_id: string;
   requestedSalary: number;
   requestedCurrency: string;
   candidateMessage: string | null;
@@ -39,15 +39,15 @@ interface CounterOffer {
   employerResponseSalary: number | null;
   employerResponseMessage: string | null;
   respondedAt: string | null;
-  createdAt: string;
+  created_at: string;
 }
 
 interface CounterOfferManagerProps {
-  offerId: string;
+  offer_id: string;
   originalSalary: number;
   currency: string;
   salaryType: string;
-  candidateName: string;
+  candidate_name: string;
   onActionComplete?: () => void;
 }
 

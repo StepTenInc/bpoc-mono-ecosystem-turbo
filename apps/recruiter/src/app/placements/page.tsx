@@ -20,28 +20,28 @@ import { toast } from '@/components/shared/ui/toast';
 
 interface Placement {
   id: string;
-  candidateId: string;
-  candidateName: string;
-  candidateEmail: string;
-  candidateAvatar?: string;
-  jobId: string;
-  jobTitle: string;
-  clientId: string;
-  clientName: string;
+  candidate_id: string;
+  candidate_name: string;
+  candidate_email: string;
+  candidate_avatar?: string;
+  job_id: string;
+  job_title: string;
+  client_id: string;
+  client_name: string;
   salary: number;
   currency: string;
-  startDate?: string;
+  start_date?: string;
   status: string;
-  hiredAt: string;
-  applicationId: string;
-  offerId: string;
+  hired_at: string;
+  application_id: string;
+  offer_id: string;
   recruiterId?: string;
   recruiterName?: string;
 }
 
 interface LeaderboardEntry {
-  recruiterId: string;
-  recruiterName: string;
+  recruiter_id: string;
+  recruiter_name: string;
   recruiterAvatar?: string;
   placementCount: number;
   totalRevenue: number;
@@ -89,7 +89,7 @@ export default function PlacementsPage() {
     }
   };
 
-  const sendContract = async (applicationId: string, candidateName: string) => {
+  const sendContract = async (application_id: string, candidate_name: string) => {
     try {
       const token = await getSessionToken();
       const response = await fetch('/api/recruiter/send-contract', {
@@ -138,13 +138,13 @@ export default function PlacementsPage() {
   const exportToCSV = () => {
     const headers = ['Candidate', 'Job Title', 'Client', 'Salary', 'Currency', 'Start Date', 'Hired Date'];
     const rows = placements.map(p => [
-      p.candidateName,
-      p.jobTitle,
-      p.clientName,
+      p.candidate_name,
+      p.job_title,
+      p.client_name,
       p.salary,
       p.currency,
-      p.startDate || '',
-      p.hiredAt,
+      p.start_date || '',
+      p.hired_at,
     ]);
     
     const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
@@ -159,15 +159,15 @@ export default function PlacementsPage() {
   };
 
   const filtered = placements.filter(p =>
-    (p.candidateName || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
-    (p.jobTitle || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
-    (p.clientName || '').toLowerCase().includes(searchQuery.toLowerCase())
+    (p.candidate_name || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+    (p.job_title || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+    (p.client_name || '').toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   // Stats
   const totalPlacements = placements.length;
   const thisMonth = placements.filter(p => {
-    const hired = new Date(p.hiredAt);
+    const hired = new Date(p.hired_at);
     const now = new Date();
     return hired.getMonth() === now.getMonth() && hired.getFullYear() === now.getFullYear();
   }).length;
@@ -177,11 +177,11 @@ export default function PlacementsPage() {
   // Generate leaderboard from placements
   const leaderboard: LeaderboardEntry[] = Object.values(
     placements.reduce((acc, p) => {
-      const id = p.recruiterId || 'unknown';
+      const id = p.recruiter_id || 'unknown';
       if (!acc[id]) {
         acc[id] = {
-          recruiterId: id,
-          recruiterName: p.recruiterName || 'You',
+          recruiter_id: id,
+          recruiter_name: p.recruiter_name || 'You',
           placementCount: 0,
           totalRevenue: 0,
         };
@@ -317,7 +317,7 @@ export default function PlacementsPage() {
               <div className="space-y-3">
                 {leaderboard.slice(0, 5).map((entry, index) => (
                   <div
-                    key={entry.recruiterId}
+                    key={entry.recruiter_id}
                     className={`flex items-center gap-4 p-3 rounded-lg ${
                       index === 0 ? 'bg-yellow-500/10 border border-yellow-500/30' :
                       index === 1 ? 'bg-gray-500/10 border border-gray-500/30' :
@@ -338,11 +338,11 @@ export default function PlacementsPage() {
                     <Avatar className="h-10 w-10">
                       <AvatarImage src={entry.recruiterAvatar} />
                       <AvatarFallback className="bg-gradient-to-br from-orange-500 to-amber-600 text-white">
-                        {entry.recruiterName.split(' ').map(n => n[0]).join('')}
+                        {entry.recruiter_name.split(' ').map(n => n[0]).join('')}
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex-1">
-                      <p className="text-white font-medium">{entry.recruiterName}</p>
+                      <p className="text-white font-medium">{entry.recruiter_name}</p>
                       <p className="text-gray-400 text-sm">{entry.placementCount} placements</p>
                     </div>
                     <div className="text-right">
@@ -420,9 +420,9 @@ export default function PlacementsPage() {
                         {/* Avatar with badge */}
                         <div className="relative">
                           <Avatar className="h-16 w-16">
-                            <AvatarImage src={placement.candidateAvatar} />
+                            <AvatarImage src={placement.candidate_avatar} />
                             <AvatarFallback className="bg-gradient-to-br from-emerald-500 to-green-600 text-white text-xl">
-                              {placement.candidateName.split(' ').map(n => n[0]).join('')}
+                              {placement.candidate_name.split(' ').map(n => n[0]).join('')}
                             </AvatarFallback>
                           </Avatar>
                           <div className="absolute -top-1 -right-1 bg-yellow-500 rounded-full p-1">
@@ -435,13 +435,13 @@ export default function PlacementsPage() {
                           <div className="flex items-start justify-between">
                             <div>
                               <div className="flex items-center gap-3 mb-1">
-                                <h3 className="text-xl font-bold text-white">{placement.candidateName}</h3>
+                                <h3 className="text-xl font-bold text-white">{placement.candidate_name}</h3>
                                 <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30">
                                   <CheckCircle className="h-3 w-3 mr-1" />
                                   Hired!
                                 </Badge>
                               </div>
-                              <p className="text-lg text-orange-400">{placement.jobTitle}</p>
+                              <p className="text-lg text-orange-400">{placement.job_title}</p>
                             </div>
                             <div className="text-right">
                               <p className="text-2xl font-bold text-white">
@@ -455,35 +455,35 @@ export default function PlacementsPage() {
                           <div className="flex items-center gap-6 mt-4 pt-4 border-t border-white/10">
                             <div className="flex items-center gap-2 text-gray-400">
                               <Building2 className="h-4 w-4" />
-                              <span>{placement.clientName}</span>
+                              <span>{placement.client_name}</span>
                             </div>
                             <div className="flex items-center gap-2 text-gray-400">
                               <Calendar className="h-4 w-4" />
-                              <span>Hired {getTimeAgo(placement.hiredAt)}</span>
+                              <span>Hired {getTimeAgo(placement.hired_at)}</span>
                             </div>
-                            {placement.startDate && (
+                            {placement.start_date && (
                               <div className="flex items-center gap-2 text-emerald-400">
                                 <Clock className="h-4 w-4" />
-                                <span>Starts {new Date(placement.startDate).toLocaleDateString()}</span>
+                                <span>Starts {new Date(placement.start_date).toLocaleDateString()}</span>
                               </div>
                             )}
                           </div>
 
                           {/* Actions */}
                           <div className="flex gap-2 mt-4">
-                            <Link href={`/recruiter/talent/${placement.candidateId}`}>
+                            <Link href={`/recruiter/talent/${placement.candidate_id}`}>
                               <Button size="sm" variant="outline" className="border-white/10 text-gray-400 hover:text-white">
                                 <User className="h-4 w-4 mr-1" />
                                 Profile
                               </Button>
                             </Link>
-                            <Link href={`/recruiter/clients/${placement.clientId}`}>
+                            <Link href={`/recruiter/clients/${placement.client_id}`}>
                               <Button size="sm" variant="outline" className="border-white/10 text-gray-400 hover:text-white">
                                 <Building2 className="h-4 w-4 mr-1" />
                                 Client
                               </Button>
                             </Link>
-                            <Link href={`/recruiter/contracts/${placement.applicationId}`}>
+                            <Link href={`/recruiter/contracts/${placement.application_id}`}>
                               <Button size="sm" variant="outline" className="border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/10">
                                 <FileText className="h-4 w-4 mr-1" />
                                 View Contract
@@ -493,7 +493,7 @@ export default function PlacementsPage() {
                               size="sm" 
                               variant="outline"
                               className="border-blue-500/30 text-blue-400 hover:bg-blue-500/10"
-                              onClick={() => sendContract(placement.applicationId, placement.candidateName)}
+                              onClick={() => sendContract(placement.application_id, placement.candidate_name)}
                             >
                               <Send className="h-4 w-4 mr-1" />
                               Send Contract

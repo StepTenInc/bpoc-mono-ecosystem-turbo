@@ -27,25 +27,25 @@ import { useVideoCall } from '@/contexts/VideoCallContext';
 
 interface Interview {
   id: string;
-  applicationId: string;
-  candidateId: string; // User ID for video calls
-  candidateName: string;
-  candidateEmail: string;
-  candidateAvatar?: string;
-  jobId?: string;
-  jobTitle: string;
+  application_id: string;
+  candidate_id: string; // User ID for video calls
+  candidate_name: string;
+  candidate_email: string;
+  candidate_avatar?: string;
+  job_id?: string;
+  job_title: string;
   type: string;
   status: string;
   outcome?: string;
   scheduledAt?: string;
   duration: number;
-  createdAt: string;
+  created_at: string;
   // Offer tracking
-  hasOffer: boolean;
-  offerStatus?: string;
-  offerId?: string;
+  has_offer: boolean;
+  offer_status?: string;
+  offer_id?: string;
   // Optional video room created for this interview (client rounds, etc)
-  roomId?: string | null;
+  room_id?: string | null;
   roomStatus?: string | null;
   roomUrl?: string | null;
   roomName?: string | null;
@@ -85,7 +85,7 @@ export default function RecruiterInterviewsPage() {
     }
   };
 
-  const handleOutcome = async (interviewId: string, outcome: string, candidateName: string) => {
+  const handleOutcome = async (interview_id: string, outcome: string, candidate_name: string) => {
     setActionLoading(interviewId);
     try {
       const token = await getSessionToken();
@@ -112,7 +112,7 @@ export default function RecruiterInterviewsPage() {
     }
   };
 
-  const handleStartRoomNow = async (roomId?: string | null) => {
+  const handleStartRoomNow = async (room_id?: string | null) => {
     if (!roomId) return;
     try {
       await joinCall(roomId);
@@ -134,10 +134,10 @@ export default function RecruiterInterviewsPage() {
           'Authorization': `Bearer ${token}`,
           'x-user-id': user?.id || '',
         },
-        body: JSON.stringify({ applicationId: offerModal.applicationId, salaryOffered: parseFloat(offerSalary) }),
+        body: JSON.stringify({ application_id: offerModal.application_id, salaryOffered: parseFloat(offerSalary) }),
       });
       if (response.ok) {
-        toast.success(`Offer sent to ${offerModal.candidateName}! 🎉`);
+        toast.success(`Offer sent to ${offerModal.candidate_name}! 🎉`);
         setOfferModal(null);
         setOfferSalary('');
         window.location.href = '/recruiter/offers';
@@ -183,15 +183,15 @@ export default function RecruiterInterviewsPage() {
   };
 
   const filtered = interviews.filter(i =>
-    (i.candidateName || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
-    (i.jobTitle || '').toLowerCase().includes(searchQuery.toLowerCase())
+    (i.candidate_name || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+    (i.job_title || '').toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   // Group interviews - include pending_scheduling (client requests) and scheduled
   const clientRequests = filtered.filter(i => i.status === 'pending_scheduling');
   const pending = filtered.filter(i => i.status === 'scheduled' && !i.outcome);
-  const passed = filtered.filter(i => i.outcome === 'passed' && !i.hasOffer);
-  const offerSent = filtered.filter(i => i.outcome === 'passed' && i.hasOffer);
+  const passed = filtered.filter(i => i.outcome === 'passed' && !i.has_offer);
+  const offerSent = filtered.filter(i => i.outcome === 'passed' && i.has_offer);
   const completed = filtered.filter(i => i.status === 'completed' || i.outcome === 'failed');
 
   const stats = {
@@ -283,20 +283,20 @@ export default function RecruiterInterviewsPage() {
                           <div className="flex items-center gap-4">
                             <Avatar className="h-11 w-11">
                               <AvatarFallback className="bg-gradient-to-br from-purple-500 to-pink-600 text-white text-sm">
-                                {interview.candidateName.split(' ').map(n => n[0]).join('')}
+                                {interview.candidate_name.split(' ').map(n => n[0]).join('')}
                               </AvatarFallback>
                             </Avatar>
                             <div>
-                              <p className="font-medium text-white">{interview.candidateName}</p>
-                              <p className="text-sm text-gray-400">{interview.jobTitle}</p>
+                              <p className="font-medium text-white">{interview.candidate_name}</p>
+                              <p className="text-sm text-gray-400">{interview.job_title}</p>
                               <p className="text-xs text-purple-300 mt-1">
-                                Proposed: {interview.scheduledAt ? new Date(interview.scheduledAt).toLocaleDateString() + ' at ' + new Date(interview.scheduledAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'TBD'}
+                                Proposed: {interview.scheduled_at ? new Date(interview.scheduled_at).toLocaleDateString() + ' at ' + new Date(interview.scheduled_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'TBD'}
                               </p>
                             </div>
                           </div>
                           <div className="flex items-center gap-3">
                             <Badge className={`${statusConfig.color} border`}>{statusConfig.label}</Badge>
-                            <Link href={`/recruiter/applications/${interview.applicationId}`}>
+                            <Link href={`/recruiter/applications/${interview.application_id}`}>
                               <Button size="sm" className="bg-purple-500 hover:bg-purple-600 text-white">
                                 Coordinate
                               </Button>
@@ -328,12 +328,12 @@ export default function RecruiterInterviewsPage() {
                           <div className="flex items-center gap-4">
                             <Avatar className="h-11 w-11">
                               <AvatarFallback className="bg-gradient-to-br from-orange-500 to-amber-600 text-white text-sm">
-                                {interview.candidateName.split(' ').map(n => n[0]).join('')}
+                                {interview.candidate_name.split(' ').map(n => n[0]).join('')}
                               </AvatarFallback>
                             </Avatar>
                             <div>
                               <div className="flex items-center gap-2">
-                                <h3 className="text-white font-semibold">{interview.candidateName}</h3>
+                                <h3 className="text-white font-semibold">{interview.candidate_name}</h3>
                                 <Badge variant="outline" className={statusConfig.color}>
                                   {statusConfig.label}
                                 </Badge>
@@ -344,11 +344,11 @@ export default function RecruiterInterviewsPage() {
                               <div className="flex items-center gap-3 text-gray-400 text-sm mt-1">
                                 <span className="flex items-center gap-1">
                                   <Briefcase className="h-3 w-3" />
-                                  {interview.jobTitle}
+                                  {interview.job_title}
                                 </span>
                                 <span className="flex items-center gap-1">
                                   <CalendarClock className="h-3 w-3" />
-                                  {getTimeAgo(interview.createdAt)}
+                                  {getTimeAgo(interview.created_at)}
                                 </span>
                               </div>
                             </div>
@@ -357,22 +357,22 @@ export default function RecruiterInterviewsPage() {
                           <div className="flex items-center gap-2">
                             {/* Start Video Call - Interview Rounds */}
                             <VideoCallButton
-                              candidateUserId={interview.candidateId}
-                              candidateName={interview.candidateName}
-                              candidateEmail={interview.candidateEmail}
-                              candidateAvatar={interview.candidateAvatar}
-                              jobId={interview.jobId}
-                              jobTitle={interview.jobTitle}
-                              applicationId={interview.applicationId}
+                              candidateUserId={interview.candidate_id}
+                              candidateName={interview.candidate_name}
+                              candidateEmail={interview.candidate_email}
+                              candidateAvatar={interview.candidate_avatar}
+                              jobId={interview.job_id}
+                              jobTitle={interview.job_title}
+                              applicationId={interview.application_id}
                               variant="compact"
                               context="interviews"
                             />
 
                             {/* Start existing client interview room now (ignores scheduled time while testing) */}
-                            {interview.roomId && interview.roomStatus !== 'ended' && (
+                            {interview.room_id && interview.roomStatus !== 'ended' && (
                               <Button
                                 size="sm"
-                                onClick={() => handleStartRoomNow(interview.roomId)}
+                                onClick={() => handleStartRoomNow(interview.room_id)}
                                 className="bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 border border-emerald-500/30"
                                 title={interview.callType ? `Start ${interview.callType}` : 'Start call'}
                               >
@@ -385,7 +385,7 @@ export default function RecruiterInterviewsPage() {
                             <Button 
                               size="sm" 
                               className="bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 border border-emerald-500/30" 
-                              onClick={() => handleOutcome(interview.id, 'passed', interview.candidateName)} 
+                              onClick={() => handleOutcome(interview.id, 'passed', interview.candidate_name)} 
                               disabled={actionLoading === interview.id}
                             >
                               {actionLoading === interview.id ? (
@@ -401,7 +401,7 @@ export default function RecruiterInterviewsPage() {
                               size="sm" 
                               variant="ghost" 
                               className="text-red-400 hover:bg-red-500/10" 
-                              onClick={() => handleOutcome(interview.id, 'failed', interview.candidateName)} 
+                              onClick={() => handleOutcome(interview.id, 'failed', interview.candidate_name)} 
                               disabled={actionLoading === interview.id}
                             >
                               <XCircle className="h-4 w-4" />
@@ -431,17 +431,17 @@ export default function RecruiterInterviewsPage() {
                         <div className="flex items-center gap-4">
                           <Avatar className="h-11 w-11">
                             <AvatarFallback className="bg-gradient-to-br from-emerald-500 to-green-600 text-white text-sm">
-                              {interview.candidateName.split(' ').map(n => n[0]).join('')}
+                              {interview.candidate_name.split(' ').map(n => n[0]).join('')}
                             </AvatarFallback>
                           </Avatar>
                           <div>
                             <div className="flex items-center gap-2">
-                              <h3 className="text-white font-semibold">{interview.candidateName}</h3>
+                              <h3 className="text-white font-semibold">{interview.candidate_name}</h3>
                               <Badge variant="outline" className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30">
                                 ✓ Passed
                               </Badge>
                             </div>
-                            <p className="text-gray-400 text-sm mt-1">{interview.jobTitle}</p>
+                            <p className="text-gray-400 text-sm mt-1">{interview.job_title}</p>
                           </div>
                         </div>
                         
@@ -468,11 +468,11 @@ export default function RecruiterInterviewsPage() {
                 Offer Sent - Awaiting Response ({offerSent.length})
               </h2>
               {offerSent.map((interview, i) => {
-                const offerStatusText = interview.offerStatus === 'accepted' ? 'Accepted! 🎉' : 
-                                        interview.offerStatus === 'rejected' ? 'Declined' : 
+                const offerStatusText = interview.offer_status === 'accepted' ? 'Accepted! 🎉' : 
+                                        interview.offer_status === 'rejected' ? 'Declined' : 
                                         'Pending Response';
-                const offerBadgeColor = interview.offerStatus === 'accepted' ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' :
-                                        interview.offerStatus === 'rejected' ? 'bg-red-500/20 text-red-400 border-red-500/30' :
+                const offerBadgeColor = interview.offer_status === 'accepted' ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' :
+                                        interview.offer_status === 'rejected' ? 'bg-red-500/20 text-red-400 border-red-500/30' :
                                         'bg-pink-500/20 text-pink-400 border-pink-500/30';
                 return (
                   <motion.div key={interview.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03 }}>
@@ -482,17 +482,17 @@ export default function RecruiterInterviewsPage() {
                           <div className="flex items-center gap-4">
                             <Avatar className="h-11 w-11">
                               <AvatarFallback className="bg-gradient-to-br from-pink-500 to-purple-600 text-white text-sm">
-                                {interview.candidateName.split(' ').map(n => n[0]).join('')}
+                                {interview.candidate_name.split(' ').map(n => n[0]).join('')}
                               </AvatarFallback>
                             </Avatar>
                             <div>
                               <div className="flex items-center gap-2">
-                                <h3 className="text-white font-semibold">{interview.candidateName}</h3>
+                                <h3 className="text-white font-semibold">{interview.candidate_name}</h3>
                                 <Badge variant="outline" className={offerBadgeColor}>
                                   {offerStatusText}
                                 </Badge>
                               </div>
-                              <p className="text-gray-400 text-sm mt-1">{interview.jobTitle}</p>
+                              <p className="text-gray-400 text-sm mt-1">{interview.job_title}</p>
                             </div>
                           </div>
                           
@@ -528,20 +528,20 @@ export default function RecruiterInterviewsPage() {
                           <div className="flex items-center gap-4">
                             <Avatar className="h-11 w-11">
                               <AvatarFallback className="bg-gray-600 text-white text-sm">
-                                {interview.candidateName.split(' ').map(n => n[0]).join('')}
+                                {interview.candidate_name.split(' ').map(n => n[0]).join('')}
                               </AvatarFallback>
                             </Avatar>
                             <div>
                               <div className="flex items-center gap-2">
-                                <h3 className="text-white font-semibold">{interview.candidateName}</h3>
+                                <h3 className="text-white font-semibold">{interview.candidate_name}</h3>
                                 <Badge variant="outline" className={statusConfig.color}>
                                   {statusConfig.label}
                                 </Badge>
                               </div>
-                              <p className="text-gray-400 text-sm mt-1">{interview.jobTitle}</p>
+                              <p className="text-gray-400 text-sm mt-1">{interview.job_title}</p>
                             </div>
                           </div>
-                          <p className="text-gray-500 text-sm">{getTimeAgo(interview.createdAt)}</p>
+                          <p className="text-gray-500 text-sm">{getTimeAgo(interview.created_at)}</p>
                         </div>
                       </CardContent>
                     </Card>
@@ -564,11 +564,11 @@ export default function RecruiterInterviewsPage() {
             <div className="space-y-4">
               <div className="p-4 rounded-lg bg-white/5">
                 <p className="text-gray-400 text-sm mb-1">Candidate</p>
-                <p className="text-white font-medium">{offerModal.candidateName}</p>
+                <p className="text-white font-medium">{offerModal.candidate_name}</p>
               </div>
               <div className="p-4 rounded-lg bg-white/5">
                 <p className="text-gray-400 text-sm mb-1">Position</p>
-                <p className="text-white font-medium">{offerModal.jobTitle}</p>
+                <p className="text-white font-medium">{offerModal.job_title}</p>
               </div>
               <div>
                 <label className="block text-gray-400 text-sm mb-2">Monthly Salary (PHP) *</label>

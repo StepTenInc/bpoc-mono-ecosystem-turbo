@@ -2,13 +2,14 @@ import { Metadata } from 'next';
 import JobDetailClient from './JobDetailClient';
 
 interface PageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 // Generate metadata for SEO
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { id } = await params;
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || 'https://www.bpoc.io'}/api/jobs/public/${params.id}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || 'https://www.bpoc.io'}/api/jobs/public/${id}`, {
       cache: 'no-store'
     });
 
@@ -21,24 +22,24 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const data = await response.json();
     const job = data.job;
 
-    const salaryText = job.salaryMin && job.salaryMax
-      ? `${job.currency} ${job.salaryMin.toLocaleString()} - ${job.salaryMax.toLocaleString()}/month`
-      : job.salaryMin
-      ? `${job.currency} ${job.salaryMin.toLocaleString()}+/month`
+    const salaryText = job.salary_min && job.salary_max
+      ? `${job.currency} ${job.salary_min.toLocaleString()} - ${job.salary_max.toLocaleString()}/month`
+      : job.salary_min
+      ? `${job.currency} ${job.salary_min.toLocaleString()}+/month`
       : 'Competitive salary';
 
     const title = `${job.title} - ${job.agency} | BPO Jobs Philippines`;
-    const description = `${job.title} at ${job.agency}. ${salaryText}. ${job.workArrangement} · ${job.workType.replace('_', ' ')} · ${job.shift} shift. Apply now on BPOC.IO - Philippines #1 BPO job platform.`;
+    const description = `${job.title} at ${job.agency}. ${salaryText}. ${job.work_arrangement} · ${job.work_type.replace('_', ' ')} · ${job.shift} shift. Apply now on BPOC.IO - Philippines #1 BPO job platform.`;
 
     return {
       title,
       description,
-      keywords: `${job.title}, BPO jobs Philippines, ${job.agency}, ${job.workArrangement} jobs, ${job.shift} shift, ${job.skills?.join(', ') || ''}`,
+      keywords: `${job.title}, BPO jobs Philippines, ${job.agency}, ${job.work_arrangement} jobs, ${job.shift} shift, ${job.skills?.join(', ') || ''}`,
       openGraph: {
         title,
         description,
         type: 'website',
-        url: `https://www.bpoc.io/jobs/${params.id}`,
+        url: `https://www.bpoc.io/jobs/${id}`,
         siteName: 'BPOC.IO',
         images: [
           {
@@ -63,6 +64,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 }
 
-export default function JobDetailPage({ params }: PageProps) {
-  return <JobDetailClient jobId={params.id} />;
+export default async function JobDetailPage({ params }: PageProps) {
+  const { id } = await params;
+  return <JobDetailClient jobId={id} />;
 }

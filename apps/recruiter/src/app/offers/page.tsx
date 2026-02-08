@@ -41,13 +41,13 @@ interface NegotiationEntry {
   amount?: number;
   currency?: string;
   note?: string;
-  createdAt: string;
+  created_at: string;
   createdBy?: string;
 }
 
 interface OfferCall {
   id: string;
-  createdAt: string;
+  created_at: string;
   endedAt?: string;
   status: string;
   duration?: number;
@@ -63,23 +63,23 @@ interface CounterOffer {
   employerResponse?: string;
   responseType?: string;
   status: string;
-  createdAt: string;
+  created_at: string;
   respondedAt?: string;
 }
 
 interface Offer {
   id: string;
-  candidateId: string;
-  candidateName: string;
-  candidateEmail: string;
-  candidateAvatar?: string;
-  jobId?: string;
-  jobTitle: string;
-  applicationId?: string;
+  candidate_id: string;
+  candidate_name: string;
+  candidate_email: string;
+  candidate_avatar?: string;
+  job_id?: string;
+  job_title: string;
+  application_id?: string;
   salaryOffered: number;
   currency: string;
   salaryType: string;
-  startDate?: string;
+  start_date?: string;
   benefits?: any;
   additionalTerms?: string;
   status: string;
@@ -87,8 +87,8 @@ interface Offer {
   viewedAt?: string;
   respondedAt?: string;
   expiresAt?: string;
-  createdAt?: string;
-  updatedAt?: string;
+  created_at?: string;
+  updated_at?: string;
   candidateResponse?: string;
   rejectionReason?: string;
   counterOffers?: CounterOffer[];
@@ -182,7 +182,7 @@ function OfferDetails({ offer }: { offer: Offer }) {
         </div>
         <div>
           <p className="text-xs text-gray-500 mb-1">Start Date</p>
-          <p className="text-white">{offer.startDate ? new Date(offer.startDate).toLocaleDateString() : 'TBD'}</p>
+          <p className="text-white">{offer.start_date ? new Date(offer.start_date).toLocaleDateString() : 'TBD'}</p>
         </div>
         <div>
           <p className="text-xs text-gray-500 mb-1">Offer Status</p>
@@ -285,7 +285,7 @@ function OfferDetails({ offer }: { offer: Offer }) {
                       {call.status}
                     </Badge>
                     <span className="text-sm text-white">
-                      {new Date(call.createdAt).toLocaleDateString()} at {new Date(call.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      {new Date(call.created_at).toLocaleDateString()} at {new Date(call.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </span>
                   </div>
                   {call.duration && (
@@ -342,7 +342,7 @@ function NegotiationHistory({ history, currency }: { history: NegotiationEntry[]
                 {entry.type === 'note' && entry.note}
               </p>
               <p className="text-gray-500 text-xs">
-                {new Date(entry.createdAt).toLocaleDateString()} at {new Date(entry.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                {new Date(entry.created_at).toLocaleDateString()} at {new Date(entry.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 {entry.createdBy && ` • ${entry.createdBy}`}
               </p>
             </div>
@@ -457,7 +457,7 @@ export default function RecruiterOffersPage() {
     return `${Math.floor(diffDays / 7)}w ago`;
   };
 
-  const handleWithdrawClick = (offerId: string) => {
+  const handleWithdrawClick = (offer_id: string) => {
     setSelectedOfferId(offerId);
     setWithdrawalReason('');
     setWithdrawDialogOpen(true);
@@ -506,8 +506,8 @@ export default function RecruiterOffersPage() {
   const statuses = ['all', 'sent', 'viewed', 'accepted', 'rejected'];
   
   const filtered = offers.filter(o => {
-    const matchesSearch = (o.candidateName || '').toLowerCase().includes(searchQuery.toLowerCase()) || 
-      (o.jobTitle || '').toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch = (o.candidate_name || '').toLowerCase().includes(searchQuery.toLowerCase()) || 
+      (o.job_title || '').toLowerCase().includes(searchQuery.toLowerCase());
     const matchesStatus = statusFilter === 'all' || o.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
@@ -646,20 +646,20 @@ export default function RecruiterOffersPage() {
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-4">
                             <Avatar className="h-12 w-12">
-                              <AvatarImage src={offer.candidateAvatar} />
+                              <AvatarImage src={offer.candidate_avatar} />
                               <AvatarFallback className="bg-gradient-to-br from-emerald-500 to-green-600 text-white text-sm">
-                                {offer.candidateName.split(' ').map(n => n[0]).join('')}
+                                {offer.candidate_name.split(' ').map(n => n[0]).join('')}
                               </AvatarFallback>
                             </Avatar>
                             <div>
                               <div className="flex items-center gap-2 mb-1">
-                                <h3 className="text-white font-semibold">{offer.candidateName}</h3>
+                                <h3 className="text-white font-semibold">{offer.candidate_name}</h3>
                                 <Badge variant="outline" className={statusConfig.color}>
                                   {statusConfig.icon}
                                   <span className="ml-1">{statusConfig.label}</span>
                                 </Badge>
                               </div>
-                              <p className="text-gray-400 text-sm">{offer.jobTitle}</p>
+                              <p className="text-gray-400 text-sm">{offer.job_title}</p>
                             </div>
                           </div>
                           <div className="flex items-center gap-4">
@@ -694,15 +694,15 @@ export default function RecruiterOffersPage() {
                                       <h4 className="text-white font-semibold mb-1">Discuss Offer with Candidate</h4>
                                       <p className="text-gray-400 text-sm">Schedule a call to negotiate or clarify offer terms</p>
                                     </div>
-                                    {offer.candidateId && (
+                                    {offer.candidate_id && (
                                       <VideoCallButton
-                                        candidateUserId={offer.candidateId}
-                                        candidateName={offer.candidateName}
-                                        candidateEmail={offer.candidateEmail}
-                                        candidateAvatar={offer.candidateAvatar}
-                                        jobId={offer.jobId}
-                                        jobTitle={offer.jobTitle}
-                                        applicationId={offer.applicationId}
+                                        candidateUserId={offer.candidate_id}
+                                        candidateName={offer.candidate_name}
+                                        candidateEmail={offer.candidate_email}
+                                        candidateAvatar={offer.candidate_avatar}
+                                        jobId={offer.job_id}
+                                        jobTitle={offer.job_title}
+                                        applicationId={offer.application_id}
                                         variant="prominent"
                                         context="offer_negotiation"
                                         label="Schedule Offer Call"
@@ -749,14 +749,14 @@ export default function RecruiterOffersPage() {
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-4">
                             <Avatar className="h-12 w-12">
-                              <AvatarImage src={offer.candidateAvatar} />
+                              <AvatarImage src={offer.candidate_avatar} />
                               <AvatarFallback className="bg-gradient-to-br from-orange-500 to-amber-600 text-white text-sm">
-                                {offer.candidateName.split(' ').map(n => n[0]).join('')}
+                                {offer.candidate_name.split(' ').map(n => n[0]).join('')}
                               </AvatarFallback>
                             </Avatar>
                             <div>
                               <div className="flex items-center gap-2 mb-1">
-                                <h3 className="text-white font-semibold">{offer.candidateName}</h3>
+                                <h3 className="text-white font-semibold">{offer.candidate_name}</h3>
                                 <Badge variant="outline" className={statusConfig.color}>
                                   {statusConfig.icon}
                                   <span className="ml-1">{statusConfig.label}</span>
@@ -768,7 +768,7 @@ export default function RecruiterOffersPage() {
                               <div className="flex items-center gap-3 text-gray-400 text-sm">
                                 <span className="flex items-center gap-1">
                                   <Briefcase className="h-3 w-3" />
-                                  {offer.jobTitle}
+                                  {offer.job_title}
                                 </span>
                                 {offer.sentAt && (
                                   <span className="flex items-center gap-1">
@@ -780,15 +780,15 @@ export default function RecruiterOffersPage() {
                             </div>
                           </div>
                           <div className="flex items-center gap-3">
-                            {offer.candidateId && (
+                            {offer.candidate_id && (
                               <VideoCallButton
-                                candidateUserId={offer.candidateId}
-                                candidateName={offer.candidateName}
-                                candidateEmail={offer.candidateEmail}
-                                candidateAvatar={offer.candidateAvatar}
-                                jobId={offer.jobId}
-                                jobTitle={offer.jobTitle}
-                                applicationId={offer.applicationId}
+                                candidateUserId={offer.candidate_id}
+                                candidateName={offer.candidate_name}
+                                candidateEmail={offer.candidate_email}
+                                candidateAvatar={offer.candidate_avatar}
+                                jobId={offer.job_id}
+                                jobTitle={offer.job_title}
+                                applicationId={offer.application_id}
                                 variant="compact"
                                 context="offers"
                               />
@@ -842,15 +842,15 @@ export default function RecruiterOffersPage() {
                                       <h4 className="text-white font-semibold mb-1">Discuss Offer with Candidate</h4>
                                       <p className="text-gray-400 text-sm">Schedule a call to negotiate terms or answer questions</p>
                                     </div>
-                                    {offer.candidateId && (
+                                    {offer.candidate_id && (
                                       <VideoCallButton
-                                        candidateUserId={offer.candidateId}
-                                        candidateName={offer.candidateName}
-                                        candidateEmail={offer.candidateEmail}
-                                        candidateAvatar={offer.candidateAvatar}
-                                        jobId={offer.jobId}
-                                        jobTitle={offer.jobTitle}
-                                        applicationId={offer.applicationId}
+                                        candidateUserId={offer.candidate_id}
+                                        candidateName={offer.candidate_name}
+                                        candidateEmail={offer.candidate_email}
+                                        candidateAvatar={offer.candidate_avatar}
+                                        jobId={offer.job_id}
+                                        jobTitle={offer.job_title}
+                                        applicationId={offer.application_id}
                                         variant="prominent"
                                         context="offer_negotiation"
                                         label="Schedule Offer Call"
@@ -865,7 +865,7 @@ export default function RecruiterOffersPage() {
                                   originalSalary={offer.salaryOffered}
                                   currency={offer.currency}
                                   salaryType={offer.salaryType}
-                                  candidateName={offer.candidateName}
+                                  candidateName={offer.candidate_name}
                                   onActionComplete={fetchOffers}
                                 />
                                 
@@ -906,18 +906,18 @@ export default function RecruiterOffersPage() {
                           <div className="flex items-center gap-4">
                             <Avatar className="h-11 w-11">
                               <AvatarFallback className="bg-gray-600 text-white text-sm">
-                                {offer.candidateName.split(' ').map(n => n[0]).join('')}
+                                {offer.candidate_name.split(' ').map(n => n[0]).join('')}
                               </AvatarFallback>
                             </Avatar>
                             <div>
                               <div className="flex items-center gap-2">
-                                <h3 className="text-white font-semibold">{offer.candidateName}</h3>
+                                <h3 className="text-white font-semibold">{offer.candidate_name}</h3>
                                 <Badge variant="outline" className={statusConfig.color}>
                                   {statusConfig.icon}
                                   <span className="ml-1">{statusConfig.label}</span>
                                 </Badge>
                               </div>
-                              <p className="text-gray-400 text-sm mt-1">{offer.jobTitle}</p>
+                              <p className="text-gray-400 text-sm mt-1">{offer.job_title}</p>
                             </div>
                           </div>
                           <p className="text-gray-500">{formatSalary(offer)}</p>

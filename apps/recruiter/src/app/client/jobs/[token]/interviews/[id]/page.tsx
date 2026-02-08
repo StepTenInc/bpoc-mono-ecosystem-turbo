@@ -100,7 +100,7 @@ export default function InterviewLobbyPage() {
     );
   }
 
-  const scheduledTime = new Date(data.interview.scheduledAt);
+  const scheduledTime = new Date(data.interview.scheduled_at);
   const minutesUntilStart = Math.floor((scheduledTime.getTime() - currentTime.getTime()) / (1000 * 60));
   const canJoinNow = minutesUntilStart <= 5 && minutesUntilStart >= -data.interview.duration;
 

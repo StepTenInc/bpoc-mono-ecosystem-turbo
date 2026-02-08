@@ -46,7 +46,7 @@ interface Contract {
     address: string;
     dateOfBirth?: string;
     nationality: string;
-    candidateId?: string;
+    candidate_id?: string;
   };
   position: {
     title: string;
@@ -62,9 +62,9 @@ interface Contract {
     benefits: string[];
   };
   period: {
-    startDate: string;
+    start_date: string;
     probationaryPeriod: string;
-    endDate: string | null;
+    end_date: string | null;
     type: string;
   };
   workingHours: {
@@ -95,10 +95,10 @@ interface Contract {
     applicableLaws: string[];
   };
   metadata: {
-    applicationId: string;
-    offerId: string;
-    jobId: string;
-    candidateId: string;
+    application_id: string;
+    offer_id: string;
+    job_id: string;
+    candidate_id: string;
     companyId?: string;
     offerAcceptedAt: string;
     contractGeneratedAt: string;
@@ -109,7 +109,7 @@ export default function ContractViewPage() {
   const params = useParams();
   const router = useRouter();
   const { user } = useAuth();
-  const applicationId = params.applicationId as string;
+  const applicationId = params.application_id as string;
 
   const [contract, setContract] = useState<Contract | null>(null);
   const [loading, setLoading] = useState(true);
@@ -151,7 +151,7 @@ export default function ContractViewPage() {
       setContract(data.contract);
       
       // Pre-fill signature name with employee name if user is the candidate
-      if (data.contract?.employee?.name && user.id === data.contract.employee.candidateId) {
+      if (data.contract?.employee?.name && user.id === data.contract.employee.candidate_id) {
         setSignatureName(data.contract.employee.name);
       }
     } catch (err: any) {
@@ -335,7 +335,7 @@ export default function ContractViewPage() {
               </div>
               
               {/* Show Sign button if candidate hasn't signed yet and user is the candidate */}
-              {!contract.signatures.candidate.signed && user.id === contract.employee.candidateId && (
+              {!contract.signatures.candidate.signed && user.id === contract.employee.candidate_id && (
                 <Button
                   className="bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700"
                   onClick={() => setShowSignDialog(true)}
@@ -529,7 +529,7 @@ export default function ContractViewPage() {
                 <div>
                   <span className="text-gray-400">Start Date:</span>
                   <p className="text-white font-medium">
-                    {new Date(contract.period.startDate).toLocaleDateString()}
+                    {new Date(contract.period.start_date).toLocaleDateString()}
                   </p>
                 </div>
                 <div>
@@ -622,7 +622,7 @@ export default function ContractViewPage() {
                         <div className="mt-2 space-y-1 text-sm">
                           <p className="text-emerald-400">✓ Signed by {contract.signatures.candidate.signatoryName}</p>
                           <p className="text-gray-400">
-                            {new Date(contract.signatures.candidate.signedAt!).toLocaleString()}
+                            {new Date(contract.signatures.candidate.signed_at!).toLocaleString()}
                           </p>
                           <p className="text-xs text-gray-500 font-mono">
                             Certificate: {contract.signatures.candidate.certificateId}

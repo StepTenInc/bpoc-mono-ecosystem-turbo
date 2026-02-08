@@ -12,10 +12,10 @@ import { toast } from '@/components/shared/ui/toast';
 
 interface TeamMember {
   id: string;
-  firstName: string;
-  lastName: string;
+  first_name: string;
+  last_name: string;
   email: string;
-  avatarUrl?: string;
+  avatar_url?: string;
   role: string;
   isYou?: boolean;
   joinedAt: string;
@@ -27,7 +27,7 @@ interface PendingInvitation {
   name?: string;
   role: string;
   status: string;
-  createdAt: string;
+  created_at: string;
   expiresAt: string;
 }
 
@@ -57,10 +57,10 @@ export default function TeamPage() {
         // The current user
         const currentUser: TeamMember = {
           id: profileData.user?.id || 'current',
-          firstName: profileData.user?.firstName || 'You',
-          lastName: profileData.user?.lastName || '',
+          first_name: profileData.user?.first_name || 'You',
+          last_name: profileData.user?.last_name || '',
           email: profileData.user?.email || '',
-          avatarUrl: profileData.user?.avatarUrl,
+          avatar_url: profileData.user?.avatar_url,
           role: profileData.recruiter?.role || 'admin',
           isYou: true,
           joinedAt: profileData.recruiter?.joinedAt || new Date().toISOString(),
@@ -245,7 +245,7 @@ export default function TeamPage() {
                   <div>
                     <p className="text-white">{invite.email}</p>
                     <p className="text-gray-500 text-xs">
-                      Invited {new Date(invite.createdAt).toLocaleDateString()} • 
+                      Invited {new Date(invite.created_at).toLocaleDateString()} • 
                       Expires {new Date(invite.expiresAt).toLocaleDateString()}
                     </p>
                   </div>
@@ -287,15 +287,15 @@ export default function TeamPage() {
               >
                 <div className="flex items-center gap-4">
                   <Avatar className="h-10 w-10">
-                    <AvatarImage src={member.avatarUrl} />
+                    <AvatarImage src={member.avatar_url} />
                     <AvatarFallback className="bg-gradient-to-br from-orange-500 to-amber-600 text-white">
-                      {member.firstName[0]}{member.lastName?.[0] || ''}
+                      {member.first_name[0]}{member.last_name?.[0] || ''}
                     </AvatarFallback>
                   </Avatar>
                   <div>
                     <div className="flex items-center gap-2">
                       <p className="text-white font-medium">
-                        {member.firstName} {member.lastName}
+                        {member.first_name} {member.last_name}
                       </p>
                       {member.isYou && (
                         <Badge variant="outline" className="text-xs bg-white/5 text-gray-400">You</Badge>

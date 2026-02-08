@@ -64,3 +64,13 @@ export const signOut = async () => {
 
 export const getCurrentUser = () => supabase.auth.getUser()
 export const getSession = () => supabase.auth.getSession()
+
+export const requestPasswordReset = async (email: string) => {
+  const baseUrl = typeof window !== 'undefined' 
+    ? window.location.origin
+    : (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.bpoc.io')
+  
+  return await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${baseUrl}/reset-password`
+  })
+}

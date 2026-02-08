@@ -56,19 +56,19 @@ interface DashboardStats {
 
 interface RecentApplication {
   id: string;
-  candidateId: string;
-  candidateName: string;
-  candidateAvatar?: string;
-  jobTitle: string;
-  appliedAt: string;
+  candidate_id: string;
+  candidate_name: string;
+  candidate_avatar?: string;
+  job_title: string;
+  applied_at: string;
   status: string;
 }
 
 interface UpcomingInterview {
   id: string;
-  candidateName: string;
-  candidateAvatar?: string;
-  jobTitle: string;
+  candidate_name: string;
+  candidate_avatar?: string;
+  job_title: string;
   scheduledAt: string;
   type: string;
 }
@@ -976,8 +976,8 @@ export default function RecruiterDashboard() {
             id: `app-${app.id}`,
             type: 'application',
             title: 'New Application',
-            description: `${app.candidateName} applied for ${app.jobTitle}`,
-            timestamp: formatTimeAgo(app.appliedAt),
+            description: `${app.candidate_name} applied for ${app.job_title}`,
+            timestamp: formatTimeAgo(app.applied_at),
             icon: FileText,
             color: 'bg-blue-500',
           });
@@ -1100,9 +1100,9 @@ export default function RecruiterDashboard() {
           candidates: (grouped[status]?.applications || [])
             .slice(0, 3)
             .map((app: any) => ({
-              id: app.candidateId,
-              name: app.candidateName,
-              avatar: app.candidateAvatar || '',
+              id: app.candidate_id,
+              name: app.candidate_name,
+              avatar: app.candidate_avatar || '',
             })),
         }));
 
@@ -1162,7 +1162,7 @@ export default function RecruiterDashboard() {
 
             return {
               id: client.id,
-              name: client.companyName || client.name,
+              name: client.company_name || client.name,
               logo: client.logo || '',
               openRoles,
               pipeline,
@@ -1171,7 +1171,7 @@ export default function RecruiterDashboard() {
             console.error(`Error loading data for client ${client.id}:`, error);
             return {
               id: client.id,
-              name: client.companyName || client.name,
+              name: client.company_name || client.name,
               logo: client.logo || '',
               openRoles: 0,
               pipeline: { new: 0, screening: 0, interview: 0, offer: 0 },
@@ -1207,10 +1207,10 @@ export default function RecruiterDashboard() {
       // Format team members with placement counts
       const formattedTeam: TeamMember[] = teamData.map((member: any) => ({
         id: member.id,
-        name: `${member.firstName || ''} ${member.lastName || ''}`.trim() || member.email,
-        avatar: member.avatarUrl || '',
+        name: `${member.first_name || ''} ${member.last_name || ''}`.trim() || member.email,
+        avatar: member.avatar_url || '',
         placements: member.placementsThisMonth || 0,
-        isOnline: member.lastActive ? (new Date().getTime() - new Date(member.lastActive).getTime() < 300000) : false, // Online if active in last 5 minutes
+        isOnline: member.last_active ? (new Date().getTime() - new Date(member.last_active).getTime() < 300000) : false, // Online if active in last 5 minutes
       }));
 
       // Sort by placements descending
@@ -1257,7 +1257,7 @@ export default function RecruiterDashboard() {
           type,
           title: notif.title || 'Notification',
           description: notif.message || notif.description || '',
-          timestamp: formatTimeAgo(notif.createdAt || notif.timestamp),
+          timestamp: formatTimeAgo(notif.created_at || notif.timestamp),
           read: notif.read || notif.isRead || false,
           actionUrl: notif.actionUrl || notif.link || '/recruiter/dashboard',
         };
@@ -1298,7 +1298,7 @@ export default function RecruiterDashboard() {
     },
     {
       title: 'Applications',
-      value: stats.totalApplications,
+      value: stats.total_applications,
       icon: FileText,
       color: 'from-cyan-500 to-blue-500',
       href: '/recruiter/applications',
@@ -1499,20 +1499,20 @@ export default function RecruiterDashboard() {
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 1.1 + index * 0.05 }}
                     >
-                      <Link href={`/recruiter/talent/${app.candidateId}`}>
+                      <Link href={`/recruiter/talent/${app.candidate_id}`}>
                         <div className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/10 hover:border-cyan-500/30 hover:bg-white/10 transition-all group/item cursor-pointer">
                           <div className="flex items-center gap-4">
                             <Avatar className="h-10 w-10">
-                              <AvatarImage src={app.candidateAvatar} />
+                              <AvatarImage src={app.candidate_avatar} />
                               <AvatarFallback className="bg-gradient-to-br from-cyan-500 to-blue-600 text-white">
-                                {app.candidateName.split(' ').map(n => n[0]).join('')}
+                                {app.candidate_name.split(' ').map(n => n[0]).join('')}
                               </AvatarFallback>
                             </Avatar>
                             <div>
                               <p className="text-white font-medium group-hover/item:text-cyan-400 transition-colors">
-                                {app.candidateName}
+                                {app.candidate_name}
                               </p>
-                              <p className="text-gray-400 text-sm">{app.jobTitle}</p>
+                              <p className="text-gray-400 text-sm">{app.job_title}</p>
                             </div>
                           </div>
                           <div className="flex items-center gap-3">
@@ -1521,7 +1521,7 @@ export default function RecruiterDashboard() {
                             </Badge>
                             <span className="text-gray-500 text-sm flex items-center gap-1">
                               <Clock className="h-3 w-3" />
-                              {formatTimeAgo(app.appliedAt)}
+                              {formatTimeAgo(app.applied_at)}
                             </span>
                           </div>
                         </div>

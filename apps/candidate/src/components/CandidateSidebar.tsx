@@ -22,7 +22,7 @@ import {
   Target,
   CheckCircle
 } from 'lucide-react'
-import { Button } from '@repo/ui/button'
+import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { useAuth } from '@/contexts/AuthContext'
 import { calculateProfileCompletion, getCompletionColor } from '@/lib/profile-completion'

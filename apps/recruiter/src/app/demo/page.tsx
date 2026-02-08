@@ -77,14 +77,14 @@ const AnimatedCounter = ({ value, duration = 2 }: { value: number; duration?: nu
 
 interface FakeCandidate {
   id: string;
-  firstName: string;
-  lastName: string;
+  first_name: string;
+  last_name: string;
   avatar: string;
   location: string;
-  englishLevel: 'Basic' | 'Conversational' | 'Fluent' | 'Native';
+  english_level: 'Basic' | 'Conversational' | 'Fluent' | 'Native';
   skills: string[];
   experience: number;
-  matchScore: number;
+  match_score: number;
 }
 
 const generateFakeCandidates = (count: number): FakeCandidate[] => {
@@ -108,12 +108,12 @@ const generateFakeCandidates = (count: number): FakeCandidate[] => {
       id: `candidate-${i}`,
       firstName,
       lastName,
-      avatar: `https://ui-avatars.com/api/?name=${firstName}+${lastName}&background=f97316&color=fff&size=150`,
+      avatar: `https://ui-avatars.com/api/?name=${first_name}+${last_name}&background=f97316&color=fff&size=150`,
       location: locations[Math.floor(Math.random() * locations.length)],
-      englishLevel: englishLevels[Math.floor(Math.random() * englishLevels.length)],
+      english_level: englishLevels[Math.floor(Math.random() * englishLevels.length)],
       skills: randomSkills,
       experience: Math.floor(Math.random() * 9), // 0-8 years
-      matchScore: Math.floor(Math.random() * 35) + 65 // 65-99%
+      match_score: Math.floor(Math.random() * 35) + 65 // 65-99%
     });
   }
 
@@ -177,7 +177,7 @@ export default function InteractiveDemoPage() {
   const filteredCandidates = useMemo(() => {
     return allCandidates.filter(candidate => {
       // English
-      if (selectedEnglish !== 'all' && candidate.englishLevel !== selectedEnglish) {
+      if (selectedEnglish !== 'all' && candidate.english_level !== selectedEnglish) {
         return false;
       }
 
@@ -195,7 +195,7 @@ export default function InteractiveDemoPage() {
       // Search
       if (searchQuery) {
         const query = searchQuery.toLowerCase();
-        const fullName = `${candidate.firstName} ${candidate.lastName}`.toLowerCase();
+        const fullName = `${candidate.first_name} ${candidate.last_name}`.toLowerCase();
         const hasMatchingSkill = candidate.skills.some(skill =>
           skill.toLowerCase().includes(query)
         );
@@ -231,49 +231,49 @@ export default function InteractiveDemoPage() {
       icon: Sparkles,
       title: 'Discover BPOC',
       description: 'Candidate finds the platform through job boards or direct search',
-      recruiterView: 'See when candidates sign up, their source, and initial profile data'
+      recruiter_view: 'See when candidates sign up, their source, and initial profile data'
     },
     {
       number: 2,
       icon: FileText,
       title: 'AI Resume Builder',
       description: 'Canva-like drag-drop builder with AI assistance and templates',
-      recruiterView: 'View AI-scored resumes (0-100) with ATS compatibility analysis'
+      recruiter_view: 'View AI-scored resumes (0-100) with ATS compatibility analysis'
     },
     {
       number: 3,
       icon: Brain,
       title: 'Skill Assessment',
       description: 'Comprehensive candidate evaluation and verification',
-      recruiterView: 'Filter candidates by verified skills and AI-analyzed resume scores'
+      recruiter_view: 'Filter candidates by verified skills and AI-analyzed resume scores'
     },
     {
       number: 4,
       icon: Zap,
       title: 'AI Job Matching',
       description: 'Algorithm automatically matches candidate skills to your job requirements',
-      recruiterView: 'See match percentage scores for each candidate per job opening'
+      recruiter_view: 'See match percentage scores for each candidate per job opening'
     },
     {
       number: 5,
       icon: Target,
       title: 'Apply',
       description: 'One-click application process with pre-filled resume data',
-      recruiterView: 'Review applications with complete assessment scores and match data'
+      recruiter_view: 'Review applications with complete assessment scores and match data'
     },
     {
       number: 6,
       icon: Video,
       title: 'Video Interview',
       description: 'In-platform video screening with recording and transcription',
-      recruiterView: 'Conduct interviews, review recordings, read transcripts, share with clients'
+      recruiter_view: 'Conduct interviews, review recordings, read transcripts, share with clients'
     },
     {
       number: 7,
       icon: CheckCircle,
       title: 'Get Hired',
       description: 'Receive offer, negotiate terms, sign contract, complete onboarding',
-      recruiterView: 'Send offers, handle negotiations, track signatures, manage onboarding tasks'
+      recruiter_view: 'Send offers, handle negotiations, track signatures, manage onboarding tasks'
     }
   ];
 
@@ -305,7 +305,7 @@ const response = await fetch('https://api.bpoc.io/v1/candidates', {
   },
   body: JSON.stringify({
     filters: {
-      englishLevel: 'Fluent',
+      english_level: 'Fluent',
       experience: { min: 2 },
       skills: ['Customer Service', 'Technical Support']
     },
@@ -519,7 +519,7 @@ print(candidates)`
                             <div>
                               <p className="text-sm font-semibold text-orange-400 mb-1">What YOU See</p>
                               <p className="text-gray-300 text-sm">
-                                {journeySteps[selectedStep - 1].recruiterView}
+                                {journeySteps[selectedStep - 1].recruiter_view}
                               </p>
                             </div>
                           </div>
@@ -639,17 +639,17 @@ print(candidates)`
                     <div className="flex items-start gap-4 mb-4">
                       <img
                         src={candidate.avatar}
-                        alt={`${candidate.firstName} ${candidate.lastName}`}
+                        alt={`${candidate.first_name} ${candidate.last_name}`}
                         className="w-16 h-16 rounded-full border-2 border-orange-500/30"
                       />
                       <div className="flex-1 min-w-0">
                         <h3 className="text-white font-semibold truncate group-hover:text-orange-400 transition-colors">
-                          {candidate.firstName} {candidate.lastName}
+                          {candidate.first_name} {candidate.last_name}
                         </h3>
                         <p className="text-sm text-gray-400">{candidate.location}</p>
                         <div className="flex items-center gap-2 mt-1">
                           <Badge className="bg-green-500/20 text-green-400 border-green-500/30 text-xs">
-                            {candidate.englishLevel}
+                            {candidate.english_level}
                           </Badge>
                         </div>
                       </div>
@@ -658,12 +658,12 @@ print(candidates)`
                     <div className="mb-4">
                       <div className="flex items-center justify-between mb-2">
                         <span className="text-xs text-gray-400">Match Score</span>
-                        <span className="text-sm font-bold text-orange-400">{candidate.matchScore}%</span>
+                        <span className="text-sm font-bold text-orange-400">{candidate.match_score}%</span>
                       </div>
                       <div className="h-2 bg-white/10 rounded-full overflow-hidden">
                         <div
                           className="h-full bg-gradient-to-r from-orange-500 to-amber-500 rounded-full"
-                          style={{ width: `${candidate.matchScore}%` }}
+                          style={{ width: `${candidate.match_score}%` }}
                         />
                       </div>
                     </div>
@@ -733,17 +733,17 @@ print(candidates)`
                 <div className="flex items-start gap-6 mb-6">
                   <img
                     src={selectedCandidate.avatar}
-                    alt={`${selectedCandidate.firstName} ${selectedCandidate.lastName}`}
+                    alt={`${selectedCandidate.first_name} ${selectedCandidate.last_name}`}
                     className="w-24 h-24 rounded-full border-4 border-orange-500/30"
                   />
                   <div className="flex-1">
                     <h2 className="text-3xl font-bold text-white mb-2">
-                      {selectedCandidate.firstName} {selectedCandidate.lastName}
+                      {selectedCandidate.first_name} {selectedCandidate.last_name}
                     </h2>
                     <p className="text-gray-400 mb-4">{selectedCandidate.location}</p>
                     <div className="flex flex-wrap gap-2">
                       <Badge className="bg-green-500/20 text-green-400 border-green-500/30">
-                        {selectedCandidate.englishLevel} English
+                        {selectedCandidate.english_level} English
                       </Badge>
                       <Badge className="bg-purple-500/20 text-purple-400 border-purple-500/30">
                         {selectedCandidate.experience} years exp
@@ -761,12 +761,12 @@ print(candidates)`
                 <div className="mb-6 p-4 rounded-xl bg-gradient-to-r from-orange-500/10 to-amber-500/10 border border-orange-500/20">
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-sm text-gray-400">Match Score</span>
-                    <span className="text-2xl font-bold text-orange-400">{selectedCandidate.matchScore}%</span>
+                    <span className="text-2xl font-bold text-orange-400">{selectedCandidate.match_score}%</span>
                   </div>
                   <div className="h-3 bg-white/10 rounded-full overflow-hidden">
                     <div
                       className="h-full bg-gradient-to-r from-orange-500 to-amber-500 rounded-full"
-                      style={{ width: `${selectedCandidate.matchScore}%` }}
+                      style={{ width: `${selectedCandidate.match_score}%` }}
                     />
                   </div>
                 </div>
@@ -1314,7 +1314,7 @@ print(candidates)`
                       <h3 className="text-lg font-bold text-white">Hours Saved</h3>
                     </div>
                     <div className="text-4xl font-bold text-green-400 mb-2">
-                      <AnimatedCounter value={roiCalculations.hoursSaved} duration={2} />
+                      <AnimatedCounter value={roiCalculations.hours_saved} duration={2} />
                     </div>
                     <p className="text-sm text-gray-300">
                       hours saved per month
@@ -1327,7 +1327,7 @@ print(candidates)`
                       <h3 className="text-lg font-bold text-white">Cost Saved</h3>
                     </div>
                     <div className="text-4xl font-bold text-orange-400 mb-2">
-                      ₱<AnimatedCounter value={roiCalculations.monthlyCostSavings} duration={2} />
+                      ₱<AnimatedCounter value={roiCalculations.monthly_cost_savings} duration={2} />
                     </div>
                     <p className="text-sm text-gray-300">
                       per month (30% reduction)
@@ -1340,7 +1340,7 @@ print(candidates)`
                       <h3 className="text-lg font-bold text-white">Annual Savings</h3>
                     </div>
                     <div className="text-4xl font-bold text-blue-400 mb-2">
-                      ₱<AnimatedCounter value={roiCalculations.annualSavings} duration={2} />
+                      ₱<AnimatedCounter value={roiCalculations.annual_savings} duration={2} />
                     </div>
                     <p className="text-sm text-gray-300">
                       total annual impact

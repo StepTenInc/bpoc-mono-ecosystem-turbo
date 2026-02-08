@@ -24,7 +24,7 @@ interface Client {
   primaryContactEmail: string;
   primaryContactPhone: string;
   notes: string;
-  createdAt: string;
+  created_at: string;
   lastContactAt?: string;
   company: {
     id: string;
@@ -32,7 +32,7 @@ interface Client {
     slug: string;
     email: string;
     phone: string;
-    logoUrl: string;
+    logo_url: string;
     website: string;
     industry: string;
     companySize: string;
@@ -58,7 +58,7 @@ export default function ClientsPage() {
   const [showDrawer, setShowDrawer] = useState(false);
   const [adding, setAdding] = useState(false);
   const [newClient, setNewClient] = useState({
-    companyName: '',
+    company_name: '',
     companyEmail: '',
     companyPhone: '',
     companyWebsite: '',
@@ -132,7 +132,7 @@ export default function ClientsPage() {
   };
 
   const handleAddClient = async () => {
-    if (!newClient.companyName.trim()) {
+    if (!newClient.company_name.trim()) {
       toast.error('Company name is required');
       return;
     }
@@ -157,15 +157,15 @@ export default function ClientsPage() {
         const data = await response.json();
         // Show verification feedback
         if (data.verificationStatus === 'verified') {
-          toast.success(`✅ ${newClient.companyName} added — Company verified online!`);
+          toast.success(`✅ ${newClient.company_name} added — Company verified online!`);
         } else if (data.verificationStatus === 'suspicious') {
-          toast.error(`⚠️ ${newClient.companyName} added but flagged — No online presence found. Please verify manually.`);
+          toast.error(`⚠️ ${newClient.company_name} added but flagged — No online presence found. Please verify manually.`);
         } else {
-          toast.success(`${newClient.companyName} added — ${data.verificationSummary || 'Limited online info found'}`);
+          toast.success(`${newClient.company_name} added — ${data.verificationSummary || 'Limited online info found'}`);
         }
         setShowDrawer(false);
         setNewClient({
-          companyName: '',
+          company_name: '',
           companyEmail: '',
           companyPhone: '',
           companyWebsite: '',
@@ -207,7 +207,7 @@ export default function ClientsPage() {
     const activeJobs = client.activeJobCount || 0;
     const placements = client.placementCount || 0;
     const hasPrimaryContact = !!(client.primaryContactEmail || client.primaryContactPhone || client.primaryContactName);
-    const lastContact = client.lastContactAt || client.createdAt;
+    const lastContact = client.lastContactAt || client.created_at;
     const daysSinceContact = Math.floor((Date.now() - new Date(lastContact).getTime()) / 86400000);
     const reasons: string[] = [];
     if (client.status === 'active' && activeJobs === 0) reasons.push('No active jobs');
@@ -434,7 +434,7 @@ export default function ClientsPage() {
                     <CardContent className="p-6 relative z-10">
                       <div className="flex items-start gap-4 mb-4">
                         <Avatar className="h-12 w-12 rounded-xl">
-                          <AvatarImage src={client.company?.logoUrl} />
+                          <AvatarImage src={client.company?.logo_url} />
                           <AvatarFallback className="bg-gradient-to-br from-orange-500 to-amber-600 text-white rounded-xl">
                             {client.company?.name?.substring(0, 2).toUpperCase() || 'CO'}
                           </AvatarFallback>
@@ -488,7 +488,7 @@ export default function ClientsPage() {
                         )}
                         <div className="flex items-center gap-2 text-gray-500">
                           <Clock className="h-4 w-4" />
-                          <span>Last contact: {formatTimeAgo(client.lastContactAt || client.createdAt)}</span>
+                          <span>Last contact: {formatTimeAgo(client.lastContactAt || client.created_at)}</span>
                         </div>
                       </div>
 
@@ -529,7 +529,7 @@ export default function ClientsPage() {
                     <CardContent className="p-4">
                       <div className="flex items-center gap-4">
                         <Avatar className="h-10 w-10 rounded-lg">
-                          <AvatarImage src={client.company?.logoUrl} />
+                          <AvatarImage src={client.company?.logo_url} />
                           <AvatarFallback className="bg-gradient-to-br from-orange-500 to-amber-600 text-white rounded-lg text-sm">
                             {client.company?.name?.substring(0, 2).toUpperCase() || 'CO'}
                           </AvatarFallback>
@@ -635,8 +635,8 @@ export default function ClientsPage() {
                     <div>
                       <label className="block text-gray-400 text-sm mb-2">Company Name *</label>
                       <Input 
-                        value={newClient.companyName}
-                        onChange={(e) => setNewClient(c => ({ ...c, companyName: e.target.value }))}
+                        value={newClient.company_name}
+                        onChange={(e) => setNewClient(c => ({ ...c, company_name: e.target.value }))}
                         placeholder="Acme Corporation"
                         className="bg-white/5 border-white/10 text-white"
                       />
@@ -760,7 +760,7 @@ export default function ClientsPage() {
                 </Button>
                 <Button 
                   onClick={handleAddClient}
-                  disabled={adding || !newClient.companyName.trim()}
+                  disabled={adding || !newClient.company_name.trim()}
                   className="flex-1 bg-gradient-to-r from-orange-500 to-amber-600 shadow-lg"
                 >
                   {adding ? (

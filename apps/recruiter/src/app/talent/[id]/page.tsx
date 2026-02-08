@@ -35,18 +35,18 @@ import { VideoCallButton } from '@/components/video';
 
 interface CandidateProfile {
   id: string;
-  firstName: string;
-  lastName: string;
+  first_name: string;
+  last_name: string;
   email: string;
   phone?: string;
-  avatarUrl?: string;
+  avatar_url?: string;
   headline?: string;
   location?: string;
   username?: string;
-  createdAt: string;
+  created_at: string;
   profile?: {
     bio?: string;
-    experienceYears?: number;
+    experience_years?: number;
     currentRole?: string;
     targetRole?: string;
     expectedSalary?: number;
@@ -55,7 +55,7 @@ interface CandidateProfile {
   skills: string[];
   resume?: {
     id: string;
-    fileName: string;
+    file_name: string;
     uploadedAt: string;
   };
   aiAnalysis?: {
@@ -87,7 +87,7 @@ export default function CandidateProfilePage() {
   const [inviting, setInviting] = useState(false);
   const [inviteMessage, setInviteMessage] = useState('');
   const [clients, setClients] = useState<Array<{ id: string; name: string }>>([]);
-  const [jobs, setJobs] = useState<Array<{ id: string; title: string; clientId: string; clientName: string; status: string }>>([]);
+  const [jobs, setJobs] = useState<Array<{ id: string; title: string; client_id: string; client_name: string; status: string }>>([]);
   const [selectedClientId, setSelectedClientId] = useState<string>('');
   const [selectedJobId, setSelectedJobId] = useState<string>('');
 
@@ -95,7 +95,7 @@ export default function CandidateProfilePage() {
     if (user?.id && candidateId) {
       fetchCandidate();
     }
-  }, [user?.id, candidateId]);
+  }, [user?.id, candidate_id]);
 
   const fetchCandidate = async () => {
     try {
@@ -146,8 +146,8 @@ export default function CandidateProfilePage() {
       const jobList = (jobsJson.jobs || []).map((j: any) => ({
         id: j.id,
         title: j.title,
-        clientId: j.agencyClientId || j.agency_client_id || '',
-        clientName: j.clientName || 'Unknown Client',
+        client_id: j.agency_client_id || j.agency_client_id || '',
+        client_name: j.client_name || 'Unknown Client',
         status: j.status,
       }));
 
@@ -181,8 +181,8 @@ export default function CandidateProfilePage() {
           'x-user-id': user?.id || '',
         },
         body: JSON.stringify({
-          candidateId: candidate.id,
-          jobId: selectedJobId,
+          candidate_id: candidate.id,
+          job_id: selectedJobId,
           message: inviteMessage,
         }),
       });
@@ -240,9 +240,9 @@ export default function CandidateProfilePage() {
           <CardContent className="p-8">
             <div className="flex items-start gap-6">
               <Avatar className="h-24 w-24">
-                <AvatarImage src={candidate.avatarUrl} />
+                <AvatarImage src={candidate.avatar_url} />
                 <AvatarFallback className="bg-gradient-to-br from-orange-500 to-amber-600 text-white text-2xl">
-                  {candidate.firstName[0]}{candidate.lastName[0]}
+                  {candidate.first_name[0]}{candidate.last_name[0]}
                 </AvatarFallback>
               </Avatar>
               
@@ -250,7 +250,7 @@ export default function CandidateProfilePage() {
                 <div className="flex items-start justify-between">
                   <div>
                     <h1 className="text-3xl font-bold text-white">
-                      {candidate.firstName} {candidate.lastName}
+                      {candidate.first_name} {candidate.last_name}
                     </h1>
                     <p className="text-gray-400 text-lg mt-1">
                       {candidate.headline || candidate.profile?.currentRole || 'Candidate'}
@@ -259,9 +259,9 @@ export default function CandidateProfilePage() {
                   <div className="flex gap-2">
                     <VideoCallButton
                       candidateUserId={candidate.id}
-                      candidateName={`${candidate.firstName} ${candidate.lastName}`}
+                      candidateName={`${candidate.first_name} ${candidate.last_name}`}
                       candidateEmail={candidate.email}
-                      candidateAvatar={candidate.avatarUrl}
+                      candidateAvatar={candidate.avatar_url}
                       variant="default"
                       context="talent_pool"
                     />
@@ -296,10 +296,10 @@ export default function CandidateProfilePage() {
 
                 {/* Quick Stats */}
                 <div className="flex gap-3 mt-4">
-                  {candidate.profile?.experienceYears && (
+                  {candidate.profile?.experience_years && (
                     <Badge variant="outline" className="bg-white/5 text-gray-300 border-white/20">
                       <Briefcase className="h-3 w-3 mr-1" />
-                      {candidate.profile.experienceYears} years exp
+                      {candidate.profile.experience_years} years exp
                     </Badge>
                   )}
                   {candidate.resume && (
@@ -481,7 +481,7 @@ export default function CandidateProfilePage() {
                 </CardHeader>
                 <CardContent>
                   <div className="p-4 rounded-lg bg-cyan-500/10 border border-cyan-500/20">
-                    <p className="text-white font-medium truncate">{candidate.resume.fileName}</p>
+                    <p className="text-white font-medium truncate">{candidate.resume.file_name}</p>
                     <p className="text-gray-400 text-sm mt-1">
                       Uploaded {new Date(candidate.resume.uploadedAt).toLocaleDateString()}
                     </p>
@@ -503,7 +503,7 @@ export default function CandidateProfilePage() {
                   <Calendar className="h-5 w-5" />
                   <div>
                     <p className="text-white">Member since</p>
-                    <p className="text-sm">{new Date(candidate.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</p>
+                    <p className="text-sm">{new Date(candidate.created_at).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</p>
                   </div>
                 </div>
               </CardContent>
@@ -520,7 +520,7 @@ export default function CandidateProfilePage() {
             <div className="flex items-center justify-between px-6 py-4 border-b border-white/10">
               <div>
                 <h3 className="text-white font-semibold text-lg">Invite to Job</h3>
-                <p className="text-gray-400 text-sm">Invite {candidate.firstName} {candidate.lastName} to apply</p>
+                <p className="text-gray-400 text-sm">Invite {candidate.first_name} {candidate.last_name} to apply</p>
               </div>
               <button
                 onClick={() => setShowInvite(false)}
@@ -557,10 +557,10 @@ export default function CandidateProfilePage() {
                 >
                   <option value="">Select a job</option>
                   {jobs
-                    .filter((j) => !selectedClientId || j.clientId === selectedClientId || j.clientName)
+                    .filter((j) => !selectedClientId || j.client_id === selectedClientId || j.client_name)
                     .map((j) => (
                       <option key={j.id} value={j.id}>
-                        {j.title} ({j.clientName})
+                        {j.title} ({j.client_name})
                       </option>
                     ))}
                 </select>

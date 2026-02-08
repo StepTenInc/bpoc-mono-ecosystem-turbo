@@ -38,17 +38,17 @@ import Link from 'next/link';
 
 interface Candidate {
   id: string;
-  firstName: string;
-  lastName: string;
+  first_name: string;
+  last_name: string;
   email: string;
-  avatarUrl?: string;
+  avatar_url?: string;
   headline?: string;
   location?: string;
-  experienceYears?: number;
+  experience_years?: number;
   skills: string[];
-  hasResume: boolean;
-  hasAiAnalysis: boolean;
-  matchScore?: number;
+  has_resume: boolean;
+  has_ai_analysis: boolean;
+  match_score?: number;
   isNew?: boolean;
   isFeatured?: boolean;
   lastActive?: string;
@@ -72,8 +72,8 @@ export default function TalentPoolPage() {
   const [filters, setFilters] = useState({
     experienceMin: '',
     experienceMax: '',
-    hasResume: false,
-    hasAiAnalysis: false,
+    has_resume: false,
+    has_ai_analysis: false,
   });
 
   useEffect(() => {
@@ -83,8 +83,8 @@ export default function TalentPoolPage() {
         const params = new URLSearchParams();
         if (searchQuery) params.set('search', searchQuery);
         if (selectedSkills.length) params.set('skills', selectedSkills.join(','));
-        if (filters.hasResume) params.set('hasResume', 'true');
-        if (filters.hasAiAnalysis) params.set('hasAiAnalysis', 'true');
+        if (filters.has_resume) params.set('hasResume', 'true');
+        if (filters.has_ai_analysis) params.set('hasAiAnalysis', 'true');
 
         const response = await fetch(`/api/recruiter/talent?${params.toString()}`);
         const data = await response.json();
@@ -111,7 +111,7 @@ export default function TalentPoolPage() {
     );
   };
 
-  const toggleSave = (candidateId: string) => {
+  const toggleSave = (candidate_id: string) => {
     setSavedCandidates(prev => {
       const newSet = new Set(prev);
       if (newSet.has(candidateId)) {
@@ -127,11 +127,11 @@ export default function TalentPoolPage() {
     const sorted = [...candidates];
     switch (sortBy) {
       case 'match':
-        return sorted.sort((a, b) => (b.matchScore || 0) - (a.matchScore || 0));
+        return sorted.sort((a, b) => (b.match_score || 0) - (a.match_score || 0));
       case 'recent':
         return sorted; // Already sorted by recent
       case 'experience':
-        return sorted.sort((a, b) => (b.experienceYears || 0) - (a.experienceYears || 0));
+        return sorted.sort((a, b) => (b.experience_years || 0) - (a.experience_years || 0));
       default:
         return sorted;
     }
@@ -314,8 +314,8 @@ export default function TalentPoolPage() {
                       <label className="flex items-center gap-2 cursor-pointer group">
                         <input
                           type="checkbox"
-                          checked={filters.hasResume}
-                          onChange={(e) => setFilters(prev => ({ ...prev, hasResume: e.target.checked }))}
+                          checked={filters.has_resume}
+                          onChange={(e) => setFilters(prev => ({ ...prev, has_resume: e.target.checked }))}
                           className="w-4 h-4 rounded border-white/20 bg-white/5 checked:bg-orange-500 checked:border-orange-500 focus:ring-2 focus:ring-orange-500/20"
                         />
                         <span className="text-gray-300 group-hover:text-white transition-colors">Has Resume</span>
@@ -325,8 +325,8 @@ export default function TalentPoolPage() {
                       <label className="flex items-center gap-2 cursor-pointer group">
                         <input
                           type="checkbox"
-                          checked={filters.hasAiAnalysis}
-                          onChange={(e) => setFilters(prev => ({ ...prev, hasAiAnalysis: e.target.checked }))}
+                          checked={filters.has_ai_analysis}
+                          onChange={(e) => setFilters(prev => ({ ...prev, has_ai_analysis: e.target.checked }))}
                           className="w-4 h-4 rounded border-white/20 bg-white/5 checked:bg-orange-500 checked:border-orange-500 focus:ring-2 focus:ring-orange-500/20"
                         />
                         <span className="text-gray-300 group-hover:text-white transition-colors">AI Analyzed</span>
@@ -430,8 +430,8 @@ export default function TalentPoolPage() {
                     setFilters({
                       experienceMin: '',
                       experienceMax: '',
-                      hasResume: false,
-                      hasAiAnalysis: false,
+                      has_resume: false,
+                      has_ai_analysis: false,
                     });
                   }}
                   className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700"
@@ -463,16 +463,16 @@ export default function TalentPoolPage() {
                     <div className="flex items-start gap-4 mb-4">
                       <Link href={`/recruiter/talent/${candidate.id}`}>
                         <Avatar className="h-16 w-16 cursor-pointer hover:ring-4 hover:ring-orange-500/30 transition-all">
-                          <AvatarImage src={candidate.avatarUrl} />
+                          <AvatarImage src={candidate.avatar_url} />
                           <AvatarFallback className="bg-gradient-to-br from-orange-500 to-amber-600 text-white text-xl font-semibold">
-                            {candidate.firstName[0]}{candidate.lastName[0]}
+                            {candidate.first_name[0]}{candidate.last_name[0]}
                           </AvatarFallback>
                         </Avatar>
                       </Link>
                       <div className="flex-1 min-w-0">
                         <Link href={`/recruiter/talent/${candidate.id}`}>
                           <h3 className="text-white font-semibold text-lg group-hover:text-orange-400 transition-colors truncate">
-                            {candidate.firstName} {candidate.lastName}
+                            {candidate.first_name} {candidate.last_name}
                           </h3>
                         </Link>
                         <p className="text-gray-400 text-sm truncate">{candidate.headline || 'Candidate'}</p>
@@ -484,9 +484,9 @@ export default function TalentPoolPage() {
                         )}
                       </div>
                       <div className="flex flex-col gap-2">
-                        {candidate.matchScore && (
+                        {candidate.match_score && (
                           <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30">
-                            {candidate.matchScore}% Match
+                            {candidate.match_score}% Match
                           </Badge>
                         )}
                         <button
@@ -510,16 +510,16 @@ export default function TalentPoolPage() {
                           <span>{candidate.location}</span>
                         </div>
                       )}
-                      {candidate.experienceYears && (
+                      {candidate.experience_years && (
                         <div className="flex items-center gap-2 text-gray-400 text-sm">
                           <Briefcase className="h-4 w-4 text-blue-400" />
-                          <span>{candidate.experienceYears} years experience</span>
+                          <span>{candidate.experience_years} years experience</span>
                         </div>
                       )}
-                      {candidate.lastActive && (
+                      {candidate.last_active && (
                         <div className="flex items-center gap-2 text-gray-400 text-sm">
                           <Clock className="h-4 w-4 text-green-400" />
-                          <span>Active {candidate.lastActive}</span>
+                          <span>Active {candidate.last_active}</span>
                         </div>
                       )}
                     </div>
@@ -544,13 +544,13 @@ export default function TalentPoolPage() {
 
                     {/* Verification Badges */}
                     <div className="flex flex-wrap gap-2 mb-5">
-                      {candidate.hasResume && (
+                      {candidate.has_resume && (
                         <Badge variant="outline" className="bg-cyan-500/10 text-cyan-400 border-cyan-500/30 text-xs">
                           <FileText className="h-3 w-3 mr-1" />
                           Resume
                         </Badge>
                       )}
-                      {candidate.hasAiAnalysis && (
+                      {candidate.has_ai_analysis && (
                         <Badge variant="outline" className="bg-purple-500/10 text-purple-400 border-purple-500/30 text-xs">
                           <Brain className="h-3 w-3 mr-1" />
                           AI Verified
@@ -571,9 +571,9 @@ export default function TalentPoolPage() {
                       </Link>
                       <VideoCallButton
                         candidateUserId={candidate.id}
-                        candidateName={`${candidate.firstName} ${candidate.lastName}`}
+                        candidateName={`${candidate.first_name} ${candidate.last_name}`}
                         candidateEmail={candidate.email}
-                        candidateAvatar={candidate.avatarUrl}
+                        candidateAvatar={candidate.avatar_url}
                         variant="icon"
                         context="talent_pool"
                       />
