@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import { Suspense } from "react";
 import "./globals.css";
@@ -6,6 +6,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { AdminProvider } from "@/contexts/AdminContext";
 import { ToastProvider } from "@/components/shared/ui/toast";
 import { AnalyticsProvider } from "@/components/analytics/AnalyticsProvider";
+import MobileNav from "@/components/shared/layout/MobileNav";
 
 const interSans = Inter({
     variable: "--font-geist-sans",
@@ -59,6 +60,15 @@ export const metadata: Metadata = {
     },
 };
 
+export const viewport: Viewport = {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 1,
+    userScalable: false,
+    viewportFit: 'cover',
+    themeColor: '#0B0B0D',
+};
+
 export default function RootLayout({
     children,
 }: {
@@ -91,6 +101,7 @@ export default function RootLayout({
                             <Suspense fallback={null}>
                                 <AnalyticsProvider>
                                     {children}
+                                    <MobileNav />
                                 </AnalyticsProvider>
                             </Suspense>
                         </ToastProvider>

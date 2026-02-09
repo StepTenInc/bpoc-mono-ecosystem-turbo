@@ -346,3 +346,135 @@ input[type="date"]:focus { color: #ffffff; }
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+/* ============================================
+   MOBILE-FIRST UTILITIES
+   ============================================ */
+
+/* Safe area padding for notched devices (iPhone X+, Android) */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.pt-safe {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+.h-safe {
+  height: env(safe-area-inset-bottom, 0px);
+}
+
+/* Touch-friendly tap targets (min 44px as per Apple HIG) */
+.touch-target {
+  min-width: 44px;
+  min-height: 44px;
+}
+
+/* Smooth momentum scrolling on iOS */
+.scroll-smooth-touch {
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+/* Hide scrollbar but keep functionality */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Prevent text selection on interactive elements */
+.select-none-touch {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+/* Tap highlight removal for cleaner mobile UX */
+.tap-highlight-none {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Active state for touch feedback */
+.touch-feedback:active {
+  transform: scale(0.97);
+  opacity: 0.9;
+}
+
+/* Horizontal scroll snap for carousels */
+.snap-x-mandatory {
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+.snap-start {
+  scroll-snap-align: start;
+}
+.snap-center {
+  scroll-snap-align: center;
+}
+
+/* Pull-to-refresh indicator area */
+.pull-indicator {
+  position: absolute;
+  top: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Bottom navigation safe zone spacing */
+.mb-nav {
+  margin-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+}
+
+/* Mobile-first responsive text */
+@media (max-width: 640px) {
+  .text-mobile-lg {
+    font-size: 1.875rem; /* 30px */
+    line-height: 2.25rem;
+  }
+  .text-mobile-xl {
+    font-size: 2.25rem; /* 36px */
+    line-height: 2.5rem;
+  }
+}
+
+/* Swipe gesture indicators */
+.swipe-hint {
+  position: relative;
+}
+.swipe-hint::after {
+  content: '';
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+}
+
+/* Glass morphism for mobile sheets */
+.glass-sheet {
+  background: rgba(11, 11, 13, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* Floating action button positioning */
+.fab-position {
+  position: fixed;
+  bottom: calc(96px + env(safe-area-inset-bottom, 0px));
+  right: 16px;
+  z-index: 40;
+}
+
+/* Mobile keyboard awareness */
+@supports (height: 100dvh) {
+  .h-screen-dynamic {
+    height: 100dvh;
+  }
+  .min-h-screen-dynamic {
+    min-height: 100dvh;
+  }
+}
