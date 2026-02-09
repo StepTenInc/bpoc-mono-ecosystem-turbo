@@ -3,9 +3,12 @@ import { createClient } from '@supabase/supabase-js';
 import CareerSiloClient from './CareerSiloClient';
 
 function getSupabase() {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    return null;
+  }
   return createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_ROLE_KEY
   );
 }
 
@@ -26,7 +29,10 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 async function getSiloData() {
-  const { data: silo } = await getSupabase()
+  const supabase = getSupabase();
+  if (!supabase) return null;
+
+  const { data: silo } = await supabase
     .from('insights_silos')
     .select('*')
     .eq('slug', 'bpo-career-growth')
@@ -37,7 +43,7 @@ async function getSiloData() {
 
   let pillarPost = null;
   if (silo.pillar_post_id) {
-    const { data: pillar } = await getSupabase()
+    const { data: pillar } = await supabase
       .from('insights_posts')
       .select('*')
       .eq('id', silo.pillar_post_id)
@@ -46,7 +52,7 @@ async function getSiloData() {
     pillarPost = pillar;
   }
 
-  const { data: articles, count } = await getSupabase()
+  const { data: articles, count } = await supabase
     .from('insights_posts')
     .select('*', { count: 'exact' })
     .eq('silo_id', silo.id)
@@ -55,7 +61,7 @@ async function getSiloData() {
     .order('published_at', { ascending: false })
     .limit(12);
 
-  const { data: relatedSilos } = await getSupabase()
+  const { data: relatedSilos } = await supabase
     .from('insights_silos')
     .select('id, name, slug, description, icon, color')
     .eq('is_active', true)

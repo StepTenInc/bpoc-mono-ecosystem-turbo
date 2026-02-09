@@ -3,9 +3,12 @@ import SiloArticleClient from './SiloArticleClient';
 import { createClient } from '@supabase/supabase-js';
 
 function getSupabase() {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    return null;
+  }
   return createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
   );
 }
 
@@ -27,8 +30,11 @@ interface PillarArticlePageProps {
 }
 
 export async function getSiloArticle(siloSlug: string, articleSlug: string) {
+  const supabase = getSupabase();
+  if (!supabase) return null;
+
   // First, get the silo by slug to get its ID
-  const { data: silo } = await getSupabase()
+  const { data: silo } = await supabase
     .from('insights_silos')
     .select('id, slug, name')
     .eq('slug', siloSlug)
@@ -40,7 +46,7 @@ export async function getSiloArticle(siloSlug: string, articleSlug: string) {
   }
 
   // Fetch the article and verify it belongs to this silo
-  const { data: post, error } = await getSupabase()
+  const { data: post, error } = await supabase
     .from('insights_posts')
     .select('*')
     .eq('slug', articleSlug)
@@ -60,8 +66,11 @@ export async function getSiloArticle(siloSlug: string, articleSlug: string) {
 }
 
 export async function getSiloMetadata(siloSlug: string, articleSlug: string) {
+  const supabase = getSupabase();
+  if (!supabase) return null;
+
   // First, get the silo by slug
-  const { data: silo } = await getSupabase()
+  const { data: silo } = await supabase
     .from('insights_silos')
     .select('id, slug, name')
     .eq('slug', siloSlug)
@@ -72,7 +81,7 @@ export async function getSiloMetadata(siloSlug: string, articleSlug: string) {
   }
 
   // Fetch the article with SEO data
-  const { data: post } = await getSupabase()
+  const { data: post } = await supabase
     .from('insights_posts')
     .select('*, seo:seo_metadata(*)')
     .eq('slug', articleSlug)
@@ -100,13 +109,14 @@ export default async function PillarArticlePage({ siloSlug, articleSlug }: Pilla
   }
 
   // Fetch related articles from the same silo
-  const { data: relatedPosts } = await getSupabase()
+  const supabase = getSupabase();
+  const { data: relatedPosts } = supabase ? await supabase
     .from('insights_posts')
     .select('id, title, slug, description, hero_url, category, created_at')
     .eq('silo_id', post.silo_id)
     .eq('is_published', true)
     .neq('id', post.id)
-    .limit(4);
+    .limit(4) : { data: null };
 
   return (
     <SiloArticleClient

@@ -3,9 +3,12 @@ import InsightsPageClient from './InsightsPageClient';
 import { createClient } from '@supabase/supabase-js';
 
 function getSupabase() {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    return null;
+  }
   return createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
   );
 }
 
@@ -13,7 +16,10 @@ function getSupabase() {
 export const revalidate = 0;
 
 async function getInsights() {
-  const { data, error } = await getSupabase()
+  const supabase = getSupabase();
+  if (!supabase) return [];
+
+  const { data, error } = await supabase
     .from('insights_posts')
     .select('*')
     .eq('is_published', true)
@@ -28,7 +34,10 @@ async function getInsights() {
 }
 
 async function getSilos() {
-  const { data } = await getSupabase()
+  const supabase = getSupabase();
+  if (!supabase) return [];
+
+  const { data } = await supabase
     .from('insights_silos')
     .select('id, name, slug, description, icon, color')
     .eq('is_active', true)
