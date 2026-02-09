@@ -1,138 +1,184 @@
+'use client'
+
 import Link from 'next/link'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/shared/ui/card'
+import { motion } from 'framer-motion'
+import { Card, CardContent } from '@/components/shared/ui/card'
 import { Button } from '@/components/shared/ui/button'
-import { Mail, Keyboard, Calculator, Linkedin, Target, ArrowRight } from 'lucide-react'
+import { Badge } from '@/components/shared/ui/badge'
+import { Mail, Keyboard, Calculator, Linkedin, Target, ArrowRight, Sparkles, Users, Trophy } from 'lucide-react'
+import Header from '@/components/shared/layout/Header'
 
 const TOOLS = [
   {
     id: 'email-signature',
     title: 'Email Signature Generator',
-    description: 'Create professional email signatures for Gmail and Outlook in seconds',
+    description: 'Create professional email signatures with your photo. Works with Gmail & Outlook.',
     icon: Mail,
-    color: 'text-cyan-600',
-    bgColor: 'bg-cyan-50',
-    href: '/tools/email-signature'
-  },
-  {
-    id: 'typing-test',
-    title: 'Typing Speed Test',
-    description: 'Test your typing speed and accuracy. Most BPO jobs require 40+ WPM',
-    icon: Keyboard,
-    color: 'text-purple-600',
-    bgColor: 'bg-purple-50',
-    href: '/tools/typing-test'
+    gradient: 'from-purple-500 to-cyan-500',
+    href: '/tools/email-signature',
+    popular: false
   },
   {
     id: 'salary-calculator',
     title: 'BPO Salary Calculator',
-    description: 'Find out what you should be earning based on your experience and skills',
+    description: 'Find out what you should be earning based on your experience, location, and skills.',
     icon: Calculator,
-    color: 'text-green-600',
-    bgColor: 'bg-green-50',
-    href: '/tools/salary-calculator'
+    gradient: 'from-green-500 to-emerald-500',
+    href: '/tools/salary-calculator',
+    popular: true
   },
   {
     id: 'linkedin-optimizer',
     title: 'LinkedIn Profile Optimizer',
-    description: 'Analyze your LinkedIn profile and get tips to attract more recruiters',
+    description: 'Get specific tips to make your profile stand out to BPO recruiters.',
     icon: Linkedin,
-    color: 'text-blue-600',
-    bgColor: 'bg-blue-50',
-    href: '/tools/linkedin-optimizer'
+    gradient: 'from-blue-500 to-indigo-500',
+    href: '/tools/linkedin-optimizer',
+    popular: false
   },
   {
     id: 'skills-gap',
     title: 'Skills Gap Analyzer',
-    description: 'Discover what skills you need to land your dream BPO job and how to learn them',
+    description: 'Discover what skills you need and get a free learning roadmap to your dream role.',
     icon: Target,
-    color: 'text-orange-600',
-    bgColor: 'bg-orange-50',
-    href: '/tools/skills-gap'
+    gradient: 'from-orange-500 to-amber-500',
+    href: '/tools/skills-gap',
+    popular: false
+  },
+  {
+    id: 'typing-test',
+    title: 'Typing Speed Test',
+    description: 'Test your WPM and accuracy. Most BPO jobs require 35-40+ WPM.',
+    icon: Keyboard,
+    gradient: 'from-yellow-500 to-orange-500',
+    href: '/tools/typing-test',
+    popular: true
   }
 ]
 
 export default function ToolsPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-white to-purple-50 py-12 px-4">
-      <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-cyan-600 to-purple-600 bg-clip-text text-transparent">
-            Free Career Tools
-          </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Professional tools to help you land your dream BPO job. All 100% free.
-          </p>
-        </div>
+    <>
+      <Header />
+      <div className="min-h-screen bg-black text-white overflow-hidden">
+        {/* Background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-cyan-950 via-black to-purple-950 opacity-70" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-cyan-500/10 rounded-full blur-[150px]" />
+        <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-purple-500/10 rounded-full blur-[150px]" />
 
-        {/* Tools Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-          {TOOLS.map((tool) => {
-            const Icon = tool.icon
-            return (
-              <Card key={tool.id} className="hover:shadow-lg transition-shadow duration-300 border-2 hover:border-cyan-200">
-                <CardHeader>
-                  <div className={`w-12 h-12 ${tool.bgColor} rounded-lg flex items-center justify-center mb-4`}>
-                    <Icon className={`w-6 h-6 ${tool.color}`} />
-                  </div>
-                  <CardTitle className="text-xl">{tool.title}</CardTitle>
-                  <CardDescription className="text-gray-600">
-                    {tool.description}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Link href={tool.href}>
-                    <Button className="w-full group">
-                      Try it now
-                      <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                    </Button>
+        <div className="relative z-10 container mx-auto px-4 py-20">
+          {/* Header */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-16"
+          >
+            <Badge className="mb-6 px-6 py-3 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 border-cyan-500/30 text-cyan-300">
+              <Sparkles className="w-5 h-5 mr-2 inline" />
+              100% Free • No Login Required
+            </Badge>
+
+            <h1 className="text-5xl md:text-6xl font-black mb-6 leading-tight">
+              <span className="bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
+                Free Career Tools
+              </span>
+            </h1>
+
+            <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+              Everything you need to land your dream BPO job. Built for Filipino professionals.
+            </p>
+          </motion.div>
+
+          {/* Tools Grid */}
+          <div className="max-w-5xl mx-auto">
+            <div className="grid md:grid-cols-2 gap-6 mb-12">
+              {TOOLS.map((tool, i) => {
+                const Icon = tool.icon
+                return (
+                  <motion.div
+                    key={tool.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, delay: i * 0.1 }}
+                  >
+                    <Link href={tool.href}>
+                      <Card className="bg-white/5 border-white/10 hover:border-white/20 transition-all duration-300 group cursor-pointer h-full overflow-hidden relative">
+                        {tool.popular && (
+                          <div className="absolute top-3 right-3">
+                            <Badge className="bg-yellow-500/20 text-yellow-400 border-yellow-500/30">
+                              <Trophy className="w-3 h-3 mr-1" /> Popular
+                            </Badge>
+                          </div>
+                        )}
+                        <CardContent className="p-6">
+                          <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${tool.gradient} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
+                            <Icon className="w-7 h-7 text-white" />
+                          </div>
+                          <h2 className="text-xl font-bold text-white mb-2 group-hover:text-cyan-400 transition-colors">
+                            {tool.title}
+                          </h2>
+                          <p className="text-gray-400 mb-4">
+                            {tool.description}
+                          </p>
+                          <div className="flex items-center text-cyan-400 font-medium">
+                            Try it free <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </Link>
+                  </motion.div>
+                )
+              })}
+            </div>
+
+            {/* Stats */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5 }}
+              className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12"
+            >
+              {[
+                { value: '5', label: 'Free Tools' },
+                { value: '100%', label: 'Free Forever' },
+                { value: '<2 min', label: 'Average Time' },
+                { value: 'No', label: 'Login Required' },
+              ].map((stat, i) => (
+                <div key={i} className="text-center p-4 bg-white/5 rounded-xl border border-white/10">
+                  <div className="text-2xl font-bold text-cyan-400">{stat.value}</div>
+                  <div className="text-sm text-gray-500">{stat.label}</div>
+                </div>
+              ))}
+            </motion.div>
+
+            {/* CTA */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+              className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 border border-cyan-500/20 rounded-2xl p-8 text-center"
+            >
+              <h2 className="text-2xl font-bold text-white mb-4">Ready to Find Your Dream Job?</h2>
+              <p className="text-gray-400 mb-6 max-w-xl mx-auto">
+                These tools are just the start. Create a free account to get personalized job matches and AI-powered career guidance.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button asChild className="bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600">
+                  <Link href="/register">
+                    Create Free Account <ArrowRight className="w-4 h-4 ml-2" />
                   </Link>
-                </CardContent>
-              </Card>
-            )
-          })}
-        </div>
-
-        {/* Call to Action */}
-        <div className="bg-gradient-to-r from-cyan-600 to-purple-600 rounded-2xl p-8 text-white text-center">
-          <h2 className="text-3xl font-bold mb-4">Want Access to Premium Features?</h2>
-          <p className="text-lg mb-6 text-cyan-50">
-            Create a free account to save your results, track your progress, and get personalized job recommendations
-          </p>
-          <div className="flex gap-4 justify-center flex-wrap">
-            <Link href="/register">
-              <Button size="lg" variant="secondary" className="bg-white text-cyan-600 hover:bg-gray-100">
-                Create Free Account
-              </Button>
-            </Link>
-            <Link href="/">
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
-                Browse Jobs
-              </Button>
-            </Link>
-          </div>
-        </div>
-
-        {/* Stats/Trust Section */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-12 text-center">
-          <div>
-            <div className="text-3xl font-bold text-cyan-600 mb-1">5</div>
-            <div className="text-sm text-gray-600">Free Tools</div>
-          </div>
-          <div>
-            <div className="text-3xl font-bold text-purple-600 mb-1">100%</div>
-            <div className="text-sm text-gray-600">Free Forever</div>
-          </div>
-          <div>
-            <div className="text-3xl font-bold text-green-600 mb-1">2 mins</div>
-            <div className="text-sm text-gray-600">Average Time</div>
-          </div>
-          <div>
-            <div className="text-3xl font-bold text-orange-600 mb-1">No Login</div>
-            <div className="text-sm text-gray-600">Required</div>
+                </Button>
+                <Button asChild variant="outline" className="border-white/10 text-white hover:bg-white/5">
+                  <Link href="/jobs">
+                    Browse Jobs
+                  </Link>
+                </Button>
+              </div>
+            </motion.div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   )
 }
