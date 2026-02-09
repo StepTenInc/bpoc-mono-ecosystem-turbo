@@ -10,12 +10,23 @@
  */
 
 import { MetadataRoute } from 'next';
-import { createClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+// Lazy initialization to avoid build-time errors
+let _supabase: SupabaseClient | null = null;
+
+function getSupabase(): SupabaseClient | null {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    return null;
+  }
+  if (!_supabase) {
+    _supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    );
+  }
+  return _supabase;
+}
 
 export const revalidate = 3600; // Revalidate every hour
 
@@ -98,6 +109,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // DYNAMIC INSIGHTS ARTICLES (from Supabase)
   // ============================================
   let insightPages: MetadataRoute.Sitemap = [];
+  const supabase = getSupabase();
+
+  // If no Supabase client (build time), return static pages only
+  if (!supabase) {
+    return staticPages;
+  }
 
   try {
     const { data: posts } = await supabase
