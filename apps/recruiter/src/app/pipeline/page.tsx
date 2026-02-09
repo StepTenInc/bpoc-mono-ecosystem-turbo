@@ -481,7 +481,7 @@ function CandidateCard({
 
           {/* Recordings */}
           {candidate.hasRecordings && (
-            <Link href="/recruiter/interviews/recordings">
+            <Link href="/interviews/recordings">
               <Badge variant="outline" className="text-xs bg-cyan-500/10 text-cyber-blue border-cyan-500/30 cursor-pointer hover:bg-cyan-500/20">
                 <Play className="h-3 w-3 mr-1" />
                 {candidate.recordingsCount} recording{candidate.recordingsCount !== 1 ? 's' : ''}
@@ -547,7 +547,7 @@ function CandidateCard({
 
           {/* View Recordings */}
           {candidate.hasRecordings && (
-            <Link href="/recruiter/interviews/recordings">
+            <Link href="/interviews/recordings">
               <Button size="sm" variant="ghost" className="h-8 w-8 p-0 text-cyber-blue hover:text-cyan-300 hover:bg-cyan-500/10 rounded-full">
                 <Play className="h-4 w-4" />
               </Button>

@@ -453,7 +453,7 @@ function AIInsightsCard({ loading }: { loading: boolean }) {
           </div>
         )}
 
-        <Link href="/recruiter/talent">
+        <Link href="/talent">
           <Button className="w-full mt-4 bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 shadow-lg shadow-purple-500/25">
             <Search className="h-4 w-4 mr-2" />
             Explore Matched Candidates
@@ -489,7 +489,7 @@ function MiniPipelinePreview({ stages, loading }: { stages: PipelineStage[]; loa
             </div>
             <h3 className="text-lg font-bold text-white">Candidate Pipeline</h3>
           </div>
-          <Link href="/recruiter/pipeline">
+          <Link href="/pipeline">
             <Button variant="ghost" size="sm" className="text-orange-400 hover:text-orange-300">
               Full View
               <ChevronRight className="h-4 w-4 ml-1" />
@@ -719,7 +719,7 @@ function ClientOverview({ clients, loading }: { clients: Client[]; loading: bool
               <p className="text-gray-400 text-sm">{clients.length} clients</p>
             </div>
           </div>
-          <Link href="/recruiter/clients">
+          <Link href="/clients">
             <Button variant="ghost" size="sm" className="text-cyan-400 hover:text-cyan-300">
               View All
               <ChevronRight className="h-4 w-4 ml-1" />
@@ -1347,7 +1347,7 @@ export default function RecruiterDashboard() {
           transition={{ delay: 0.2 }}
         >
           {verificationStatus === 'verified' ? (
-            <Link href="/recruiter/jobs/create">
+            <Link href="/jobs/create">
               <Button className="w-full sm:w-auto bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 shadow-lg shadow-orange-500/25">
                 <Plus className="h-4 w-4 mr-2" />
                 Post New Job
@@ -1461,7 +1461,7 @@ export default function RecruiterDashboard() {
                   </div>
                   <h2 className="text-xl font-semibold text-white">Recent Applications</h2>
                 </div>
-                <Link href="/recruiter/applications">
+                <Link href="/applications">
                   <Button variant="ghost" size="sm" className="text-orange-400 hover:text-orange-300">
                     View All
                     <ChevronRight className="h-4 w-4 ml-1" />
@@ -1483,7 +1483,7 @@ export default function RecruiterDashboard() {
                   </div>
                   <h3 className="text-xl font-bold text-white mb-2">No Applications Yet</h3>
                   <p className="text-gray-400 mb-6">Share your job posts to start receiving applications</p>
-                  <Link href="/recruiter/jobs/create">
+                  <Link href="/jobs/create">
                     <Button className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 shadow-lg shadow-cyan-500/25">
                       <Plus className="h-4 w-4 mr-2" />
                       Post Your First Job
@@ -1551,7 +1551,7 @@ export default function RecruiterDashboard() {
 
               <div className="space-y-2">
                 {verificationStatus === 'verified' ? (
-                  <Link href="/recruiter/jobs/create" className="block">
+                  <Link href="/jobs/create" className="block">
                     <div className="flex items-center gap-3 p-3 rounded-lg bg-gradient-to-r from-orange-500/10 to-amber-500/10 border border-orange-500/20 hover:border-orange-500/40 transition-all group">
                       <Plus className="h-4 w-4 text-orange-400" />
                       <span className="text-white text-sm group-hover:text-orange-400 transition-colors">Post a New Job</span>
@@ -1567,21 +1567,21 @@ export default function RecruiterDashboard() {
                   </div>
                 )}
 
-                <Link href="/recruiter/talent" className="block">
+                <Link href="/talent" className="block">
                   <div className="flex items-center gap-3 p-3 rounded-lg bg-white/5 border border-white/10 hover:border-cyan-500/30 transition-all group">
                     <Users className="h-4 w-4 text-cyan-400" />
                     <span className="text-white text-sm group-hover:text-cyan-400 transition-colors">Search Talent Pool</span>
                   </div>
                 </Link>
 
-                <Link href="/recruiter/pipeline" className="block">
+                <Link href="/pipeline" className="block">
                   <div className="flex items-center gap-3 p-3 rounded-lg bg-white/5 border border-white/10 hover:border-purple-500/30 transition-all group">
                     <Activity className="h-4 w-4 text-purple-400" />
                     <span className="text-white text-sm group-hover:text-purple-400 transition-colors">View Pipeline</span>
                   </div>
                 </Link>
 
-                <Link href="/recruiter/interviews" className="block">
+                <Link href="/interviews" className="block">
                   <div className="flex items-center gap-3 p-3 rounded-lg bg-white/5 border border-white/10 hover:border-emerald-500/30 transition-all group">
                     <Video className="h-4 w-4 text-emerald-400" />
                     <span className="text-white text-sm group-hover:text-emerald-400 transition-colors">Manage Interviews</span>

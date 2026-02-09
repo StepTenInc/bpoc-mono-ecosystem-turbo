@@ -506,7 +506,7 @@ export default function RecruiterApplicationsPage() {
             <span className="hidden sm:inline">{bulkMode ? 'Exit Bulk Mode' : 'Bulk Actions'}</span>
             <span className="sm:hidden">Bulk</span>
           </Button>
-          <Link href="/recruiter/talent">
+          <Link href="/talent">
             <Button variant="outline" size="sm" className="whitespace-nowrap border-white/10 text-gray-400 hover:text-white">
               <User className="h-4 w-4 mr-1 sm:mr-2" />
               <span className="hidden sm:inline">Browse Talent Pool</span>
@@ -652,7 +652,7 @@ export default function RecruiterApplicationsPage() {
             <p className="text-gray-400 mb-6">
               Applications will appear when candidates apply to your jobs.
             </p>
-            <Link href="/recruiter/jobs">
+            <Link href="/jobs">
               <Button className="bg-gradient-to-r from-orange-500 to-amber-600">
                 <Briefcase className="h-4 w-4 mr-2" />
                 View Your Jobs
@@ -864,7 +864,7 @@ export default function RecruiterApplicationsPage() {
                           )}
                           
                           {app.status === 'interview_scheduled' && (
-                            <Link href="/recruiter/interviews">
+                            <Link href="/interviews">
                               <Button size="sm" className="h-8 px-3 min-w-[120px] justify-center bg-orange-500/20 text-orange-400 hover:bg-orange-500/30 border border-orange-500/30">
                                 <Video className="h-4 w-4 mr-1.5" />
                                 View Interview
@@ -873,7 +873,7 @@ export default function RecruiterApplicationsPage() {
                           )}
 
                           {app.status === 'hired' && (
-                            <Link href="/recruiter/placements">
+                            <Link href="/placements">
                               <Button size="sm" className="h-8 px-3 min-w-[120px] justify-center bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 border border-emerald-500/30">
                                 <Award className="h-4 w-4 mr-1.5" />
                                 View Placement

@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { supabase } from '@/lib/supabase/admin';
 
 export async function POST(request: NextRequest) {
   try {
@@ -13,14 +12,18 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create a regular supabase client for auth
+    // Create clients
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
     const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
     
-    const supabase = createClient(supabaseUrl, supabaseAnonKey);
+    // Auth client (for user login)
+    const authClient = createClient(supabaseUrl, supabaseAnonKey);
+    // Admin client (for bypassing RLS)
+    const adminClient = createClient(supabaseUrl, supabaseServiceKey);
 
     // 1. Sign in with Supabase Auth
-    const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+    const { data: authData, error: authError } = await authClient.auth.signInWithPassword({
       email,
       password,
     });
@@ -41,7 +44,7 @@ export async function POST(request: NextRequest) {
     }
 
     // 2. Check if user is a BPOC admin using admin client (bypasses RLS)
-    const { data: bpocUser, error: bpocError } = await supabase
+    const { data: bpocUser, error: bpocError } = await adminClient
       .from('bpoc_users')
       .select('id, email, first_name, last_name, role, is_active')
       .eq('id', authData.user.id)

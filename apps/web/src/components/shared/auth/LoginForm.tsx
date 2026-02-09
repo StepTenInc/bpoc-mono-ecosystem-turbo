@@ -114,7 +114,10 @@ export default function LoginForm({ open, onOpenChange, onSwitchToSignUp }: Logi
         onOpenChange(false)
         resetForm()
 
-        window.location.href = isRecruiter ? '/recruiter/dashboard' : '/candidate/dashboard'
+        // Redirect to appropriate dashboard
+        // Recruiters/admins stay on web app, candidates go to separate candidate app
+        const candidateAppUrl = process.env.NEXT_PUBLIC_CANDIDATE_APP_URL || 'http://localhost:3000'
+        window.location.href = isRecruiter ? '/recruiter/dashboard' : `${candidateAppUrl}/dashboard`
       }
     } catch {
       setError('Something went wrong. Please try again.')

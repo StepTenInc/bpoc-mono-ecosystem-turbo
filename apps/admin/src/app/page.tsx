@@ -162,7 +162,7 @@ export default function AdminDashboard() {
           value={stats.totalCandidates.toLocaleString()}
           change={12}
           icon={Users}
-          href="/admin/candidates"
+          href="/candidates"
           color="cyan"
         />
         <StatCard
@@ -170,7 +170,7 @@ export default function AdminDashboard() {
           value={stats.totalAgencies}
           change={5}
           icon={Building2}
-          href="/admin/agencies"
+          href="/agencies"
           color="purple"
         />
         <StatCard
@@ -178,7 +178,7 @@ export default function AdminDashboard() {
           value={stats.activeJobs}
           change={-3}
           icon={Briefcase}
-          href="/admin/jobs"
+          href="/jobs"
           color="emerald"
         />
         <StatCard
@@ -186,21 +186,21 @@ export default function AdminDashboard() {
           value={stats.pendingApplications}
           change={18}
           icon={FileText}
-          href="/admin/applications"
+          href="/applications"
           color="orange"
         />
         <StatCard
           title="Interviews"
           value={stats.scheduledInterviews}
           icon={Calendar}
-          href="/admin/interviews"
+          href="/interviews"
           color="red"
         />
         <StatCard
           title="Pending Offers"
           value={stats.pendingOffers}
           icon={CheckCircle}
-          href="/admin/offers"
+          href="/offers"
           color="cyan"
         />
       </div>
@@ -250,28 +250,28 @@ export default function AdminDashboard() {
             </CardHeader>
             <CardContent className="space-y-2">
               <Link
-                href="/admin/jobs?action=new"
+                href="/jobs?action=new"
                 className="flex items-center gap-3 p-3 rounded-lg bg-white/5 hover:bg-red-500/10 hover:border-red-500/30 border border-transparent transition-all text-white"
               >
                 <Briefcase className="h-5 w-5 text-red-400" />
                 <span>Post New Job</span>
               </Link>
               <Link
-                href="/admin/candidates"
+                href="/candidates"
                 className="flex items-center gap-3 p-3 rounded-lg bg-white/5 hover:bg-cyan-500/10 hover:border-cyan-500/30 border border-transparent transition-all text-white"
               >
                 <Users className="h-5 w-5 text-cyan-400" />
                 <span>View Candidates</span>
               </Link>
               <Link
-                href="/admin/interviews"
+                href="/interviews"
                 className="flex items-center gap-3 p-3 rounded-lg bg-white/5 hover:bg-orange-500/10 hover:border-orange-500/30 border border-transparent transition-all text-white"
               >
                 <Calendar className="h-5 w-5 text-orange-400" />
                 <span>Manage Interviews</span>
               </Link>
               <Link
-                href="/admin/applications?status=pending"
+                href="/applications?status=pending"
                 className="flex items-center gap-3 p-3 rounded-lg bg-white/5 hover:bg-purple-500/10 hover:border-purple-500/30 border border-transparent transition-all text-white"
               >
                 <AlertCircle className="h-5 w-5 text-purple-400" />

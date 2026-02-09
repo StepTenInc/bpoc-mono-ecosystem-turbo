@@ -24,7 +24,7 @@ export default function AdminLoginPage() {
 
     try {
       // Call API route to login (bypasses RLS for bpoc_users check)
-      const response = await fetch('/api/admin/login', {
+      const response = await fetch('/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -47,7 +47,7 @@ export default function AdminLoginPage() {
       }
 
       // Success - redirect to admin dashboard
-      router.push('/admin');
+      router.push('/');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Login failed');
     } finally {
@@ -149,7 +149,7 @@ export default function AdminLoginPage() {
           {/* Footer */}
           <p className="text-center text-gray-500 text-sm mt-6">
             Need an account?{' '}
-            <Link href="/admin/signup" className="text-red-400 hover:text-red-300">
+            <Link href="/signup" className="text-red-400 hover:text-red-300">
               Create one
             </Link>
           </p>

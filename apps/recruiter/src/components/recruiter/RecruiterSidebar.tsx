@@ -38,27 +38,27 @@ interface NavItem {
 }
 
 const mainNavItems: NavItem[] = [
-  { name: 'Dashboard', href: '/recruiter', icon: LayoutDashboard },
-  { name: 'Clients', href: '/recruiter/clients', icon: Building2 },
-  { name: 'Talent Pool', href: '/recruiter/talent', icon: Search },
-  { name: 'Jobs', href: '/recruiter/jobs', icon: Briefcase },
-  { name: 'Applications', href: '/recruiter/applications', icon: FileText, badgeKey: 'newApplications' },
-  { name: 'Pipeline', href: '/recruiter/pipeline', icon: Kanban },
-  { name: 'Interviews', href: '/recruiter/interviews', icon: Calendar, badgeKey: 'pendingInterviews' },
-  { name: 'Recordings', href: '/recruiter/interviews/recordings', icon: Video },
-  { name: 'Offers', href: '/recruiter/offers', icon: Gift, badgeKey: 'pendingOffers' },
-  { name: 'Onboarding', href: '/recruiter/onboarding', icon: FileCheck, badgeKey: 'pendingOnboarding', highlight: true },
-  { name: 'Placements', href: '/recruiter/placements', icon: Trophy },
-  { name: 'Labor Law Compliance', href: '/recruiter/hr-assistant', icon: FileCheck },
-  { name: 'Notifications', href: '/recruiter/notifications', icon: Bell, badgeKey: 'unreadNotifications' },
+  { name: 'Dashboard', href: '/', icon: LayoutDashboard },
+  { name: 'Clients', href: '/clients', icon: Building2 },
+  { name: 'Talent Pool', href: '/talent', icon: Search },
+  { name: 'Jobs', href: '/jobs', icon: Briefcase },
+  { name: 'Applications', href: '/applications', icon: FileText, badgeKey: 'newApplications' },
+  { name: 'Pipeline', href: '/pipeline', icon: Kanban },
+  { name: 'Interviews', href: '/interviews', icon: Calendar, badgeKey: 'pendingInterviews' },
+  { name: 'Recordings', href: '/interviews/recordings', icon: Video },
+  { name: 'Offers', href: '/offers', icon: Gift, badgeKey: 'pendingOffers' },
+  { name: 'Onboarding', href: '/onboarding', icon: FileCheck, badgeKey: 'pendingOnboarding', highlight: true },
+  { name: 'Placements', href: '/placements', icon: Trophy },
+  { name: 'Labor Law Compliance', href: '/hr-assistant', icon: FileCheck },
+  { name: 'Notifications', href: '/notifications', icon: Bell, badgeKey: 'unreadNotifications' },
 ];
 
 const settingsNavItems: NavItem[] = [
-  { name: 'Profile', href: '/recruiter/profile', icon: User },
-  { name: 'Agency', href: '/recruiter/agency', icon: Building2 },
-  { name: 'Team', href: '/recruiter/team', icon: Users },
-  { name: 'API Keys', href: '/recruiter/api', icon: Key },
-  { name: 'Settings', href: '/recruiter/settings', icon: Settings },
+  { name: 'Profile', href: '/profile', icon: User },
+  { name: 'Agency', href: '/agency', icon: Building2 },
+  { name: 'Team', href: '/team', icon: Users },
+  { name: 'API Keys', href: '/api', icon: Key },
+  { name: 'Settings', href: '/settings', icon: Settings },
 ];
 
 interface NotificationBadges {
@@ -139,8 +139,8 @@ export default function RecruiterSidebar({
   }, [recruiter?.id, recruiter?.agency_id]);
 
   const isActive = (href: string) => {
-    if (href === '/recruiter') {
-      return pathname === '/recruiter';
+    if (href === '/') {
+      return pathname === '/' || pathname === '';
     }
     return pathname.startsWith(href);
   };
@@ -176,7 +176,7 @@ export default function RecruiterSidebar({
       {/* Logo & Collapse Toggle */}
       <div className="p-4 border-b border-white/10">
         <div className="flex items-center justify-between">
-          <Link href="/recruiter" className="flex items-center gap-3">
+          <Link href="/" className="flex items-center gap-3">
             {recruiter?.agency?.logo_url ? (
               <Avatar className="h-10 w-10 rounded-xl">
                 <AvatarImage src={recruiter.agency.logo_url} alt={recruiter.agency.name} />

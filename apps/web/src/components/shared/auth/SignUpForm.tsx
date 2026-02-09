@@ -163,8 +163,9 @@ export default function SignUpForm({ open, onOpenChange, onSwitchToLogin }: Sign
           await new Promise(resolve => setTimeout(resolve, 800))
 
           onOpenChange(false)
-          // Redirect to dashboard
-          window.location.href = '/candidate/dashboard'
+          // Redirect to candidate app dashboard
+          const candidateAppUrl = process.env.NEXT_PUBLIC_CANDIDATE_APP_URL || 'http://localhost:3000'
+          window.location.href = `${candidateAppUrl}/dashboard`
         }
       }
     } catch {

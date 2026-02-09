@@ -410,7 +410,7 @@ export default function ApplicationDetailPage() {
       <div className="max-w-3xl mx-auto space-y-4 py-10">
         <div className="flex items-center justify-between">
           <Link
-            href="/recruiter/applications"
+            href="/applications"
             className="inline-flex items-center text-gray-400 hover:text-white transition-colors"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
@@ -445,7 +445,7 @@ export default function ApplicationDetailPage() {
               >
                 Retry
               </Button>
-              <Link href="/recruiter/applications">
+              <Link href="/applications">
                 <Button className="bg-orange-500 hover:bg-orange-600">Go to Applications</Button>
               </Link>
             </div>
@@ -463,7 +463,7 @@ export default function ApplicationDetailPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <Link
-          href="/recruiter/applications"
+          href="/applications"
           className="inline-flex items-center text-gray-400 hover:text-white transition-colors"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />

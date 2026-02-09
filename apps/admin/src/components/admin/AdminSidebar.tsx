@@ -39,30 +39,30 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { label: 'Dashboard', href: '/admin', icon: LayoutDashboard },
-  { label: 'Users', href: '/admin/users', icon: Users, highlight: true },
-  { label: 'Recruiters', href: '/admin/recruiters', icon: UserCircle, highlight: true },
-  { label: 'Agencies', href: '/admin/agencies', icon: Building2 },
-  { label: 'Clients', href: '/admin/clients', icon: Building2 },
-  { label: 'Candidates', href: '/admin/candidates', icon: Users },
-  { label: 'Jobs', href: '/admin/jobs', icon: Briefcase },
-  { label: 'Applications', href: '/admin/applications', icon: FileText },
-  { label: 'Interviews', href: '/admin/interviews', icon: Calendar },
-  { label: 'Offers', href: '/admin/offers', icon: Gift },
-  { label: 'Counter Offers', href: '/admin/counter-offers', icon: TrendingUp },
-  { label: 'Onboarding', href: '/admin/onboarding', icon: CheckCircle2 },
-  { label: 'Insights Manager', href: '/admin/insights', icon: Newspaper },
-  { label: 'Analytics', href: '/admin/analytics', icon: BarChart3 },
-  { label: 'Billing', href: '/admin/billing', icon: TrendingUp, highlight: true },
-  { label: 'BPOC Compliance', href: '/admin/hr-assistant', icon: Shield },
-  { label: 'Notifications', href: '/admin/notifications', icon: Bell },
-  { label: 'Outbound', href: '/admin/outbound', icon: Mail, highlight: true },
-  { label: 'Audit Log', href: '/admin/audit-log', icon: Shield },
-  { label: 'Error Dashboard', href: '/admin/errors', icon: AlertCircle },
+  { label: 'Dashboard', href: '/', icon: LayoutDashboard },
+  { label: 'Users', href: '/users', icon: Users, highlight: true },
+  { label: 'Recruiters', href: '/recruiters', icon: UserCircle, highlight: true },
+  { label: 'Agencies', href: '/agencies', icon: Building2 },
+  { label: 'Clients', href: '/clients', icon: Building2 },
+  { label: 'Candidates', href: '/candidates', icon: Users },
+  { label: 'Jobs', href: '/jobs', icon: Briefcase },
+  { label: 'Applications', href: '/applications', icon: FileText },
+  { label: 'Interviews', href: '/interviews', icon: Calendar },
+  { label: 'Offers', href: '/offers', icon: Gift },
+  { label: 'Counter Offers', href: '/counter-offers', icon: TrendingUp },
+  { label: 'Onboarding', href: '/onboarding', icon: CheckCircle2 },
+  { label: 'Insights Manager', href: '/insights', icon: Newspaper },
+  { label: 'Analytics', href: '/analytics', icon: BarChart3 },
+  { label: 'Billing', href: '/billing', icon: TrendingUp, highlight: true },
+  { label: 'BPOC Compliance', href: '/hr-assistant', icon: Shield },
+  { label: 'Notifications', href: '/notifications', icon: Bell },
+  { label: 'Outbound', href: '/outbound', icon: Mail, highlight: true },
+  { label: 'Audit Log', href: '/audit-log', icon: Shield },
+  { label: 'Error Dashboard', href: '/errors', icon: AlertCircle },
 ];
 
 const bottomNavItems: NavItem[] = [
-  { label: 'Settings', href: '/admin/settings', icon: Settings },
+  { label: 'Settings', href: '/settings', icon: Settings },
 ];
 
 interface AdminSidebarProps {
@@ -77,8 +77,8 @@ export default function AdminSidebar({ collapsed = false, onToggle, mobileOpen =
   const { user, signOut } = useAuth();
 
   const isActive = (href: string) => {
-    if (href === '/admin') {
-      return pathname === '/admin';
+    if (href === '/') {
+      return pathname === '/' || pathname === '';
     }
     return pathname.startsWith(href);
   };
@@ -88,7 +88,7 @@ export default function AdminSidebar({ collapsed = false, onToggle, mobileOpen =
       {/* Logo */}
       <div className="h-16 flex items-center justify-between px-4 border-b border-white/10">
         {!collapsed && (
-          <Link href="/admin" className="flex items-center gap-3" onClick={onMobileClose}>
+          <Link href="/" className="flex items-center gap-3" onClick={onMobileClose}>
             <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-red-500 to-orange-600 flex items-center justify-center">
               <Shield className="h-6 w-6 text-white" />
             </div>

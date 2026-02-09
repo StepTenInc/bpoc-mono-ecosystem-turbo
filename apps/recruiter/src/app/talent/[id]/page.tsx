@@ -113,7 +113,7 @@ export default function CandidateProfilePage() {
         setCandidate(data.candidate);
       } else {
         toast.error('Candidate not found');
-        router.push('/recruiter/talent');
+        router.push('/talent');
       }
     } catch (error) {
       console.error('Failed to fetch candidate:', error);
@@ -226,7 +226,7 @@ export default function CandidateProfilePage() {
   return (
     <div className="max-w-5xl mx-auto space-y-6">
       {/* Header */}
-      <Link href="/recruiter/talent" className="inline-flex items-center text-gray-400 hover:text-white">
+      <Link href="/talent" className="inline-flex items-center text-gray-400 hover:text-white">
         <ArrowLeft className="h-4 w-4 mr-2" />
         Back to Talent Pool
       </Link>

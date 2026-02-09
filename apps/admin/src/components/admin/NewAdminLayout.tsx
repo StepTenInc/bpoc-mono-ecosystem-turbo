@@ -28,7 +28,7 @@ export default function NewAdminLayout({ children }: NewAdminLayoutProps) {
 
   useEffect(() => {
     // Skip auth check on login and signup pages - they render without sidebar
-    if (pathname === '/admin/login' || pathname === '/admin/signup') {
+    if (pathname === '/login' || pathname === '/signup') {
       setLoading(false);
       // Don't set isAuthenticated - we want to render children directly without sidebar
       return;
@@ -39,12 +39,12 @@ export default function NewAdminLayout({ children }: NewAdminLayoutProps) {
         const { data: { session } } = await supabase.auth.getSession();
 
         if (!session) {
-          router.push('/admin/login');
+          router.push('/login');
           return;
         }
 
         // Verify user is a BPOC admin via API (bypasses RLS)
-        const response = await fetch('/api/admin/verify', {
+        const response = await fetch('/api/verify', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -61,14 +61,14 @@ export default function NewAdminLayout({ children }: NewAdminLayoutProps) {
         if (!response.ok || !result.isAdmin) {
           console.warn('Admin verification failed:', result);
           await supabase.auth.signOut();
-          router.push('/admin/login');
+          router.push('/login');
           return;
         }
 
         setIsAuthenticated(true);
       } catch (err) {
         console.error('Auth check failed:', err);
-        router.push('/admin/login');
+        router.push('/login');
       } finally {
         setLoading(false);
       }
@@ -79,7 +79,7 @@ export default function NewAdminLayout({ children }: NewAdminLayoutProps) {
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_OUT') {
-        router.push('/admin/login');
+        router.push('/login');
       }
     });
 
@@ -87,7 +87,7 @@ export default function NewAdminLayout({ children }: NewAdminLayoutProps) {
   }, [pathname, router]);
 
   // For login/signup pages, render children directly without sidebar
-  if (pathname === '/admin/login' || pathname === '/admin/signup') {
+  if (pathname === '/login' || pathname === '/signup') {
     return <>{children}</>;
   }
 

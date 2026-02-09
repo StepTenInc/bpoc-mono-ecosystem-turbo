@@ -30,7 +30,7 @@ import { useAdmin } from '@/contexts/AdminContext'
 import { getSessionToken } from '@/lib/auth-helpers'
 import { AnimatedLogo } from '@/components/shared/ui/AnimatedLogo'
 import { LayoutDashboard } from 'lucide-react'
-import { trackSignupModal } from '@/lib/analytics/anonymous-tracking'
+import { trackEvent } from '@/components/analytics/AnalyticsProvider'
 
 interface HeaderProps {
   className?: string
@@ -105,7 +105,7 @@ export default function Header({}: HeaderProps) {
 
     const handleOpenSignupModal = () => {
       setIsSignUpDialogOpen(true)
-      trackSignupModal('open')
+      trackEvent('modal_open', 'interaction', { modal: 'signup' })
     }
 
     window.addEventListener('openSignupModal', handleOpenSignupModal)
@@ -120,7 +120,7 @@ export default function Header({}: HeaderProps) {
       // Modal was closed without signup - track abandonment
       const wasOpen = localStorage.getItem('signup_modal_was_open');
       if (wasOpen === 'true') {
-        trackSignupModal('abandoned');
+        trackEvent('modal_close', 'interaction', { modal: 'signup', abandoned: true });
         localStorage.removeItem('signup_modal_was_open');
       }
     } else if (isSignUpDialogOpen && !user) {
@@ -248,7 +248,9 @@ export default function Header({}: HeaderProps) {
   const getDashboardUrl = () => {
     if (isAdmin) return '/admin'
     if (isRecruiter) return '/recruiter'
-    return '/candidate/dashboard'
+    // Candidates go to separate candidate app
+    const candidateAppUrl = process.env.NEXT_PUBLIC_CANDIDATE_APP_URL || 'http://localhost:3000'
+    return `${candidateAppUrl}/dashboard`
   }
 
   const allMenuItems = [

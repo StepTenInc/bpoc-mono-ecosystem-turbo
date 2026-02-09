@@ -121,7 +121,7 @@ export default function PendingVerificationPage() {
             </div>
           </Link>
           <div className="flex items-center gap-4">
-            <Link href="/recruiter/login">
+            <Link href="/login">
               <Button variant="ghost" className="text-gray-400 hover:text-white">
                 Sign Out
               </Button>
@@ -256,7 +256,7 @@ export default function PendingVerificationPage() {
                 )}
               </Button>
 
-              <Link href="/recruiter/login">
+              <Link href="/login">
                 <Button variant="ghost" className="text-gray-400 hover:text-white">
                   Sign Out
                 </Button>

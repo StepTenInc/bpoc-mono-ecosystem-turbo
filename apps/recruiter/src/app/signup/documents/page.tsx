@@ -157,7 +157,7 @@ export default function DocumentUploadPage() {
       if (!res.ok) throw new Error(data.error ?? 'Upload failed');
 
       setSuccess(true);
-      setTimeout(() => router.push('/recruiter/signup/pending-verification'), 1800);
+      setTimeout(() => router.push('/signup/pending-verification'), 1800);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong');
     } finally {

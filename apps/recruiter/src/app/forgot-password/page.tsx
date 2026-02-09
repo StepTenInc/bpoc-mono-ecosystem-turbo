@@ -95,7 +95,7 @@ export default function RecruiterForgotPasswordPage() {
           </form>
 
           <p className="text-center text-gray-400 mt-6">
-            <Link href="/recruiter/login" className="text-orange-400 hover:text-orange-300">
+            <Link href="/login" className="text-orange-400 hover:text-orange-300">
               Back to login
             </Link>
           </p>

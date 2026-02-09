@@ -208,7 +208,7 @@ function RecruiterSignupContent() {
           </div>
           <h2 className="text-2xl font-bold text-white mb-4">Invalid Invitation</h2>
           <p className="text-gray-400 mb-6">{inviteError}</p>
-          <Link href="/recruiter/signup">
+          <Link href="/signup">
             <Button className="bg-gradient-to-r from-orange-500 to-amber-600">
               Create New Account Instead
             </Button>
@@ -258,7 +258,7 @@ function RecruiterSignupContent() {
             </div>
           </Link>
           <div className="flex items-center gap-4">
-            <Link href="/recruiter/login" className="text-sm font-medium text-gray-400 hover:text-white transition-colors">
+            <Link href="/login" className="text-sm font-medium text-gray-400 hover:text-white transition-colors">
               Log In
             </Link>
             <Link href="#signup-form">

@@ -33,12 +33,21 @@ import {
 } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 import {
-  initPageTracking,
-  trackAnonEvent,
-  trackCTAClick,
-  trackSignupModal,
-  getAnonSessionId
-} from '@/lib/analytics/anonymous-tracking';
+  trackEvent,
+  trackConversion,
+  trackClick
+} from '@/components/analytics/AnalyticsProvider';
+
+// Helper to get anon session ID
+function getAnonSessionId(): string {
+  if (typeof window === 'undefined') return '';
+  let sessionId = localStorage.getItem('bpoc_anon_session');
+  if (!sessionId) {
+    sessionId = `anon-${crypto.randomUUID()}`;
+    localStorage.setItem('bpoc_anon_session', sessionId);
+  }
+  return sessionId;
+}
 
 interface AnalysisResult {
   // Overall score
@@ -113,8 +122,8 @@ export default function TryResumeBuilder() {
 
   const handleSignUp = () => {
     // Track CTA click
-    trackCTAClick('Sign Up Free', 'Resume Analyzer Results');
-    trackSignupModal('open');
+    trackClick('Sign Up Free', 'Resume Analyzer Results');
+    trackEvent('modal_open', 'interaction', { modal: 'signup' });
 
     // Trigger the Header's signup modal directly
     window.dispatchEvent(new Event('openSignupModal'));
@@ -129,11 +138,8 @@ export default function TryResumeBuilder() {
     // Get or create anonymous session ID
     const sessionId = getAnonSessionId();
     setAnonSessionId(sessionId);
-
-    // Initialize page tracking
-    const cleanup = initPageTracking('Free Resume Analyzer');
-
-    return cleanup;
+    
+    // Page tracking is handled by AnalyticsProvider
   }, []);
 
   // Fetch real platform stats
@@ -187,7 +193,7 @@ export default function TryResumeBuilder() {
 
     if (!isValidType) {
       setError('Please upload a PDF, DOC, DOCX, or image file');
-      trackAnonEvent('resume_upload_start', {
+      trackConversion('resume_upload_start', {
         success: false,
         error: 'Invalid file type',
         file_type: selectedFile.type
@@ -197,7 +203,7 @@ export default function TryResumeBuilder() {
 
     if (selectedFile.size > 10 * 1024 * 1024) {
       setError('File too large. Maximum 10MB.');
-      trackAnonEvent('resume_upload_start', {
+      trackConversion('resume_upload_start', {
         success: false,
         error: 'File too large',
         file_size: selectedFile.size
@@ -208,7 +214,7 @@ export default function TryResumeBuilder() {
     setFile(selectedFile);
 
     // Track successful file upload
-    trackAnonEvent('resume_upload_complete', {
+    trackConversion('resume_upload_complete', {
       success: true,
       file_type: selectedFile.type,
       file_size: selectedFile.size,
@@ -231,7 +237,7 @@ export default function TryResumeBuilder() {
     setProgress(0);
 
     // Track analysis start
-    trackAnonEvent('resume_upload_start', {
+    trackConversion('resume_upload_start', {
       file_name: file.name,
       file_type: file.type,
       file_size: file.size
@@ -294,7 +300,7 @@ export default function TryResumeBuilder() {
       setProgressText('✅ Analysis complete!');
 
       // Track successful analysis
-      trackAnonEvent('resume_analysis_complete', {
+      trackConversion('resume_analysis_complete', {
         success: true,
         score: data.analysis.score,
         grade: data.analysis.grade,
@@ -315,7 +321,7 @@ export default function TryResumeBuilder() {
       setIsAnalyzing(false);
 
       // Track analysis error
-      trackAnonEvent('resume_analysis_complete', {
+      trackConversion('resume_analysis_complete', {
         success: false,
         error: errorMessage
       });

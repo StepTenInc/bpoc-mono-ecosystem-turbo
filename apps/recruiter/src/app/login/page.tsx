@@ -44,7 +44,7 @@ export default function RecruiterLoginPage() {
       await verifyRecruiter(data.user.id);
 
       // Redirect to recruiter dashboard
-      router.push('/recruiter');
+      router.push('/');
 
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Login failed');
@@ -142,7 +142,7 @@ export default function RecruiterLoginPage() {
             </div>
 
             <div className="flex items-center justify-end">
-              <Link href="/recruiter/forgot-password" className="text-sm text-orange-400 hover:text-orange-300">
+              <Link href="/forgot-password" className="text-sm text-orange-400 hover:text-orange-300">
                 Forgot password?
               </Link>
             </div>
@@ -166,7 +166,7 @@ export default function RecruiterLoginPage() {
 
         <p className="text-center text-gray-400 mt-6">
           Don&apos;t have an account?{' '}
-          <Link href="/recruiter/signup" className="text-orange-400 hover:text-orange-300">
+          <Link href="/signup" className="text-orange-400 hover:text-orange-300">
             Sign up free
           </Link>
         </p>

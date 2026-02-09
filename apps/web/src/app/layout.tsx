@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
+import { Suspense } from "react";
 import "./globals.css";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { AdminProvider } from "@/contexts/AdminContext";
 import { ToastProvider } from "@/components/shared/ui/toast";
+import { AnalyticsProvider } from "@/components/analytics/AnalyticsProvider";
 
 const interSans = Inter({
     variable: "--font-geist-sans",
@@ -86,7 +88,11 @@ export default function RootLayout({
                 <AuthProvider>
                     <AdminProvider>
                         <ToastProvider>
-                            {children}
+                            <Suspense fallback={null}>
+                                <AnalyticsProvider>
+                                    {children}
+                                </AnalyticsProvider>
+                            </Suspense>
                         </ToastProvider>
                     </AdminProvider>
                 </AuthProvider>

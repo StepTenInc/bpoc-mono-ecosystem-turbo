@@ -192,7 +192,7 @@ export default function CreateJobPage() {
         setSuccess(true);
         toast.success('Job posted successfully!');
         setTimeout(() => {
-          router.push('/recruiter/jobs');
+          router.push('/jobs');
         }, 2000);
       } else {
         toast.error(data.error || 'Failed to create job');
@@ -240,7 +240,7 @@ export default function CreateJobPage() {
                 </Button>
               </Link>
               {verificationStatus === 'pending_documents' && (
-                <Link href="/recruiter/signup/documents">
+                <Link href="/signup/documents">
                   <Button className="bg-gradient-to-r from-orange-500 to-amber-600">
                     Upload Documents
                   </Button>
@@ -275,7 +275,7 @@ export default function CreateJobPage() {
     <div className="max-w-4xl mx-auto">
       {/* Header */}
       <div className="mb-8">
-        <Link href="/recruiter/jobs" className="inline-flex items-center text-gray-400 hover:text-white mb-4">
+        <Link href="/jobs" className="inline-flex items-center text-gray-400 hover:text-white mb-4">
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back to Jobs
         </Link>
@@ -328,7 +328,7 @@ export default function CreateJobPage() {
                   ) : clients.length === 0 ? (
                     <div className="p-4 rounded-lg bg-orange-500/10 border border-orange-500/30">
                       <p className="text-orange-400 text-sm">
-                        No clients found. <Link href="/recruiter/clients" className="underline">Add a client first</Link> to post jobs.
+                        No clients found. <Link href="/clients" className="underline">Add a client first</Link> to post jobs.
                       </p>
                     </div>
                   ) : (

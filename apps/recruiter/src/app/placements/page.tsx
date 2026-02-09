@@ -382,7 +382,7 @@ export default function PlacementsPage() {
               When candidates accept offers and get hired, they'll appear here.
               Keep sending those offers!
             </p>
-            <Link href="/recruiter/offers">
+            <Link href="/offers">
               <Button className="bg-gradient-to-r from-orange-500 to-amber-600 shadow-lg shadow-orange-500/25">
                 View Pending Offers
                 <ChevronRight className="h-4 w-4 ml-2" />

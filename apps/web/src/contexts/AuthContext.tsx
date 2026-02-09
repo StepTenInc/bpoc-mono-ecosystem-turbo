@@ -134,11 +134,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
               return
             }
           }
-          // Redirect CANDIDATE users to candidate dashboard (even from home page)
-          else if (!isOnCandidatePage && !isOnRecruiterPage && !isOnAdminPage && !isOnTestPage && (!isOnPublicPage || currentPath === '/')) {
-            console.log('🔀 Redirecting candidate user to /candidate/dashboard')
+          // Redirect CANDIDATE users to candidate app (separate Next.js app)
+          // Only redirect from root path - let users browse marketing pages if they want
+          else if (currentPath === '/' && !isOnTestPage) {
+            const candidateAppUrl = process.env.NEXT_PUBLIC_CANDIDATE_APP_URL || 'http://localhost:3000'
+            console.log('🔀 Redirecting candidate user to candidate app:', candidateAppUrl)
             setTimeout(() => {
-              window.location.href = '/candidate/dashboard'
+              window.location.href = `${candidateAppUrl}/dashboard`
             }, 500)
             return
           }

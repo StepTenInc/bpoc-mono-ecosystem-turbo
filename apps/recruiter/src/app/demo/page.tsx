@@ -356,10 +356,10 @@ print(candidates)`
       {/* Navigation */}
       <nav className="sticky top-0 z-50 border-b border-white/5 bg-[#0B0B0D]/80 backdrop-blur-md">
         <div className="container mx-auto px-6 h-16 flex items-center justify-between">
-          <Link href="/recruiter/signup" className="text-sm font-medium text-orange-400 hover:text-orange-300 transition-colors">
+          <Link href="/signup" className="text-sm font-medium text-orange-400 hover:text-orange-300 transition-colors">
             ← Back to Signup
           </Link>
-          <Link href="/recruiter/signup">
+          <Link href="/signup">
             <Button className="bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white rounded-full px-6">
               Start Free
             </Button>
@@ -399,7 +399,7 @@ print(candidates)`
                   Explore Demo Below
                   <ArrowDown className="ml-2 w-5 h-5" />
                 </Button>
-                <Link href="/recruiter/signup">
+                <Link href="/signup">
                   <Button size="lg" className="h-14 px-10 bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white rounded-full">
                     Start Free
                     <ChevronRight className="ml-2 w-5 h-5" />
@@ -894,7 +894,7 @@ print(candidates)`
                   <p className="text-gray-400 mb-6 max-w-md mx-auto">
                     Track applications, manage interviews, and close placements faster
                   </p>
-                  <Link href="/recruiter/signup">
+                  <Link href="/signup">
                     <Button className="bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white">
                       Create Free Account
                       <ArrowRight className="ml-2 w-5 h-5" />
@@ -1350,7 +1350,7 @@ print(candidates)`
               </div>
 
               <div className="mt-8 text-center">
-                <Link href="/recruiter/signup">
+                <Link href="/signup">
                   <Button size="lg" className="h-14 px-10 bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white rounded-full">
                     Start Saving Today
                     <ArrowRight className="ml-2 w-5 h-5" />
@@ -1480,7 +1480,7 @@ print(candidates)`
               </p>
 
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
-                <Link href="/recruiter/signup">
+                <Link href="/signup">
                   <Button size="lg" className="h-16 px-12 text-xl bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white rounded-full shadow-2xl shadow-orange-500/30">
                     Start Free
                     <ArrowRight className="ml-2 w-6 h-6" />

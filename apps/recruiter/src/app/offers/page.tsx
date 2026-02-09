@@ -535,7 +535,7 @@ export default function RecruiterOffersPage() {
           <h1 className="text-3xl font-bold text-white">Job Offers</h1>
           <p className="text-gray-400 mt-1">Track offers and manage negotiations</p>
         </div>
-        <Link href="/recruiter/interviews">
+        <Link href="/interviews">
           <Button className="bg-gradient-to-r from-orange-500 to-amber-600 shadow-lg shadow-orange-500/25">
             <Gift className="h-4 w-4 mr-2" />
             Create Offer
@@ -619,7 +619,7 @@ export default function RecruiterOffersPage() {
             <Gift className="h-12 w-12 text-gray-500 mx-auto mb-4" />
             <h3 className="text-lg font-semibold text-white mb-2">No Offers</h3>
             <p className="text-gray-400 mb-4">Send offers from the Interviews page after candidates pass.</p>
-            <Link href="/recruiter/interviews">
+            <Link href="/interviews">
               <Button className="bg-gradient-to-r from-orange-500 to-amber-600">
                 Go to Interviews
               </Button>

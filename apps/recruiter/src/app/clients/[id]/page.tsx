@@ -121,7 +121,7 @@ export default function ClientDetailPage() {
         });
       } else {
         toast.error('Client not found');
-        router.push('/recruiter/clients');
+        router.push('/clients');
       }
     } catch (error) {
       console.error('Failed to fetch client:', error);
@@ -196,7 +196,7 @@ export default function ClientDetailPage() {
     <div className="max-w-5xl mx-auto space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <Link href="/recruiter/clients" className="inline-flex items-center text-gray-400 hover:text-white">
+        <Link href="/clients" className="inline-flex items-center text-gray-400 hover:text-white">
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back to Clients
         </Link>

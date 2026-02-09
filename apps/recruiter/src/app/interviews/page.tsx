@@ -496,7 +496,7 @@ export default function RecruiterInterviewsPage() {
                             </div>
                           </div>
                           
-                          <Link href="/recruiter/offers">
+                          <Link href="/offers">
                             <Button variant="outline" className="border-pink-500/30 text-pink-400 hover:bg-pink-500/10">
                               <Gift className="h-4 w-4 mr-2" />
                               View Offer

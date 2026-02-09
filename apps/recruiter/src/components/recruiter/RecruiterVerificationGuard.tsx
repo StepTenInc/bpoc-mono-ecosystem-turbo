@@ -39,7 +39,7 @@ export default function RecruiterVerificationGuard({ children }: RecruiterVerifi
 
       if (!response.ok || !data.recruiter) {
         // Not a recruiter, redirect to login
-        router.push('/recruiter/login');
+        router.push('/login');
         return;
       }
 
@@ -50,13 +50,13 @@ export default function RecruiterVerificationGuard({ children }: RecruiterVerifi
       // Redirect based on verification status
       if (status === 'pending_documents') {
         // Authorized head needs to upload documents
-        router.push('/recruiter/signup/documents');
+        router.push('/signup/documents');
       } else if (status === 'pending_admin_review') {
         // Documents uploaded, awaiting admin approval
-        router.push('/recruiter/signup/pending-verification');
+        router.push('/signup/pending-verification');
       } else if (status === 'pending_authorization_head') {
         // Non-authorized recruiter waiting for auth head
-        router.push('/recruiter/signup/awaiting-authorization');
+        router.push('/signup/awaiting-authorization');
       } else if (status === 'rejected') {
         // Rejected, show rejection screen
         // For now, allow access to dashboard so they can see rejection message

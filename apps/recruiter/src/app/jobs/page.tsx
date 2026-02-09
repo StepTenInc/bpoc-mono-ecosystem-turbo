@@ -247,7 +247,7 @@ export default function RecruiterJobsPage() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.2 }}
         >
-          <Link href="/recruiter/jobs/create">
+          <Link href="/jobs/create">
             <Button className="bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 shadow-lg shadow-orange-500/25">
               <Plus className="h-4 w-4 mr-2" />
               Post New Job
@@ -387,7 +387,7 @@ export default function RecruiterJobsPage() {
               <p className="text-gray-400 mb-6 max-w-md mx-auto">
                 Create your first job posting to start receiving applications from top talent
               </p>
-              <Link href="/recruiter/jobs/create">
+              <Link href="/jobs/create">
                 <Button className="bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 shadow-lg shadow-orange-500/25">
                   <Plus className="h-4 w-4 mr-2" />
                   Post Your First Job

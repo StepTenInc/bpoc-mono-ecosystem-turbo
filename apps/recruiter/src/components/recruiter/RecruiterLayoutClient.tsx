@@ -69,12 +69,12 @@ export default function RecruiterLayoutClient({
   };
 
   // Skip auth check for login/signup/demo pages
-  const isAuthPage = pathname === '/recruiter/login' || pathname === '/recruiter/signup' || pathname === '/recruiter/demo';
+  const isAuthPage = pathname === '/login' || pathname === '/signup' || pathname === '/demo';
 
   // Skip verification check for specific pages where redirects go
-  const isVerificationPage = pathname?.startsWith('/recruiter/signup/documents') ||
-                               pathname?.startsWith('/recruiter/signup/pending-verification') ||
-                               pathname?.startsWith('/recruiter/signup/awaiting-authorization');
+  const isVerificationPage = pathname?.startsWith('/signup/documents') ||
+                               pathname?.startsWith('/signup/pending-verification') ||
+                               pathname?.startsWith('/signup/awaiting-authorization');
 
   // Show modal every time for unverified recruiters until docs are uploaded
   useEffect(() => {
@@ -111,7 +111,7 @@ export default function RecruiterLayoutClient({
         if (authLoading) return;
 
         if (!session || !user) {
-          router.push('/recruiter/login');
+          router.push('/login');
           return;
         }
 
@@ -126,7 +126,7 @@ export default function RecruiterLayoutClient({
 
         if (!response.ok || !data.isRecruiter) {
           await signOut();
-          router.push('/recruiter/login');
+          router.push('/login');
           return;
         }
 
@@ -148,7 +148,7 @@ export default function RecruiterLayoutClient({
         }
       } catch (error) {
         console.error('Auth check failed:', error);
-        router.push('/recruiter/login');
+        router.push('/login');
       } finally {
         setLoading(false);
       }
@@ -159,7 +159,7 @@ export default function RecruiterLayoutClient({
 
   const handleSignOut = async () => {
     await signOut();
-    router.push('/recruiter/login');
+    router.push('/login');
   };
 
   // For auth pages, render without sidebar
@@ -296,7 +296,7 @@ export default function RecruiterLayoutClient({
                       Please upload your agency documents (TIN, DTI Certificate, Business Permit, SEC Registration) to activate your account.
                     </p>
                     <Button
-                      onClick={() => router.push('/recruiter/signup/documents')}
+                      onClick={() => router.push('/signup/documents')}
                       className="bg-orange-500 hover:bg-orange-600"
                     >
                       Upload Documents
@@ -398,7 +398,7 @@ export default function RecruiterLayoutClient({
                       onClick={() => {
                         setShowVerificationModal(false);
                         
-                        router.push('/recruiter/signup/documents');
+                        router.push('/signup/documents');
                       }}
                       className="w-full bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-semibold py-6 text-lg rounded-xl"
                     >

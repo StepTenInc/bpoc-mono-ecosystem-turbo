@@ -87,7 +87,7 @@ export default function EditJobPage() {
         });
       } else {
         toast.error('Job not found');
-        router.push('/recruiter/jobs');
+        router.push('/jobs');
       }
     } catch (error) {
       console.error('Failed to fetch job:', error);
@@ -117,7 +117,7 @@ export default function EditJobPage() {
 
       if (response.ok) {
         toast.success('Job updated successfully');
-        router.push('/recruiter/jobs');
+        router.push('/jobs');
       } else {
         const error = await response.json();
         toast.error(error.message || 'Failed to update job');
@@ -143,7 +143,7 @@ export default function EditJobPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <Link href="/recruiter/jobs" className="inline-flex items-center text-gray-400 hover:text-white mb-4">
+          <Link href="/jobs" className="inline-flex items-center text-gray-400 hover:text-white mb-4">
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Jobs
           </Link>
@@ -371,7 +371,7 @@ export default function EditJobPage() {
       <div className="flex gap-4">
         <Button
           variant="outline"
-          onClick={() => router.push('/recruiter/jobs')}
+          onClick={() => router.push('/jobs')}
           className="flex-1 border-white/10 text-gray-400"
         >
           Cancel
