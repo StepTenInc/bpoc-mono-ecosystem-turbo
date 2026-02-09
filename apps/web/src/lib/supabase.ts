@@ -7,13 +7,31 @@
  * This file is kept for backward compatibility but will be removed in a future version.
  */
 
-import { createBrowserClient } from '@supabase/ssr'
+import { createBrowserClient, SupabaseClient } from '@supabase/ssr'
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+// Lazy initialization to avoid build-time errors when env vars aren't available
+let _supabase: SupabaseClient | null = null
 
-// Use the modern SSR-compatible browser client
-export const supabase = createBrowserClient(supabaseUrl, supabaseAnonKey)
+function getSupabaseClient(): SupabaseClient {
+  if (!_supabase) {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    
+    if (!supabaseUrl || !supabaseAnonKey) {
+      throw new Error('Supabase environment variables not configured')
+    }
+    
+    _supabase = createBrowserClient(supabaseUrl, supabaseAnonKey)
+  }
+  return _supabase
+}
+
+// Use Proxy for lazy access - client is only created when actually used
+export const supabase = new Proxy({} as SupabaseClient, {
+  get(_target, prop) {
+    return getSupabaseClient()[prop as keyof SupabaseClient]
+  }
+})
 
 // Auth helper functions
 
@@ -118,6 +136,11 @@ export const updatePassword = async (newPassword: string, accessToken?: string) 
 	}
 
 	// Token fallback via GoTrue REST API
+	const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+	const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+	if (!supabaseUrl || !supabaseAnonKey) {
+		return { data: null, error: { message: 'Supabase not configured' } as unknown as Error }
+	}
 	const url = `${supabaseUrl}/auth/v1/user`
 	const resp = await fetch(url, {
 		method: 'PUT',
