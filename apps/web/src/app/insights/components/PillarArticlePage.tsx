@@ -2,9 +2,12 @@ import { notFound } from 'next/navigation';
 import SiloArticleClient from './SiloArticleClient';
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-const supabase = createClient(supabaseUrl, supabaseKey);
+function getSupabase() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
+}
 
 // Silo color mapping
 const SILO_COLORS: Record<string, string> = {
@@ -25,7 +28,7 @@ interface PillarArticlePageProps {
 
 export async function getSiloArticle(siloSlug: string, articleSlug: string) {
   // First, get the silo by slug to get its ID
-  const { data: silo } = await supabase
+  const { data: silo } = await getSupabase()
     .from('insights_silos')
     .select('id, slug, name')
     .eq('slug', siloSlug)
@@ -37,7 +40,7 @@ export async function getSiloArticle(siloSlug: string, articleSlug: string) {
   }
 
   // Fetch the article and verify it belongs to this silo
-  const { data: post, error } = await supabase
+  const { data: post, error } = await getSupabase()
     .from('insights_posts')
     .select('*')
     .eq('slug', articleSlug)
@@ -58,7 +61,7 @@ export async function getSiloArticle(siloSlug: string, articleSlug: string) {
 
 export async function getSiloMetadata(siloSlug: string, articleSlug: string) {
   // First, get the silo by slug
-  const { data: silo } = await supabase
+  const { data: silo } = await getSupabase()
     .from('insights_silos')
     .select('id, slug, name')
     .eq('slug', siloSlug)
@@ -69,7 +72,7 @@ export async function getSiloMetadata(siloSlug: string, articleSlug: string) {
   }
 
   // Fetch the article with SEO data
-  const { data: post } = await supabase
+  const { data: post } = await getSupabase()
     .from('insights_posts')
     .select('*, seo:seo_metadata(*)')
     .eq('slug', articleSlug)
@@ -97,7 +100,7 @@ export default async function PillarArticlePage({ siloSlug, articleSlug }: Pilla
   }
 
   // Fetch related articles from the same silo
-  const { data: relatedPosts } = await supabase
+  const { data: relatedPosts } = await getSupabase()
     .from('insights_posts')
     .select('id, title, slug, description, hero_url, category, created_at')
     .eq('silo_id', post.silo_id)

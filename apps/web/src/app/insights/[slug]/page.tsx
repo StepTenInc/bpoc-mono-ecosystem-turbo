@@ -3,10 +3,12 @@ import { notFound } from 'next/navigation';
 import InsightArticleClient from './InsightArticleClient';
 import { createClient } from '@supabase/supabase-js';
 
-// Server-side Supabase client
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-const supabase = createClient(supabaseUrl, supabaseKey);
+function getSupabase() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
+}
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -16,7 +18,7 @@ export const revalidate = 0; // No cache - always fetch fresh data
 
 // Generate static params for all articles (for SSG/ISR)
 export async function generateStaticParams() {
-  const { data: posts } = await supabase
+  const { data: posts } = await getSupabase()
     .from('insights_posts')
     .select('slug')
     .eq('is_published', true);
@@ -30,7 +32,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   
-  const { data: post } = await supabase
+  const { data: post } = await getSupabase()
     .from('insights_posts')
     .select('*, seo:seo_metadata(*)')
     .eq('slug', slug)
@@ -78,7 +80,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function InsightArticlePage({ params }: Props) {
   const { slug } = await params;
   
-  const { data: post } = await supabase
+  const { data: post } = await getSupabase()
     .from('insights_posts')
     .select('*, seo:seo_metadata(*)')
     .eq('slug', slug)
@@ -89,7 +91,7 @@ export default async function InsightArticlePage({ params }: Props) {
   }
 
   // Fetch related posts (simple logic: same category)
-  const { data: relatedPosts } = await supabase
+  const { data: relatedPosts } = await getSupabase()
     .from('insights_posts')
     .select('title, slug, read_time')
     .eq('category', post.category)
@@ -98,7 +100,7 @@ export default async function InsightArticlePage({ params }: Props) {
     .limit(3);
 
   // Fetch explicit internal links (Link Manager)
-  const { data: internalLinks } = await supabase
+  const { data: internalLinks } = await getSupabase()
     .from('internal_links')
     .select('anchor_text, target_post:insights_posts!internal_links_target_post_id_fkey(slug, title)')
     .eq('source_post_id', post.id);

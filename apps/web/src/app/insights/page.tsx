@@ -2,16 +2,18 @@ import { Metadata } from 'next';
 import InsightsPageClient from './InsightsPageClient';
 import { createClient } from '@supabase/supabase-js';
 
-// Server-side Supabase client for fetching content
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-const supabase = createClient(supabaseUrl, supabaseKey);
+function getSupabase() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
+}
 
 // Always show fresh content (no cache) so newly published posts appear immediately
 export const revalidate = 0;
 
 async function getInsights() {
-  const { data, error } = await supabase
+  const { data, error } = await getSupabase()
     .from('insights_posts')
     .select('*')
     .eq('is_published', true)
@@ -26,7 +28,7 @@ async function getInsights() {
 }
 
 async function getSilos() {
-  const { data } = await supabase
+  const { data } = await getSupabase()
     .from('insights_silos')
     .select('id, name, slug, description, icon, color')
     .eq('is_active', true)

@@ -2,11 +2,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-// Use Service Role to bypass RLS for existence check
-const supabaseAdmin = createClient(
+function getSupabaseAdmin() {
+  return createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+  );
+}
 
 export async function GET(req: NextRequest) {
     try {
@@ -18,7 +19,7 @@ export async function GET(req: NextRequest) {
         }
 
         // Check auth.users (requires admin rights)
-        const { data: { users }, error } = await supabaseAdmin.auth.admin.listUsers();
+        const { data: { users }, error } = await getSupabaseAdmin().auth.admin.listUsers();
 
         // Note: listUsers isn't efficient for existence check on large scale but works for now. 
         // Ideally we use a specific rpc or query if we had access to auth schema directly, 
@@ -33,7 +34,7 @@ export async function GET(req: NextRequest) {
         // or just return false to let the actual SignUp handle the collision check (which returns 422/400).
 
         // Let's rely on the public 'users' table if it exists.
-        const { data: existingUser } = await supabaseAdmin
+        const { data: existingUser } = await getSupabaseAdmin()
             .from('users')
             .select('id')
             .eq('email', email)
