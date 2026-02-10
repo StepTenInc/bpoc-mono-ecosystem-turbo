@@ -41,13 +41,13 @@ export async function GET(request: NextRequest) {
     let clientIds: string[];
     if (clientId) {
       // Verify client belongs to agency
-      const allClientIds = await getAgencyClientIds(agency_id);
+      const allClientIds = await getAgencyClientIds(agencyId);
       if (!allClientIds.includes(clientId)) {
         return withCors(NextResponse.json({ error: 'Client not found' }, { status: 404 }), request);
       }
       clientIds = [clientId];
     } else {
-      clientIds = await getAgencyClientIds(agency_id);
+      clientIds = await getAgencyClientIds(agencyId);
     }
     
     if (clientIds.length === 0) {
