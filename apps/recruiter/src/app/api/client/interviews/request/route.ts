@@ -138,7 +138,7 @@ export async function POST(request: NextRequest) {
     const { data: interview, error: interviewError } = await supabaseAdmin
       .from('job_interviews')
       .insert({
-        application_id: application_id,
+        applicationId: application_id,
         interview_type: 'client_round_1',
         status: 'pending_scheduling',
         interviewer_notes: message || 'Client-requested interview',
@@ -205,7 +205,7 @@ export async function POST(request: NextRequest) {
         message: `${clientName} has requested an interview with ${candidate?.first_name || ''} ${candidate?.last_name || ''} for ${job.title}`,
         link: `/recruiter/applications/${application_id}`,
         metadata: {
-          application_id: application_id,
+          applicationId: application_id,
           interview_id: interview.id,
           job_id: job.id,
           proposed_times: processedTimes,

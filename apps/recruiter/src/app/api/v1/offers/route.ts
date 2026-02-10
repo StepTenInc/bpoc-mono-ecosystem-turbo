@@ -71,7 +71,7 @@ export async function GET(request: NextRequest) {
     const { data: applications } = await supabaseAdmin
       .from('job_applications')
       .select('id, job_id, candidate_id')
-      .in('job_id', job_id_list);
+      .in('job_id', jobIds);
 
     const appIds = applications?.map(a => a.id) || [];
     const appMap = Object.fromEntries((applications || []).map(a => [a.id, a]));
@@ -101,7 +101,7 @@ export async function GET(request: NextRequest) {
     const { data: candidates } = await supabaseAdmin
       .from('candidates')
       .select('id, first_name, last_name, email')
-      .in('id', candidate_id_list.length > 0 ? candidateIds : ['none']);
+      .in('id', candidateIds.length > 0 ? candidateIds : ['none']);
 
     const candidateMap = Object.fromEntries(
       (candidates || []).map(c => [c.id, { name: `${c.first_name} ${c.last_name}`.trim(), email: c.email }])
@@ -203,7 +203,7 @@ export async function POST(request: NextRequest) {
       .from('job_applications')
       .select('id, job_id')
       .eq('id', application_id)
-      .in('job_id', job_id_list)
+      .in('job_id', jobIds)
       .single();
 
     if (!app) {
@@ -220,7 +220,7 @@ export async function POST(request: NextRequest) {
     if (existingOffer) {
       return withCors(NextResponse.json({ 
         error: 'An offer already exists for this application',
-        offer_id: existingOffer.id
+        offerId: existingOffer.id
       }, { status: 409 }));
     }
 
@@ -230,7 +230,7 @@ export async function POST(request: NextRequest) {
     const { data: offer, error } = await supabaseAdmin
       .from('job_offers')
       .insert({
-        application_id: application_id,
+        applicationId: application_id,
         salary_offered: salary,
         currency,
         start_date: startDate || null,
@@ -285,13 +285,13 @@ export async function POST(request: NextRequest) {
 
     if (application) {
       webhookOfferSent({
-        offer_id: offer.id,
-        application_id: application_id,
+        offerId: offer.id,
+        applicationId: application_id,
         candidate_id: application.candidate_id,
         salaryOffered: salary,
         currency: currency,
         start_date: startDate || undefined,
-        agency_id: auth.agency_id,
+        agencyId: auth.agency_id,
       }).catch(err => console.error('[Webhook] Offer sent error:', err));
     }
 
@@ -303,7 +303,7 @@ export async function POST(request: NextRequest) {
         performed_by_id: auth.agency_id, // Using agency ID as this is via API
         description: `Job offer sent: ${currency} ${salary}${startDate ? ' (Start: ' + startDate + ')' : ''}`,
         metadata: {
-          offer_id: offer.id,
+          offerId: offer.id,
           salary_offered: salary,
           currency: currency,
           start_date: startDate || null,

@@ -15,7 +15,7 @@ async function createDailyRoom(interview_id: string, scheduledAt: string, durati
   }
 
   try {
-    const roomName = `interview-${interviewId}-${Date.now()}`;
+    const roomName = `interview-${interview_id}-${Date.now()}`;
     const expiryTime = new Date(scheduledAt);
     expiryTime.setMinutes(expiryTime.getMinutes() + durationMinutes + 30); // Extra 30 min buffer
 
@@ -121,6 +121,7 @@ export async function POST(
         scheduled_at,
         duration_minutes,
         client_timezone,
+        interviewer_notes,
         application:job_applications!inner(
           id,
           job_id,
@@ -151,14 +152,23 @@ export async function POST(
       return NextResponse.json({ error: 'Interview not found' }, { status: 404 });
     }
 
+    // Cast application to proper type (Supabase returns single object for !inner joins)
+    const application = interview.application as unknown as {
+      id: string;
+      job_id: string;
+      candidate_id: string;
+      candidate: { first_name: string; last_name: string; email: string };
+      job: { id: string; title: string; agency_client_id: string; agency_clients: { id: string; agency_id: string; client_timezone: string; primary_contact_email: string; companies: { name: string } } };
+    };
+
     // Verify recruiter has access to this interview
-    if (interview.application.job.agency_clients.agency_id !== recruiter.agency_id) {
+    if (application.job.agency_clients.agency_id !== recruiter.agency_id) {
       return NextResponse.json({ error: 'Access denied' }, { status: 403 });
     }
 
-    const clientTimezone = interview.client_timezone || interview.application.job.agency_clients.client_timezone || 'Australia/Sydney';
-    const candidateName = `${interview.application.candidate.first_name} ${interview.application.candidate.last_name}`;
-    const clientName = interview.application.job.agency_clients.companies?.name || 'Client';
+    const clientTimezone = interview.client_timezone || application.job.agency_clients.client_timezone || 'Australia/Sydney';
+    const candidateName = `${application.candidate.first_name} ${application.candidate.last_name}`;
+    const clientName = application.job.agency_clients.companies?.name || 'Client';
 
     let updateData: any = {
       updated_at: new Date().toISOString(),
@@ -178,8 +188,8 @@ export async function POST(
       updateData.meeting_link = meetingRoom?.url || null;
       updateData.interviewer_id = recruiter.id;
       updateData.interviewer_notes = message 
-        ? `${interview.interviewer_notes || ''}\n\n[Accepted] ${message}`.trim()
-        : interview.interviewer_notes;
+        ? `${(interview as any).interviewer_notes || ''}\n\n[Accepted] ${message}`.trim()
+        : (interview as any).interviewer_notes;
 
       // Also create video_call_rooms record if meeting was created
       if (meetingRoom) {
@@ -187,9 +197,9 @@ export async function POST(
           .from('video_call_rooms')
           .insert({
             interview_id: interview.id,
-            application_id: interview.application_id,
+            applicationId: interview.application_id,
             call_type: 'client_interview',
-            call_title: `Interview: ${candidateName} - ${interview.application.job.title}`,
+            call_title: `Interview: ${candidateName} - ${application.job.title}`,
             status: 'scheduled',
             daily_room_url: meetingRoom.url,
             daily_room_name: meetingRoom.name,
@@ -201,8 +211,8 @@ export async function POST(
     } else if (action === 'reject') {
       updateData.status = 'cancelled';
       updateData.interviewer_notes = message 
-        ? `${interview.interviewer_notes || ''}\n\n[Rejected] ${message}`.trim()
-        : interview.interviewer_notes;
+        ? `${(interview as any).interviewer_notes || ''}\n\n[Rejected] ${message}`.trim()
+        : (interview as any).interviewer_notes;
 
     } else if (action === 'counter') {
       // Counter proposal with new time
@@ -223,8 +233,8 @@ export async function POST(
       updateData.scheduled_at_ph = newScheduledAtPh;
       updateData.scheduled_at_client_local = newScheduledAtClientLocal;
       updateData.interviewer_notes = message 
-        ? `${interview.interviewer_notes || ''}\n\n[Counter Proposal] ${message}`.trim()
-        : interview.interviewer_notes;
+        ? `${(interview as any).interviewer_notes || ''}\n\n[Counter Proposal] ${message}`.trim()
+        : (interview as any).interviewer_notes;
     }
 
     // Update the interview

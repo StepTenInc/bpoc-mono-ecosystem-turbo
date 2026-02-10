@@ -55,7 +55,7 @@ export async function PATCH(
       const { data: candidateData } = await supabaseAdmin
         .from('candidates')
         .select('id, first_name, last_name, email')
-        .eq('id', candidate_id)
+        .eq('id', candidateId)
         .single();
       candidate = candidateData;
     }

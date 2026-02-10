@@ -236,7 +236,7 @@ export async function GET(
       releasedCandidates: (releasedCandidates || []).map((app: any) => {
         const candidate = candidateMap.get(app.candidate_id);
         return {
-          application_id: app.id,
+          applicationId: app.id,
           candidate_id: candidate?.id || app.candidate_id,
           candidateSlug: candidate?.slug || '',
           fullName: candidate ? `${candidate.first_name} ${candidate.last_name}` : 'Unknown',

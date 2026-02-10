@@ -86,7 +86,7 @@ export async function GET(request: NextRequest) {
     const { data: profiles } = await supabaseAdmin
       .from('candidate_profiles')
       .select('candidate_id, headline, location, experience_years')
-      .in('candidate_id', candidate_id_list.length > 0 ? candidateIds : ['none']);
+      .in('candidate_id', candidateIds.length > 0 ? candidateIds : ['none']);
 
     const profileMap = Object.fromEntries(
       (profiles || []).map(p => [p.candidate_id, p])
@@ -96,7 +96,7 @@ export async function GET(request: NextRequest) {
     const { data: skillsData } = await supabaseAdmin
       .from('candidate_skills')
       .select('candidate_id, name')
-      .in('candidate_id', candidate_id_list.length > 0 ? candidateIds : ['none']);
+      .in('candidate_id', candidateIds.length > 0 ? candidateIds : ['none']);
 
     const skillsMap: Record<string, string[]> = {};
     (skillsData || []).forEach(s => {
@@ -108,7 +108,7 @@ export async function GET(request: NextRequest) {
     const { data: resumes } = await supabaseAdmin
       .from('candidate_resumes')
       .select('candidate_id')
-      .in('candidate_id', candidate_id_list.length > 0 ? candidateIds : ['none']);
+      .in('candidate_id', candidateIds.length > 0 ? candidateIds : ['none']);
 
     const resumeSet = new Set((resumes || []).map(r => r.candidate_id));
 

@@ -27,7 +27,7 @@ export async function GET(
     return withCors(NextResponse.json({ error: auth.error }, { status: auth.status }), request);
   }
 
-  const { agency_id } = auth;
+  const { agency_id: agencyId } = auth;
   const { searchParams } = new URL(request.url);
   const mode = (searchParams.get('mode') || 'client').toLowerCase();
   const { id } = await params;

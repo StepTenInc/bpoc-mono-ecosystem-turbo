@@ -105,7 +105,7 @@ export async function POST(
     // Generate document hash (hash of the contract data)
     const contractData = {
       offer_id: offer.id,
-      application_id: application.id,
+      applicationId: application.id,
       candidate_id: candidate.id,
       job_title: application.jobs.title,
       salary: offer.salary_offered,

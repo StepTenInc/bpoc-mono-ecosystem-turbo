@@ -61,7 +61,7 @@ export async function GET(
   }
 }
 
-async function getAgencyTier(agency_id: string): Promise<string> {
+async function getAgencyTier(agencyId: string): Promise<string> {
   const { data: agency } = await supabaseAdmin
     .from('agencies')
     .select('tier')

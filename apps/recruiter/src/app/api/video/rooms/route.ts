@@ -271,7 +271,7 @@ export async function POST(request: NextRequest) {
       
       // Interview context
       job_id: jobId || null,
-      application_id: application_id || null,
+      applicationId: application_id || null,
       interview_id: interviewId || null,
       
       // Agency context - IMPORTANT for multi-tenant
@@ -300,7 +300,7 @@ export async function POST(request: NextRequest) {
         host_user_id: userId,
         participant_user_id: participantUserId,
         job_id: jobId || null,
-        application_id: application_id || null,
+        applicationId: application_id || null,
         interview_id: interviewId || null,
         status: 'created',
         enable_recording: enableRecording,
@@ -594,7 +594,7 @@ export async function GET(request: NextRequest) {
               )
             )
           `)
-          .in('id', job_id_list);
+          .in('id', jobIds);
         
         for (const job of jobsData || []) {
           jobsById.set(job.id, job);

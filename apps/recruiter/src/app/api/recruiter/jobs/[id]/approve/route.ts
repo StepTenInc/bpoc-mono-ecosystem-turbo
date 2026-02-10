@@ -60,7 +60,7 @@ export async function POST(
     const { data: job, error: jobError } = await supabaseAdmin
       .from('jobs')
       .select('*, agency_clients!inner(agency_id)')
-      .eq('id', job_id)
+      .eq('id', jobId)
       .single();
 
     if (jobError || !job) {
@@ -91,7 +91,7 @@ export async function POST(
         status: 'active', // Automatically activate approved jobs
         updated_at: new Date().toISOString(),
       })
-      .eq('id', job_id)
+      .eq('id', jobId)
       .select()
       .single();
 
@@ -226,7 +226,7 @@ export async function DELETE(
     const { data: job, error: jobError } = await supabaseAdmin
       .from('jobs')
       .select('*, agency_clients!inner(agency_id)')
-      .eq('id', job_id)
+      .eq('id', jobId)
       .single();
 
     if (jobError || !job) {
@@ -251,7 +251,7 @@ export async function DELETE(
         status: 'draft', // Keep as draft
         updated_at: new Date().toISOString(),
       })
-      .eq('id', job_id)
+      .eq('id', jobId)
       .select()
       .single();
 

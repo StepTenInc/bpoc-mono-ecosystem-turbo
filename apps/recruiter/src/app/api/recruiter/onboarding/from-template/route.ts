@@ -74,7 +74,7 @@ export async function POST(request: NextRequest) {
       }
 
       return {
-        application_id: application_id,
+        applicationId: application_id,
         title: task.title,
         description: task.instructions || '',
         type: task.type,

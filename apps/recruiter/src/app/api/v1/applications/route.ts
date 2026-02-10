@@ -284,24 +284,25 @@ export async function POST(request: NextRequest) {
       .eq('id', job_id)
       .single();
 
-    if (jobDetails?.agency_client?.agency_id) {
+    const agencyClient = jobDetails?.agency_client as any;
+    if (agencyClient?.agency_id) {
       webhookApplicationCreated({
-        application_id: app.id,
-        job_id: job_id,
-        candidate_id: candidateId,
-        candidate_name: candidate.first_name && candidate.last_name
+        applicationId: app.id,
+        jobId: job_id,
+        candidateId: candidateId,
+        candidateName: candidate.first_name && candidate.last_name
           ? `${candidate.first_name} ${candidate.last_name}`
           : undefined,
-        candidate_email: candidate.email,
-        job_title: jobDetails.title,
-        agency_id: jobDetails.agency_client.agency_id,
+        candidateEmail: candidate.email,
+        jobTitle: jobDetails.title,
+        agencyId: agencyClient.agency_id,
       }).catch(err => console.error('[Webhook] Application created error:', err));
     }
 
     const response = {
       success: true,
       message: 'Application submitted successfully',
-      application_id: app.id
+      applicationId: app.id
     };
     return NextResponse.json(transformToApi(response), { status: 201 });
 

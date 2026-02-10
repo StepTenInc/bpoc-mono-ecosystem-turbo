@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { candidate_id, job_id, message } = body as { candidate_id?: string; job_id?: string; message?: string };
+    const { candidate_id: candidateId, job_id: jobId, message } = body as { candidate_id?: string; job_id?: string; message?: string };
 
     if (!candidateId || !jobId) {
       return withCors(NextResponse.json({ error: 'candidateId and jobId are required' }, { status: 400 }), request);
@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
     const { data: job } = await supabaseAdmin
       .from('jobs')
       .select('id, agency_client_id')
-      .eq('id', job_id)
+      .eq('id', jobId)
       .in('agency_client_id', clientIds)
       .single();
 
@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
     return withCors(
       NextResponse.json({
         success: true,
-        application_id: application?.id,
+        applicationId: application?.id,
         status: application?.status,
         message: 'Invitation created',
       }),

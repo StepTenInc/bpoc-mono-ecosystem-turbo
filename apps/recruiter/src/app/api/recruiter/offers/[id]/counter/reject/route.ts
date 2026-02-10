@@ -132,7 +132,7 @@ export async function POST(
     await supabaseAdmin
       .from('application_activity_timeline')
       .insert({
-        application_id: offer.application_id,
+        applicationId: offer.application_id,
         action_type: sendNewCounter ? 'counter_sent' : 'counter_rejected',
         performed_by_type: 'recruiter',
         performed_by_id: user.id,

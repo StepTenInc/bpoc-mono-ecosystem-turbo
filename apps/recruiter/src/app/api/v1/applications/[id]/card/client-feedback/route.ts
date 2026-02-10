@@ -24,7 +24,7 @@ export async function PATCH(
     return withCors(NextResponse.json({ error: auth.error }, { status: auth.status }), request);
   }
 
-  const { agency_id } = auth;
+  const { agency_id: agencyId } = auth;
   const { id } = await params;
   const body = await request.json();
   const { notes, rating } = body;

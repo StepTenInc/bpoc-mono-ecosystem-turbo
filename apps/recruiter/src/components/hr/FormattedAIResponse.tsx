@@ -3,6 +3,18 @@
  * Removes raw markdown and applies proper styling
  */
 
+import DOMPurify from 'isomorphic-dompurify';
+
+// Configure DOMPurify to allow only safe tags and attributes
+const purifyConfig = {
+  ALLOWED_TAGS: ['strong', 'em', 'code', 'span'],
+  ALLOWED_ATTR: ['class'],
+};
+
+function sanitize(html: string): string {
+  return DOMPurify.sanitize(html, purifyConfig);
+}
+
 interface FormattedContentProps {
   content: string;
   accentColor: 'cyan' | 'orange' | 'blue';
@@ -52,7 +64,7 @@ export function FormattedAIResponse({ content, accentColor }: FormattedContentPr
             {currentList.map((item, idx) => (
               <li key={idx} className="flex gap-3">
                 <span className={`font-bold ${color.number} flex-shrink-0`}>{idx + 1}.</span>
-                <span className="text-gray-200" dangerouslySetInnerHTML={{ __html: formatInlineMarkdown(item) }} />
+                <span className="text-gray-200" dangerouslySetInnerHTML={{ __html: sanitize(formatInlineMarkdown(item)) }} />
               </li>
             ))}
           </ol>
@@ -63,7 +75,7 @@ export function FormattedAIResponse({ content, accentColor }: FormattedContentPr
             {currentList.map((item, idx) => (
               <li key={idx} className="flex gap-3">
                 <span className={`${color.bullet} flex-shrink-0`}>•</span>
-                <span className="text-gray-200" dangerouslySetInnerHTML={{ __html: formatInlineMarkdown(item) }} />
+                <span className="text-gray-200" dangerouslySetInnerHTML={{ __html: sanitize(formatInlineMarkdown(item)) }} />
               </li>
             ))}
           </ul>
@@ -135,7 +147,7 @@ export function FormattedAIResponse({ content, accentColor }: FormattedContentPr
       <p
         key={elements.length}
         className="text-gray-200 leading-relaxed my-2"
-        dangerouslySetInnerHTML={{ __html: formatInlineMarkdown(trimmed) }}
+        dangerouslySetInnerHTML={{ __html: sanitize(formatInlineMarkdown(trimmed)) }}
       />
     );
   });

@@ -69,7 +69,7 @@ export async function GET(request: NextRequest) {
     let roomQuery = supabaseAdmin
       .from('video_call_rooms')
       .select('id, application_id, job_id')
-      .in('job_id', job_id_list);
+      .in('job_id', jobIds);
 
     if (application_id) roomQuery = roomQuery.eq('application_id', application_id);
 
@@ -139,7 +139,7 @@ export async function GET(request: NextRequest) {
       fileSizeMb: recording.file_size_mb,
       application_id: recording.video_call_rooms?.application_id,
       job_id: recording.video_call_rooms?.job_id,
-      interview_id: recording.video_call_rooms?.interview_id,
+      interviewId: recording.video_call_rooms?.interview_id,
       hasTranscript: recording.video_call_transcripts && recording.video_call_transcripts.length > 0,
       transcriptStatus: recording.video_call_transcripts?.[0]?.status || null,
       created_at: recording.created_at,

@@ -33,7 +33,7 @@ export async function OPTIONS(request: NextRequest) {
 export async function POST(request: NextRequest) {
     try {
         const body = await request.json();
-        const { room_id, candidate_id, recruiterName, recruiterUserId, jobTitle, participantJoinUrl, callType, callTitle } = body;
+        const { room_id, candidate_id: candidateId, recruiterName, recruiterUserId, jobTitle, participantJoinUrl, callType, callTitle } = body;
 
         console.log('[Notification API] Request received:', {
             room_id,
@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
 
         // Validate UUID formats
         if (!isValidUUID(candidateId)) {
-            console.error('[Notification API] Invalid candidateId format:', candidate_id);
+            console.error('[Notification API] Invalid candidateId format:', candidateId);
             return NextResponse.json(
                 { error: 'Invalid candidateId format. Expected UUID' },
                 { status: 400, headers: corsHeaders }
@@ -80,16 +80,16 @@ export async function POST(request: NextRequest) {
         }
 
         // Get candidate details
-        console.log('[Notification API] Looking up candidate:', candidate_id);
+        console.log('[Notification API] Looking up candidate:', candidateId);
 
         const { data: candidate, error: candidateError } = await supabaseAdmin
             .from('candidates')
             .select('id, email, first_name, last_name')
-            .eq('id', candidate_id)
+            .eq('id', candidateId)
             .single();
 
         if (candidateError || !candidate) {
-            console.error('[Notification API] Candidate not found:', candidate_id);
+            console.error('[Notification API] Candidate not found:', candidateId);
             return NextResponse.json(
                 { error: 'Candidate not found', id: candidateId },
                 { status: 404, headers: corsHeaders }
@@ -178,11 +178,16 @@ export async function POST(request: NextRequest) {
             }
         }
 
+        // At this point roomRecord should not be null - we either found it or threw an error
+        if (!roomRecord) {
+            return NextResponse.json({ error: 'Room record not found' }, { status: 500, headers: corsHeaders });
+        }
+
         const resolvedCallType =
-            roomRecord?.call_type ||
+            roomRecord.call_type ||
             (typeof callType === 'string' && callType.length > 0 ? callType : 'recruiter_prescreen');
         const resolvedCallTitle =
-            roomRecord?.call_title ||
+            roomRecord.call_title ||
             (typeof callTitle === 'string' && callTitle.length > 0
                 ? callTitle
                 : (jobTitle ? `Pre-Screen: ${jobTitle}` : 'Pre-Screen Interview'));

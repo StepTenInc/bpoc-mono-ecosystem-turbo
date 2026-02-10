@@ -113,7 +113,7 @@ export async function GET(request: NextRequest) {
       )
       .in('job_id', jobIds);
 
-    const { data: applications, error } = await applicationQuery;
+    const { data: applications, error } = await applicationQuery as { data: any[] | null; error: any };
 
     if (error) {
       console.error('Pipeline fetch error:', error);

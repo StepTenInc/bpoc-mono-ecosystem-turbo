@@ -22,9 +22,10 @@ export async function POST(req: NextRequest) {
     }
 
     console.log('[send-contract] Verifying token...');
-    const userId = await verifyAuthToken(token);
+    const auth = await verifyAuthToken(req);
+    const userId = auth.userId;
     if (!userId) {
-      return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
+      return NextResponse.json({ error: auth.error || 'Invalid token' }, { status: 401 });
     }
 
     console.log('[send-contract] User verified:', userId);

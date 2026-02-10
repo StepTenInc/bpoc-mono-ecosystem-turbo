@@ -39,6 +39,7 @@ export async function POST(
     }
 
     const { offer_id } = await params;
+    const agencyId = auth.agency_id;
     const body = await request.json().catch(() => ({}));
 
     const counterOfferId = String(body?.counterOfferId || '');
@@ -113,7 +114,7 @@ export async function POST(
       const { error: createErr } = await supabaseAdmin
         .from('counter_offers')
         .insert({
-          offer_id: offer_id,
+          offerId: offer_id,
           requested_salary: revisedSalary,
           requested_currency: currency,
           candidate_message: null,
@@ -153,14 +154,14 @@ export async function POST(
     await supabaseAdmin
       .from('application_activity_timeline')
       .insert({
-        application_id: application_id,
+        applicationId: application_id,
         action_type: sendNewCounter ? 'counter_sent' : 'counter_rejected',
         performed_by_type: 'client',
         performed_by_id: null,
         description: sendNewCounter ? 'New counter offer sent' : 'Counter offer declined',
         metadata: {
-          offer_id: offer_id,
-          counter_offer_id: counterOfferId,
+          offerId: offer_id,
+          counter_offerId: counterOfferId,
           send_new_counter: sendNewCounter,
         },
       } as any);

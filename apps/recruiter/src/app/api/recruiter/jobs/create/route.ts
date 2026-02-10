@@ -246,7 +246,7 @@ export async function POST(request: NextRequest) {
       description: description || briefDescription || '',
       requirements: requirements || [],
       responsibilities: responsibilities || [],
-      companyName,
+      company_name: companyName,
       agencyName,
     });
     console.log(`✅ [JOB-CREATE] AI validation result: ${validation.approvalStatus} (score: ${validation.score})`);

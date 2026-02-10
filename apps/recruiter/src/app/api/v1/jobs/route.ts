@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
     return withCors(NextResponse.json({ error: auth.error }, { status: auth.status }), request);
   }
 
-  const { agency_id } = auth;
+  const { agency_id: agencyId } = auth;
   const { searchParams } = new URL(request.url);
   const status = searchParams.get('status') || 'active';
   const clientId = searchParams.get('clientId'); // Filter by specific client

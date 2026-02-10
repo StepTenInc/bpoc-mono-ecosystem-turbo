@@ -122,7 +122,7 @@ export async function GET(
       action: canJoin ? 'joined_interview' : 'viewed_interview',
       metadata: {
         interview_id: interviewId,
-        application_id: application.id,
+        applicationId: application.id,
         candidate_name: `${candidate?.first_name} ${candidate?.last_name}`,
         scheduled_at: interview.scheduled_at,
       },

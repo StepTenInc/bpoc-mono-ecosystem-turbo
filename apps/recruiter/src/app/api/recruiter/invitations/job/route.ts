@@ -102,7 +102,7 @@ export async function POST(request: NextRequest) {
         is_urgent: true,
         is_read: false,
         metadata: {
-          application_id: application?.id,
+          applicationId: application?.id,
           job_id,
           candidate_id,
           timestamp: now,
@@ -119,7 +119,7 @@ export async function POST(request: NextRequest) {
     // Best-effort activity timeline entry (so invited shows in history)
     try {
       await supabaseAdmin.from('application_activity_timeline').insert({
-        application_id: application?.id,
+        applicationId: application?.id,
         action_type: 'invited',
         performed_by_type: 'recruiter',
         performed_by_id: recruiter.id,
@@ -136,7 +136,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      application_id: application?.id,
+      applicationId: application?.id,
       status: application?.status,
       message: 'Invitation sent',
       notificationCreated,

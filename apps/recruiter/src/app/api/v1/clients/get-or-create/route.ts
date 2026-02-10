@@ -147,7 +147,7 @@ export async function POST(request: NextRequest) {
     const { data: newClient, error: clientError } = await supabaseAdmin
       .from('agency_clients')
       .insert({
-        agency_id: auth.agency_id,
+        agencyId: auth.agency_id,
         company_id: newCompany.id,
         status: 'active',
         primary_contact_name: contact_name || null,

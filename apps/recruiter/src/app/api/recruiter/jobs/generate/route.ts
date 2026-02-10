@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
     }
 
     const anthropic = new Anthropic({
-      api_key: process.env.ANTHROPIC_API_KEY,
+      apiKey: process.env.ANTHROPIC_API_KEY,
     });
 
     const prompt = `You are a professional HR copywriter. Generate a complete job listing based on the following:

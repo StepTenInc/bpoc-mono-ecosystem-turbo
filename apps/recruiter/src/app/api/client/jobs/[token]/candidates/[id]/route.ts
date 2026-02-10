@@ -305,7 +305,7 @@ export async function GET(
       jobTokenId: tokenData.tokenId,
       action: 'viewed_candidate',
       metadata: {
-        application_id: application_id,
+        applicationId: application_id,
         candidate_id: application.candidate_id,
         candidate_name: `${candidate.first_name} ${candidate.last_name}`,
       },

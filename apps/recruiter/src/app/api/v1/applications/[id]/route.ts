@@ -66,7 +66,7 @@ export async function GET(
         )
       `)
       .eq('id', id)
-      .in('job_id', job_id_list)
+      .in('job_id', jobIds)
       .single();
 
     if (error || !application) {
@@ -209,7 +209,7 @@ export async function PATCH(
       .from('job_applications')
       .select('id')
       .eq('id', id)
-      .in('job_id', job_id_list)
+      .in('job_id', jobIds)
       .single();
 
     if (!existingApp) {

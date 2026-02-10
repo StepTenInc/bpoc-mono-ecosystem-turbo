@@ -112,7 +112,7 @@ export async function POST(request: NextRequest) {
     const { data: interview, error: interviewError } = await supabaseAdmin
       .from('interviews')
       .insert({
-        application_id: application_id,
+        applicationId: application_id,
         interview_type: interviewType,
         status: 'pending_scheduling',
         duration_minutes: duration || 60,

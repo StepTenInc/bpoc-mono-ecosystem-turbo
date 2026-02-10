@@ -25,7 +25,7 @@ export async function PATCH(
     return withCors(NextResponse.json({ error: auth.error }, { status: auth.status }), request);
   }
 
-  const { agency_id } = auth;
+  const { agency_id: agencyId } = auth;
   const { id } = await params;
   const body = await request.json();
   const { video_url, transcript, rating, notes, status, screened_by } = body;
@@ -81,13 +81,13 @@ export async function PATCH(
 
       if (appDetails) {
         webhookApplicationStatusChanged({
-          application_id: id,
-          job_id: appDetails.job_id,
-          candidate_id: appDetails.candidate_id,
+          applicationId: id,
+          jobId: appDetails.job_id,
+          candidateId: appDetails.candidate_id,
           oldStatus: 'pending',
           newStatus: status,
           changedBy: screened_by,
-          agency_id: agencyId,
+          agencyId: agencyId,
         }).catch(err => console.error('[Webhook] Prescreen status change error:', err));
       }
     }

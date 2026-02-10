@@ -17,7 +17,7 @@ export async function OPTIONS() {
  * 
  * Query params:
  *   - callType: Filter by call type (screening, technical, client_intro, etc.)
- *   - interview_id: Filter by specific interview
+ *   - interviewId: Filter by specific interview
  *   - application_id: Filter by application
  *   - status: Filter by room status (created, active, ended)
  *   - outcome: Filter by call outcome (successful, no_show, etc.)
@@ -112,7 +112,7 @@ export async function GET(request: NextRequest) {
         job_id,
         agency_id
       `, { count: 'exact' })
-      .in('job_id', job_id_list)
+      .in('job_id', jobIds)
       .order('created_at', { ascending: false })
       .range(offset, offset + limit - 1);
 
@@ -170,7 +170,7 @@ export async function GET(request: NextRequest) {
         scheduledFor: room.scheduled_for,
         outcome: room.outcome,
         notes: room.notes,
-        interview_id: room.interview_id,
+        interviewId: room.interview_id,
         application_id: room.application_id,
         job_id: room.job_id,
         recordingEnabled: room.enable_recording,
@@ -294,7 +294,7 @@ export async function POST(request: NextRequest) {
       .from('job_applications')
       .select('id, job_id, candidate_id')
       .eq('id', application_id)
-      .in('job_id', job_id_list)
+      .in('job_id', jobIds)
       .single();
 
     if (!application) {
@@ -414,8 +414,8 @@ export async function POST(request: NextRequest) {
         host_user_id: auth.agency_id,
         participant_user_id: candidateAuthId,
         job_id: application.job_id,
-        application_id: application_id,
-        interview_id: interviewId || null,
+        applicationId: application_id,
+        interviewId: interviewId || null,
         status: 'created',
         enable_recording: enableRecording,
         enable_transcription: enableTranscription,
@@ -423,7 +423,7 @@ export async function POST(request: NextRequest) {
         call_type: callType,
         call_title: callTitle,
         scheduled_for: scheduledFor || null,
-        agency_id: auth.agency_id,
+        agencyId: auth.agency_id,
         // For client_* stages, sharing should be ON by default (formal stage).
         share_with_client: isClientCall ? true : false,
         share_with_candidate: isClientCall ? true : false,
@@ -465,9 +465,9 @@ export async function POST(request: NextRequest) {
       },
       // Metadata for reference
       application_id,
-      interview_id: interviewId || null,
+      interviewId: interviewId || null,
       candidate_id: application.candidate_id,
-      agency_id: auth.agency_id,
+      agencyId: auth.agency_id,
     }, { status: 201 }));
 
   } catch (error: any) {

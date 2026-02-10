@@ -259,7 +259,7 @@ export async function POST(request: NextRequest) {
     const { data: interview, error } = await supabaseAdmin
       .from('job_interviews')
       .insert({
-        application_id: application_id,
+        applicationId: application_id,
         interview_type: interviewType || 'screening',
         status: 'scheduled',
         interviewer_id: recruiter?.id || null,

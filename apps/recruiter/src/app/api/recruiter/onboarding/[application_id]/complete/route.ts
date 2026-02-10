@@ -79,7 +79,7 @@ export async function POST(
     await supabaseAdmin
       .from('application_activity_timeline')
       .insert({
-        application_id: application_id,
+        applicationId: application_id,
         action_type: 'onboarding_complete',
         performed_by_type: 'recruiter',
         performed_by_id: user.id,

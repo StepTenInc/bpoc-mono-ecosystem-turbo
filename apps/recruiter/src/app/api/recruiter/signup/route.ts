@@ -87,7 +87,7 @@ export async function POST(req: Request) {
       user_metadata: {
         first_name: firstName,
         last_name: lastName,
-        full_name: `${first_name} ${last_name}`,
+        full_name: `${firstName} ${lastName}`,
         role: 'recruiter',
         admin_level: 'recruiter', // This prevents candidate creation in user-sync
       },
@@ -105,7 +105,7 @@ export async function POST(req: Request) {
     const userId = authData.user.id;
 
     // 2. Determine agency - use invited agency or create/find one
-    let agency_id: string;
+    let agencyId: string;
     let isNewAgency = false;
     
     if (invitedAgencyId) {
@@ -156,11 +156,11 @@ export async function POST(req: Request) {
       }
     } else {
       // Create placeholder agency for this recruiter
-      const slug = `${first_name.toLowerCase()}-${last_name.toLowerCase()}-agency-${Date.now()}`;
+      const slug = `${firstName.toLowerCase()}-${lastName.toLowerCase()}-agency-${Date.now()}`;
       const { data: newAgency, error: agencyError } = await supabaseAdmin
         .from('agencies')
         .insert({
-          name: `${first_name} ${last_name}'s Agency`,
+          name: `${firstName} ${lastName}'s Agency`,
           slug: slug,
           is_active: true,
         })
@@ -258,7 +258,7 @@ export async function POST(req: Request) {
           .eq('id', agencyId)
           .single();
 
-        const fullAgencyName = agencyData?.name || agencyName || `${first_name} ${last_name}'s Agency`;
+        const fullAgencyName = agencyData?.name || agencyName || `${firstName} ${lastName}'s Agency`;
 
         // Create invitation record
         const { data: invitationData, error: invitationError } = await supabaseAdmin
@@ -267,7 +267,7 @@ export async function POST(req: Request) {
             agency_id: agencyId,
             inviter_id: userId,
             inviter_email: email,
-            inviter_name: `${first_name} ${last_name}`,
+            inviter_name: `${firstName} ${lastName}`,
             invitee_email: authorizedPersonEmail,
             invitee_name: `${authorizedPersonFirstName} ${authorizedPersonLastName}`,
             role: 'admin',
@@ -295,7 +295,7 @@ export async function POST(req: Request) {
           console.log('📧 Sending invitation email to:', authorizedPersonEmail);
           await sendTeamInvitationEmail(
             authorizedPersonEmail,
-            `${first_name} ${last_name}`,
+            `${firstName} ${lastName}`,
             fullAgencyName,
             token,
             inviteLink
@@ -320,7 +320,7 @@ export async function POST(req: Request) {
         ? 'Account created. Authorization head invitation sent.'
         : 'Recruiter account created successfully',
       userId,
-      agencyId,
+      agencyId: agencyId,
       role: recruiterRole,
       joinedViaInvite: !!invitation,
       verificationStatus,

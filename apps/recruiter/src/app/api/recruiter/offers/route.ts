@@ -157,7 +157,7 @@ export async function GET(request: NextRequest) {
       
       return {
         id: offer.id,
-        application_id: offer.application_id,
+        applicationId: offer.application_id,
         // Candidate info for video calls
         candidate_id: app?.candidate_id || null,
         candidate_name: candidateInfo?.name || 'Unknown',
@@ -282,7 +282,7 @@ export async function POST(request: NextRequest) {
     const { data: offer, error } = await supabaseAdmin
       .from('job_offers')
       .insert({
-        application_id: application_id,
+        applicationId: application_id,
         salary_offered: salaryOffered,
         currency: currency || 'PHP',
         salary_type: salaryType || 'monthly',

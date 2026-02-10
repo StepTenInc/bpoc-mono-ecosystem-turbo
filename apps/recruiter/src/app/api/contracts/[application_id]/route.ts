@@ -250,7 +250,7 @@ export async function GET(
 
       // Metadata
       metadata: {
-        application_id: application.id,
+        applicationId: application.id,
         offer_id: offer.id,
         job_id: job.id,
         candidate_id: candidate.id,

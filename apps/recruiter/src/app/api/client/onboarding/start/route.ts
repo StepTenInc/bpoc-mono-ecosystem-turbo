@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
       .from('candidate_onboarding')
       .insert({
         candidate_id: application.candidate_id,
-        job_application_id: application_id,
+        job_applicationId: application_id,
         first_name: candidate?.first_name || '',
         last_name: candidate?.last_name || '',
         email: candidate?.email || '',

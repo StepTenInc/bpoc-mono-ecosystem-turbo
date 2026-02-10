@@ -72,7 +72,7 @@ export async function GET(request: NextRequest) {
     const { data: applications } = await supabaseAdmin
       .from('job_applications')
       .select('id, job_id, candidate_id')
-      .in('job_id', job_id_list);
+      .in('job_id', jobIds);
 
     const appIds = applications?.map(a => a.id) || [];
     const appMap = Object.fromEntries((applications || []).map(a => [a.id, a]));
@@ -110,7 +110,7 @@ export async function GET(request: NextRequest) {
     const { data: candidates } = await supabaseAdmin
       .from('candidates')
       .select('id, first_name, last_name, email')
-      .in('id', candidate_id_list.length > 0 ? candidateIds : ['none']);
+      .in('id', candidateIds.length > 0 ? candidateIds : ['none']);
 
     const candidateMap = Object.fromEntries(
       (candidates || []).map(c => [c.id, { name: `${c.first_name} ${c.last_name}`.trim(), email: c.email }])
@@ -298,7 +298,7 @@ export async function POST(request: NextRequest) {
       .from('job_applications')
       .select('id, job_id')
       .eq('id', application_id)
-      .in('job_id', job_id_list)
+      .in('job_id', jobIds)
       .single();
 
     if (!app) {
@@ -311,7 +311,7 @@ export async function POST(request: NextRequest) {
     // scheduled_at_client_local = formatted string for client display
     // scheduled_at_ph = formatted string for PH display
     const insertData: Record<string, any> = {
-      application_id: application_id,
+      applicationId: application_id,
       interview_type: type,
       status: 'scheduled',
       scheduled_at: scheduledAtUTC || null, // UTC (TIMESTAMPTZ)
@@ -494,14 +494,14 @@ export async function POST(request: NextRequest) {
             // IMPORTANT: candidate auth id is candidates.id
             participant_user_id: candidateAuthId,
             job_id: app.job_id,
-            application_id: application_id,
-            interview_id: interview.id,
+            applicationId: application_id,
+            interviewId: interview.id,
             status: 'created',
             enable_recording: enableRecording,
             enable_transcription: enableTranscription,
             call_type: type,
             scheduled_for: scheduledAtUTC || null,
-            agency_id: auth.agency_id,
+            agencyId: auth.agency_id,
             // For client_* stages, sharing should be ON by default (formal stage).
             share_with_client: isClientInterview ? true : false,
             share_with_candidate: isClientInterview ? true : false,
@@ -589,13 +589,13 @@ export async function POST(request: NextRequest) {
     // Trigger webhook for interview scheduled
     if (scheduledAtUTC) {
       webhookInterviewScheduled({
-        interview_id: interview.id,
-        application_id: application_id,
-        candidate_id: application.candidate_id,
+        interviewId: interview.id,
+        applicationId: application_id,
+        candidateId: applicationData?.candidate_id,
         scheduledAt: scheduledAtUTC,
         interviewType: type,
         meetingLink: videoRoom?.daily_room_url || null,
-        agency_id: auth.agency_id,
+        agencyId: auth.agency_id,
       }).catch(err => console.error('[Webhook] Interview scheduled error:', err));
     }
 
@@ -641,7 +641,7 @@ export async function POST(request: NextRequest) {
  * Update interview outcome, rating, and feedback
  * 
  * Body:
- *   interview_id: string (required)
+ *   interviewId: string (required)
  *   outcome?: 'passed' | 'failed' | 'pending_decision' | 'needs_followup'
  *   rating?: number (1-5 star rating)
  *   feedback?: object (structured feedback JSON)
@@ -731,12 +731,12 @@ export async function PATCH(request: NextRequest) {
         : updated.job_applications;
 
       webhookInterviewCompleted({
-        interview_id: updated.id,
+        interviewId: updated.id,
         application_id: updated.application_id,
         candidate_id: application.candidate_id,
         outcome: outcome,
         rating: rating || updated.rating,
-        agency_id: auth.agency_id,
+        agencyId: auth.agency_id,
       }).catch(err => console.error('[Webhook] Interview completed error:', err));
     }
 

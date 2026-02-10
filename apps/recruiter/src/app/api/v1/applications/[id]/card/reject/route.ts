@@ -25,7 +25,7 @@ export async function POST(
     return withCors(NextResponse.json({ error: auth.error }, { status: auth.status }), request);
   }
 
-  const { agency_id } = auth;
+  const { agency_id: agencyId } = auth;
   const { id } = await params;
   const body = await request.json();
   const { reason, rejected_by, rejected_by_id } = body;
@@ -77,13 +77,13 @@ export async function POST(
 
     if (appDetails) {
       webhookApplicationStatusChanged({
-        application_id: id,
-        job_id: appDetails.job_id,
-        candidate_id: appDetails.candidate_id,
+        applicationId: id,
+        jobId: appDetails.job_id,
+        candidateId: appDetails.candidate_id,
         oldStatus: appDetails.status || 'unknown',
         newStatus: 'rejected',
         changedBy: rejected_by_id,
-        agency_id: agencyId,
+        agencyId: agencyId,
       }).catch(err => console.error('[Webhook] Application rejection error:', err));
     }
 

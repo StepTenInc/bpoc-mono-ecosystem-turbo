@@ -39,7 +39,7 @@ export async function GET(
           email
         )
       `)
-            .eq('job_id', job_id)
+            .eq('job_id', jobId)
             .order('overall_score', { ascending: false });
 
         if (error) {
@@ -53,7 +53,7 @@ export async function GET(
         // Fetch candidate profiles for additional info
         const candidateIds = matches?.map(m => m.candidate_id) || [];
 
-        let candidateProfiles = [];
+        let candidateProfiles: { candidate_id: string; headline: string | null; location_city: string | null; work_status: string | null }[] = [];
         if (candidateIds.length > 0) {
             const { data: profiles } = await supabaseAdmin
                 .from('candidate_profiles')

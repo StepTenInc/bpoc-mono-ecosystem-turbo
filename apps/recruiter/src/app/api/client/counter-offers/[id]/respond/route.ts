@@ -76,7 +76,7 @@ export async function POST(
       const { data: newOffer, error: newOfferError } = await supabaseAdmin
         .from('job_offers')
         .insert({
-          application_id: offer.application_id,
+          applicationId: offer.application_id,
           salary_offered: counterOffer.requested_salary,
           salary_type: 'monthly',
           currency: counterOffer.requested_currency || offer.currency,
@@ -157,7 +157,7 @@ export async function POST(
       const { data: newOffer, error: newOfferError } = await supabaseAdmin
         .from('job_offers')
         .insert({
-          application_id: offer.application_id,
+          applicationId: offer.application_id,
           salary_offered: newSalary,
           salary_type: 'monthly',
           currency: offer.currency,

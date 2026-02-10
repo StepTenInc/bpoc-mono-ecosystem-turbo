@@ -116,28 +116,40 @@ export async function GET(request: NextRequest) {
         .in('id', candidateIds),
       
       // Candidate profiles (for location) - optional
-      supabaseAdmin
-        .from('candidate_profiles')
-        .select('candidate_id, location')
-        .in('candidate_id', candidateIds)
-        .then(res => res)
-        .catch(() => ({ data: [] })),
+      (async () => {
+        try {
+          return await supabaseAdmin
+            .from('candidate_profiles')
+            .select('candidate_id, location')
+            .in('candidate_id', candidateIds);
+        } catch {
+          return { data: [] };
+        }
+      })(),
       
       // Interviews (using correct table name 'job_interviews')
-      supabaseAdmin
-        .from('job_interviews')
-        .select('id, application_id, interview_type, status, outcome, created_at')
-        .in('application_id', appIds)
-        .then(res => res)
-        .catch(() => ({ data: [] })),
+      (async () => {
+        try {
+          return await supabaseAdmin
+            .from('job_interviews')
+            .select('id, application_id, interview_type, status, outcome, created_at')
+            .in('application_id', appIds);
+        } catch {
+          return { data: [] };
+        }
+      })(),
       
       // Offers
-      supabaseAdmin
-        .from('job_offers')
-        .select('id, application_id, status, salary_offered, currency, created_at')
-        .in('application_id', appIds)
-        .then(res => res)
-        .catch(() => ({ data: [] })),
+      (async () => {
+        try {
+          return await supabaseAdmin
+            .from('job_offers')
+            .select('id, application_id, status, salary_offered, currency, created_at')
+            .in('application_id', appIds);
+        } catch {
+          return { data: [] };
+        }
+      })(),
     ]);
 
     // Video calls - fetch separately as it's optional and may fail
@@ -161,7 +173,7 @@ export async function GET(request: NextRequest) {
 
     // Build profile map for location
     const profileMap = Object.fromEntries(
-      (profilesResult.data || []).map(p => [p.candidate_id, p.location])
+      ((profilesResult as any).data || []).map((p: { candidate_id: string; location: string }) => [p.candidate_id, p.location])
     );
 
     // Build lookup maps
@@ -176,7 +188,7 @@ export async function GET(request: NextRequest) {
 
     // Group interviews by application
     const interviewsByApp: Record<string, any[]> = {};
-    (interviewsResult.data || []).forEach(i => {
+    ((interviewsResult as any).data || []).forEach((i: { application_id: string; interview_type: string; id: string; status: string; outcome: string; created_at: string }) => {
       if (!interviewsByApp[i.application_id]) interviewsByApp[i.application_id] = [];
       // Map job_interviews structure to our internal structure
       interviewsByApp[i.application_id].push({
@@ -187,7 +199,7 @@ export async function GET(request: NextRequest) {
 
     // Group offers by application
     const offersByApp: Record<string, any[]> = {};
-    (offersResult.data || []).forEach(o => {
+    ((offersResult as any).data || []).forEach((o: { application_id: string; id: string; status: string; salary_offered: number; currency: string; created_at: string }) => {
       if (!offersByApp[o.application_id]) offersByApp[o.application_id] = [];
       offersByApp[o.application_id].push(o);
     });

@@ -121,7 +121,7 @@ export async function GET(
         roomName: transcript.video_call_rooms?.daily_room_name,
         application_id: transcript.video_call_rooms?.application_id,
         job_id: transcript.video_call_rooms?.job_id,
-        interview_id: transcript.video_call_rooms?.interview_id,
+        interviewId: transcript.video_call_rooms?.interview_id,
         startedAt: transcript.video_call_rooms?.started_at,
         endedAt: transcript.video_call_rooms?.ended_at,
       },

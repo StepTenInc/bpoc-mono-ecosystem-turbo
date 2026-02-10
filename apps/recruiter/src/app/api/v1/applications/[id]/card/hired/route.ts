@@ -25,7 +25,7 @@ export async function PATCH(
     return withCors(NextResponse.json({ error: auth.error }, { status: auth.status }), request);
   }
 
-  const { agency_id } = auth;
+  const { agency_id: agencyId } = auth;
   const { id } = await params;
   const body = await request.json();
   const { offer_acceptance_date, contract_signed, first_day_date, started_status } = body;
@@ -72,12 +72,12 @@ export async function PATCH(
 
       if (appDetails) {
         webhookApplicationStatusChanged({
-          application_id: id,
-          job_id: appDetails.job_id,
-          candidate_id: appDetails.candidate_id,
+          applicationId: id,
+          jobId: appDetails.job_id,
+          candidateId: appDetails.candidate_id,
           oldStatus: appDetails.status || 'unknown',
           newStatus: started_status,
-          agency_id: agencyId,
+          agencyId: agencyId,
         }).catch(err => console.error('[Webhook] Hired status change error:', err));
       }
     }

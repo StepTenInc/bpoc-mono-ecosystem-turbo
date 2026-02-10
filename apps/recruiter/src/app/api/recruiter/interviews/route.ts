@@ -141,7 +141,7 @@ export async function GET(request: NextRequest) {
               };
             }
           } catch (e) {
-            console.log('⚠️ [interviews] Could not fetch auth user:', candidate_id);
+            console.log('⚠️ [interviews] Could not fetch auth user:', candidateId);
           }
         }
       }
@@ -188,7 +188,7 @@ export async function GET(request: NextRequest) {
       
       return {
         id: interview.id,
-        application_id: interview.application_id,
+        applicationId: interview.application_id,
         // Candidate info for video calls
         candidate_id: candidate?.userId || '', // user_id for starting video call
         candidate_name: candidate?.name || 'Unknown',
@@ -311,7 +311,7 @@ export async function POST(request: NextRequest) {
     const { data: interview, error } = await supabaseAdmin
       .from('job_interviews')
       .insert({
-        application_id: application_id,
+        applicationId: application_id,
         interview_type: interviewType,
         status: 'scheduled',
         interviewer_id: recruiter.id,

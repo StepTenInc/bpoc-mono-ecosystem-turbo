@@ -50,7 +50,7 @@ export async function POST(
         // 4. Create Default Onboarding Tasks
         const defaultTasks = [
             {
-                application_id: offer.application_id,
+                applicationId: offer.application_id,
                 task_type: 'document_upload',
                 title: 'Upload Government ID',
                 description: 'Please upload a valid government-issued ID (Passport, Driver License, etc.)',
@@ -58,7 +58,7 @@ export async function POST(
                 status: 'pending'
             },
             {
-                application_id: offer.application_id,
+                applicationId: offer.application_id,
                 task_type: 'form_fill',
                 title: 'Bank Details',
                 description: 'Provide your bank details for payroll',
@@ -66,7 +66,7 @@ export async function POST(
                 status: 'pending'
             },
             {
-                application_id: offer.application_id,
+                applicationId: offer.application_id,
                 task_type: 'acknowledgment',
                 title: 'Sign Handbook',
                 description: 'Read and acknowledge the Employee Handbook',
@@ -105,22 +105,22 @@ export async function POST(
                 const acceptedAt = new Date().toISOString();
 
                 webhookOfferAccepted({
-                    offer_id: offer_id,
-                    application_id: offer.application_id,
+                    offerId: offer_id,
+                    applicationId: offer.application_id,
                     candidate_id: application.candidate_id,
                     acceptedAt: acceptedAt,
-                    agency_id: agencyId,
+                    agencyId: agencyId,
                 }).catch(err => console.error('[Webhook] Offer accepted error:', err));
 
                 // Trigger webhook for placement creation (hired status)
                 webhookPlacementCreated({
                     placementId: offer.application_id, // Application ID serves as placement ID
-                    application_id: offer.application_id,
+                    applicationId: offer.application_id,
                     candidate_id: application.candidate_id,
                     job_id: application.job_id,
                     start_date: offer.start_date || acceptedAt,
                     salary: offer.salary_offered,
-                    agency_id: agencyId,
+                    agencyId: agencyId,
                 }).catch(err => console.error('[Webhook] Placement created error:', err));
             }
         }

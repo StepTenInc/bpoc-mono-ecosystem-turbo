@@ -63,7 +63,7 @@ export async function GET(
         )
       `)
       .eq('id', room_id)
-      .in('job_id', job_id_list)
+      .in('job_id', jobIds)
       .single();
 
     if (error || !room) {
@@ -162,7 +162,7 @@ export async function GET(
         is_active: dailyRoomActive && room.status !== 'ended',
         recordingEnabled: room.enable_recording,
         transcriptionEnabled: room.enable_transcription,
-        interview_id: room.interview_id,
+        interviewId: room.interview_id,
         application_id: room.application_id,
         job_id: room.job_id,
         duration: room.duration_seconds,
@@ -251,7 +251,7 @@ export async function PATCH(
       .from('video_call_rooms')
       .select('id, daily_room_name, status, interview_id')
       .eq('id', room_id)
-      .in('job_id', job_id_list)
+      .in('job_id', jobIds)
       .single();
 
     if (!room) {
@@ -370,7 +370,7 @@ export async function DELETE(
       .from('video_call_rooms')
       .select('id, daily_room_name, status')
       .eq('id', room_id)
-      .in('job_id', job_id_list)
+      .in('job_id', jobIds)
       .single();
 
     if (!room) {

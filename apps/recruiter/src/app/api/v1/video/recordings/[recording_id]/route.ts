@@ -108,7 +108,7 @@ export async function GET(
         fileSizeMb: recording.file_size_mb,
         application_id: recording.video_call_rooms?.application_id,
         job_id: recording.video_call_rooms?.job_id,
-        interview_id: recording.video_call_rooms?.interview_id,
+        interviewId: recording.video_call_rooms?.interview_id,
         created_at: recording.created_at,
         processedAt: recording.processed_at,
       },
@@ -225,7 +225,7 @@ export async function POST(
     const { data: transcript, error: insertError } = await supabaseAdmin
       .from('video_call_transcripts')
       .insert({
-        recording_id: recording_id,
+        recordingId: recording_id,
         room_id: recording.room_id,
         status: 'pending',
       })

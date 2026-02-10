@@ -24,7 +24,7 @@ export async function GET(
     return withCors(NextResponse.json({ error: auth.error }, { status: auth.status }), request);
   }
 
-  const { agency_id } = auth;
+  const { agency_id: agencyId } = auth;
   const { id } = await params;
 
   try {
@@ -66,7 +66,7 @@ export async function POST(
     return withCors(NextResponse.json({ error: auth.error }, { status: auth.status }), request);
   }
 
-  const { agency_id } = auth;
+  const { agency_id: agencyId } = auth;
   const { id } = await params;
   const body = await request.json();
   const { action_type, performed_by_type, performed_by_id, description, metadata } = body;

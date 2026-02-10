@@ -114,7 +114,7 @@ export async function GET(request: NextRequest) {
       return {
         id: offer.id,
         offer_id: offer.id,
-        application_id: offer.application_id,
+        applicationId: offer.application_id,
         // Candidate
         candidate_id: app?.candidate_id || '',
         candidate_name: candidate?.name || 'Unknown',

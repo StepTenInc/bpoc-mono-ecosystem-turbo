@@ -124,7 +124,7 @@ export async function POST(
       await supabaseAdmin
         .from('activity_timeline')
         .insert({
-          application_id: application.id,
+          applicationId: application.id,
           event_type: 'offer_withdrawn',
           title: 'Offer Withdrawn',
           description: `Job offer withdrawn by recruiter. Reason: ${withdrawalReason}`,
