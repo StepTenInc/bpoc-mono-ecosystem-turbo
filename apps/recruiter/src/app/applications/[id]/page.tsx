@@ -499,7 +499,7 @@ export default function ApplicationDetailPage() {
                         : 'Candidate Information'}
                     </h2>
                     <Link
-                      href={`/recruiter/talent/${application.candidate_id}`}
+                      href={`/talent/${application.candidate_id}`}
                       className="text-sm text-orange-400 hover:text-orange-300"
                     >
                       View Full Profile →
@@ -911,107 +911,212 @@ export default function ApplicationDetailPage() {
                 <CardTitle className="text-white">Quick Actions</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
-                {/* Rejected Application Notice */}
-                {application.status === 'rejected' && (
-                  <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 mb-2">
-                    <p className="text-red-400 text-sm text-center font-medium">
-                      This application has been rejected. Actions are disabled.
-                    </p>
-                  </div>
-                )}
-
-                {/* General Call Button - Full Width (disabled when rejected) */}
-                {application.status !== 'rejected' ? (
-                  <VideoCallButton
-                    candidateUserId={application.candidate_id}
-                    candidateName={
-                      application.candidates?.first_name && application.candidates?.last_name
-                        ? `${application.candidates.first_name} ${application.candidates.last_name}`
-                        : 'Candidate'
-                    }
-                    candidateEmail={application.candidates?.email}
-                    candidateAvatar={application.candidates?.avatar_url}
-                    jobId={application.job_id}
-                    jobTitle={application.jobs?.title}
-                    applicationId={application.id}
-                    context="all"
-                    variant="default"
-                    className="w-full justify-center"
-                  />
-                ) : (
-                  <Button
-                    disabled
-                    className="w-full justify-center bg-gray-500/10 text-gray-500 border border-gray-500/20 cursor-not-allowed"
-                  >
-                    <Calendar className="h-4 w-4 mr-2" />
-                    General Call
-                  </Button>
-                )}
-
-                {/* Review & Shortlist Buttons - Grid Row */}
-                {application.status !== 'rejected' && application.status !== 'hired' && (
-                  <div className="grid grid-cols-2 gap-2">
-                    <Button
-                      variant="outline"
-                      className={`w-full justify-center ${
-                        application.status === 'under_review' || application.status === 'shortlisted'
-                          ? 'border-gray-500/20 text-gray-500 cursor-not-allowed'
-                          : 'border-cyan-500/30 text-cyan-300 hover:bg-cyan-500/10'
-                      }`}
-                      onClick={() => updateApplicationStatus('under_review')}
-                      disabled={!!statusLoading || application.status === 'under_review' || application.status === 'shortlisted'}
-                      title={application.status === 'shortlisted' ? 'Already shortlisted' : 'Mark as Under Review'}
-                    >
-                      {statusLoading === 'under_review' ? (
-                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                      ) : (
-                        <FileText className="h-4 w-4 mr-2" />
+                {(() => {
+                  // Define stage-based button visibility
+                  const status = application.status;
+                  const isRejected = status === 'rejected';
+                  const isHired = status === 'hired' || status === 'offer_accepted';
+                  const isOfferStage = status === 'offer_sent' || status === 'offer_accepted';
+                  const isInterviewStage = ['interview_scheduled', 'bpoc_round_1', 'bpoc_round_2', 'client_interview', 'interviewed'].includes(status);
+                  const isEarlyStage = ['submitted', 'under_review', 'shortlisted'].includes(status);
+                  
+                  return (
+                    <>
+                      {/* Status-based notices */}
+                      {isRejected && (
+                        <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 mb-2">
+                          <p className="text-red-400 text-sm text-center font-medium">
+                            This application has been rejected. Actions are disabled.
+                          </p>
+                        </div>
                       )}
-                      Review
-                    </Button>
-                    <Button
-                      variant="outline"
-                      className={`w-full justify-center ${
-                        application.status === 'shortlisted'
-                          ? 'border-gray-500/20 text-gray-500 cursor-not-allowed'
-                          : 'border-purple-500/30 text-purple-300 hover:bg-purple-500/10'
-                      }`}
-                      onClick={() => updateApplicationStatus('shortlisted')}
-                      disabled={!!statusLoading || application.status === 'shortlisted'}
-                      title={application.status === 'shortlisted' ? 'Already shortlisted' : 'Shortlist candidate'}
-                    >
-                      {statusLoading === 'shortlisted' ? (
-                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                      ) : (
-                        <Star className="h-4 w-4 mr-2" />
+                      
+                      {isHired && (
+                        <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 mb-2">
+                          <p className="text-emerald-400 text-sm text-center font-medium">
+                            🎉 Candidate has accepted the offer!
+                          </p>
+                        </div>
                       )}
-                      Shortlist
-                    </Button>
-                  </div>
-                )}
 
-                {/* Schedule Interview & View Profile - Grid Row */}
-                <div className="grid grid-cols-2 gap-2">
-                  <Button
-                    variant="outline"
-                    className={`w-full justify-center ${
-                      application.status === 'rejected'
-                        ? 'border-gray-500/20 text-gray-500 cursor-not-allowed'
-                        : 'border-orange-500/30 text-orange-300 hover:bg-orange-500/10'
-                    }`}
-                    onClick={() => application.status !== 'rejected' && setShowSchedulerModal(true)}
-                    disabled={application.status === 'rejected'}
-                  >
-                    <Calendar className="h-4 w-4 mr-2" />
-                    Schedule
-                  </Button>
-                  <Link href={`/recruiter/talent/${application.candidate_id}`} className="w-full">
-                    <Button variant="outline" className="w-full justify-center border-blue-500/30 text-blue-300 hover:bg-blue-500/10">
-                      <User className="h-4 w-4 mr-2" />
-                      Profile
-                    </Button>
-                  </Link>
-                </div>
+                      {isOfferStage && !isHired && (
+                        <div className="p-3 rounded-lg bg-yellow-500/10 border border-yellow-500/20 mb-2">
+                          <p className="text-yellow-400 text-sm text-center font-medium">
+                            Offer sent - awaiting candidate response
+                          </p>
+                        </div>
+                      )}
+
+                      {/* Call Button - Always show unless rejected */}
+                      {!isRejected ? (
+                        <VideoCallButton
+                          candidateUserId={application.candidate_id}
+                          candidateName={
+                            application.candidates?.first_name && application.candidates?.last_name
+                              ? `${application.candidates.first_name} ${application.candidates.last_name}`
+                              : 'Candidate'
+                          }
+                          candidateEmail={application.candidates?.email}
+                          candidateAvatar={application.candidates?.avatar_url}
+                          jobId={application.job_id}
+                          jobTitle={application.jobs?.title}
+                          applicationId={application.id}
+                          context="all"
+                          variant="default"
+                          className="w-full justify-center"
+                        />
+                      ) : (
+                        <Button
+                          disabled
+                          className="w-full justify-center bg-gray-500/10 text-gray-500 border border-gray-500/20 cursor-not-allowed"
+                        >
+                          <Calendar className="h-4 w-4 mr-2" />
+                          General Call
+                        </Button>
+                      )}
+
+                      {/* Early Stage Actions: Review & Shortlist - Only for early stages */}
+                      {isEarlyStage && !isRejected && (
+                        <div className="grid grid-cols-2 gap-2">
+                          <Button
+                            variant="outline"
+                            className={`w-full justify-center ${
+                              status === 'under_review' || status === 'shortlisted'
+                                ? 'border-gray-500/20 text-gray-500 cursor-not-allowed'
+                                : 'border-cyan-500/30 text-cyan-300 hover:bg-cyan-500/10'
+                            }`}
+                            onClick={() => updateApplicationStatus('under_review')}
+                            disabled={!!statusLoading || status === 'under_review' || status === 'shortlisted'}
+                            title={status === 'shortlisted' ? 'Already shortlisted' : 'Mark as Under Review'}
+                          >
+                            {statusLoading === 'under_review' ? (
+                              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                            ) : (
+                              <FileText className="h-4 w-4 mr-2" />
+                            )}
+                            Review
+                          </Button>
+                          <Button
+                            variant="outline"
+                            className={`w-full justify-center ${
+                              status === 'shortlisted'
+                                ? 'border-gray-500/20 text-gray-500 cursor-not-allowed'
+                                : 'border-purple-500/30 text-purple-300 hover:bg-purple-500/10'
+                            }`}
+                            onClick={() => updateApplicationStatus('shortlisted')}
+                            disabled={!!statusLoading || status === 'shortlisted'}
+                            title={status === 'shortlisted' ? 'Already shortlisted' : 'Shortlist candidate'}
+                          >
+                            {statusLoading === 'shortlisted' ? (
+                              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                            ) : (
+                              <Star className="h-4 w-4 mr-2" />
+                            )}
+                            Shortlist
+                          </Button>
+                        </div>
+                      )}
+
+                      {/* Interview Stage Actions */}
+                      {isInterviewStage && !isRejected && (
+                        <div className="grid grid-cols-2 gap-2">
+                          <Link href="/interviews" className="w-full">
+                            <Button variant="outline" className="w-full justify-center border-orange-500/30 text-orange-300 hover:bg-orange-500/10">
+                              <Calendar className="h-4 w-4 mr-2" />
+                              View Interviews
+                            </Button>
+                          </Link>
+                          <Button
+                            variant="outline"
+                            className="w-full justify-center border-emerald-500/30 text-emerald-300 hover:bg-emerald-500/10"
+                            onClick={() => updateApplicationStatus('offer_sent')}
+                            disabled={!!statusLoading}
+                          >
+                            {statusLoading === 'offer_sent' ? (
+                              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                            ) : (
+                              <Star className="h-4 w-4 mr-2" />
+                            )}
+                            Send Offer
+                          </Button>
+                        </div>
+                      )}
+
+                      {/* Offer Stage Actions */}
+                      {isOfferStage && !isHired && !isRejected && (
+                        <div className="grid grid-cols-2 gap-2">
+                          <Link href="/offers" className="w-full">
+                            <Button variant="outline" className="w-full justify-center border-yellow-500/30 text-yellow-300 hover:bg-yellow-500/10">
+                              <FileText className="h-4 w-4 mr-2" />
+                              View Offer
+                            </Button>
+                          </Link>
+                          <Button
+                            variant="outline"
+                            className="w-full justify-center border-red-500/30 text-red-300 hover:bg-red-500/10"
+                            onClick={() => updateApplicationStatus('rejected')}
+                            disabled={!!statusLoading}
+                          >
+                            Withdraw Offer
+                          </Button>
+                        </div>
+                      )}
+
+                      {/* Hired Stage Actions */}
+                      {isHired && (
+                        <div className="grid grid-cols-2 gap-2">
+                          <Link href="/onboarding" className="w-full">
+                            <Button variant="outline" className="w-full justify-center border-emerald-500/30 text-emerald-300 hover:bg-emerald-500/10">
+                              <FileText className="h-4 w-4 mr-2" />
+                              View Onboarding
+                            </Button>
+                          </Link>
+                          <Link href="/placements" className="w-full">
+                            <Button variant="outline" className="w-full justify-center border-purple-500/30 text-purple-300 hover:bg-purple-500/10">
+                              <Briefcase className="h-4 w-4 mr-2" />
+                              View Placement
+                            </Button>
+                          </Link>
+                        </div>
+                      )}
+
+                      {/* Schedule & Profile - Always show for non-hired, non-offer stages */}
+                      {!isHired && !isOfferStage && (
+                        <div className="grid grid-cols-2 gap-2">
+                          <Button
+                            variant="outline"
+                            className={`w-full justify-center ${
+                              isRejected
+                                ? 'border-gray-500/20 text-gray-500 cursor-not-allowed'
+                                : 'border-orange-500/30 text-orange-300 hover:bg-orange-500/10'
+                            }`}
+                            onClick={() => !isRejected && setShowSchedulerModal(true)}
+                            disabled={isRejected}
+                          >
+                            <Calendar className="h-4 w-4 mr-2" />
+                            Schedule
+                          </Button>
+                          <Link href={`/talent/${application.candidate_id}`} className="w-full">
+                            <Button variant="outline" className="w-full justify-center border-blue-500/30 text-blue-300 hover:bg-blue-500/10">
+                              <User className="h-4 w-4 mr-2" />
+                              Profile
+                            </Button>
+                          </Link>
+                        </div>
+                      )}
+
+                      {/* Profile only for hired/offer stages */}
+                      {(isHired || isOfferStage) && (
+                        <Link href={`/talent/${application.candidate_id}`} className="w-full">
+                          <Button variant="outline" className="w-full justify-center border-blue-500/30 text-blue-300 hover:bg-blue-500/10">
+                            <User className="h-4 w-4 mr-2" />
+                            View Full Profile
+                          </Button>
+                        </Link>
+                      )}
+                    </>
+                  );
+                })()}
 
                 {/* Schedule Interview Expanded Panel (only when not rejected) */}
                 {scheduleOpen && application.status !== 'rejected' && (
@@ -1068,40 +1173,20 @@ export default function ApplicationDetailPage() {
                     </Button>
                   </div>
                 )}
-                {/* Rejection Info - only show when not already rejected */}
-                {application.status !== 'rejected' && (
-                  <RejectionInfo
-                    applicationId={application.id}
-                    rejectionReason={application.rejection_reason}
-                    rejectedBy={application.rejected_by}
-                    rejectedDate={application.rejected_date}
-                    onUpdate={handleUpdate}
-                    editable={true}
-                  />
-                )}
-                {/* Hired & Started Tracking - only for non-rejected, non-hired applications */}
+                {/* Rejection Info - only show for early/interview stages (not hired, offer_accepted, or already rejected) */}
                 {(() => {
-                  // Don't show for rejected applications
-                  if (application.status === 'rejected') return null;
-                  // Don't show if already hired (main area shows it)
-                  if (application.status === 'hired') return null;
-                  
-                  const hasHiredData = !!(
-                    application.offer_acceptance_date ||
-                    application.contract_signed ||
-                    application.first_day_date ||
-                    application.started_status
-                  );
+                  const status = application.status;
+                  const hideRejection = ['rejected', 'hired', 'offer_accepted', 'offer_sent'].includes(status);
+                  if (hideRejection) return null;
                   
                   return (
-                    <HiredStatus
+                    <RejectionInfo
                       applicationId={application.id}
-                      offerAcceptanceDate={application.offer_acceptance_date}
-                      contractSigned={application.contract_signed}
-                      firstDayDate={application.first_day_date}
-                      startedStatus={application.started_status}
+                      rejectionReason={application.rejection_reason}
+                      rejectedBy={application.rejected_by}
+                      rejectedDate={application.rejected_date}
                       onUpdate={handleUpdate}
-                      editable={hasHiredData}
+                      editable={true}
                     />
                   );
                 })()}

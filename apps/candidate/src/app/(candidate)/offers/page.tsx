@@ -24,6 +24,7 @@ import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/contexts/AuthContext';
 import Link from 'next/link';
 import CounterOfferModal from '@/components/candidate/CounterOfferModal';
+import OnboardingWizard from '@/components/candidate/OnboardingWizard';
 import { ESignatureCapture } from '@/components/shared/offer/ESignatureCapture';
 
 interface CounterOffer {
@@ -65,6 +66,7 @@ export default function CandidateOffersPage() {
   const [successMessage, setSuccessMessage] = useState('');
   const [counterOfferModal, setCounterOfferModal] = useState<Offer | null>(null);
   const [signingOffer, setSigningOffer] = useState<string | null>(null);
+  const [onboardingWizardOffer, setOnboardingWizardOffer] = useState<Offer | null>(null);
 
   useEffect(() => {
     const fetchOffers = async () => {
@@ -109,6 +111,7 @@ export default function CandidateOffersPage() {
       const data = await response.json();
 
       if (response.ok) {
+        const acceptedOffer = offers.find(o => o.id === offerId);
         setOffers(prev => prev.map(o =>
           o.id === offerId
             ? { ...o, status: action === 'accept' ? 'accepted' : 'rejected' }
@@ -116,6 +119,11 @@ export default function CandidateOffersPage() {
         ));
         setSuccessMessage(data.message);
         setTimeout(() => setSuccessMessage(''), 5000);
+        
+        // Show onboarding wizard if accepted
+        if (action === 'accept' && acceptedOffer) {
+          setOnboardingWizardOffer(acceptedOffer);
+        }
       }
     } catch (error) {
       console.error('Failed to respond:', error);
@@ -496,6 +504,28 @@ export default function CandidateOffersPage() {
           onSuccess={() => {
             // Refresh offers
             window.location.reload();
+          }}
+        />
+      )}
+
+      {/* Onboarding Wizard */}
+      {onboardingWizardOffer && (
+        <OnboardingWizard
+          isOpen={!!onboardingWizardOffer}
+          onClose={() => setOnboardingWizardOffer(null)}
+          offer={{
+            id: onboardingWizardOffer.id,
+            jobTitle: onboardingWizardOffer.jobTitle,
+            company: onboardingWizardOffer.company,
+            salaryOffered: onboardingWizardOffer.salaryOffered,
+            currency: onboardingWizardOffer.currency,
+            salaryType: onboardingWizardOffer.salaryType,
+            startDate: onboardingWizardOffer.startDate,
+            benefits: onboardingWizardOffer.benefits,
+          }}
+          onComplete={() => {
+            setOnboardingWizardOffer(null);
+            // Optionally navigate to dashboard or refresh
           }}
         />
       )}

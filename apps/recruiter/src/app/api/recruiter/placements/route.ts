@@ -65,7 +65,7 @@ export async function GET(request: NextRequest) {
     const { data: applications } = await supabaseAdmin
       .from('job_applications')
       .select('id, job_id, candidate_id, status')
-      .in('job_id', job_id_list)
+      .in('job_id', jobIds)
       .eq('status', 'hired');
 
     if (!applications || applications.length === 0) {
@@ -94,7 +94,7 @@ export async function GET(request: NextRequest) {
     const { data: candidates } = await supabaseAdmin
       .from('candidates')
       .select('id, first_name, last_name, email, avatar_url')
-      .in('id', candidate_id_list);
+      .in('id', candidateIds);
 
     const candidateMap = Object.fromEntries(
       (candidates || []).map(c => [c.id, {

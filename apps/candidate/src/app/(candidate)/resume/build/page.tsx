@@ -156,45 +156,7 @@ const dataUrlToFile = async (dataUrl: string, fileName: string): Promise<File> =
   return new File([blob], fileName, { type });
 };
 
-// Mock data for testing
-const MOCK_RESUME = {
-  name: 'John Doe',
-  email: 'john.doe@email.com',
-  phone: '+63 912 345 6789',
-  location: 'Manila, Philippines',
-  bestJobTitle: 'Senior Customer Support Specialist',
-  summary: 'Dedicated customer support professional with 5+ years of experience in the BPO industry. Proven track record of improving customer satisfaction scores by 25% and reducing resolution times by 40%. Expert in handling high-volume inquiries while maintaining quality standards.',
-  experience: [
-    {
-      title: 'Senior Customer Support Specialist',
-      company: 'Accenture Philippines',
-      duration: 'Jan 2021 - Present',
-      achievements: [
-        'Led a team of 8 support agents, improving team performance by 30%',
-        'Implemented new ticketing system reducing response time by 45%',
-        'Maintained 98% customer satisfaction rating',
-        'Trained 25+ new hires on company protocols and best practices'
-      ]
-    },
-    {
-      title: 'Customer Support Representative',
-      company: 'Teleperformance',
-      duration: 'Mar 2018 - Dec 2020',
-      achievements: [
-        'Handled 100+ customer inquiries daily with 95% resolution rate',
-        'Recognized as Top Performer for 6 consecutive quarters',
-        'Assisted in developing training materials for new products'
-      ]
-    }
-  ],
-  education: [
-    { degree: 'Bachelor of Science in Business Administration', institution: 'University of the Philippines', year: '2018' }
-  ],
-  skills: {
-    technical: ['Zendesk', 'Salesforce', 'Microsoft Office', 'CRM Systems', 'Live Chat', 'Email Support'],
-    soft: ['Communication', 'Problem Solving', 'Leadership', 'Time Management', 'Empathy', 'Adaptability']
-  }
-};
+// Resume data is loaded from localStorage or API - no mock data
 
 export default function ResumeBuildPage() {
   const router = useRouter();
@@ -252,6 +214,56 @@ export default function ResumeBuildPage() {
     { role: 'ai', content: "👋 Hi! I'm your AI Resume Coach. I'll help you build a perfect resume that gets you hired!\n\nI can see what's missing and guide you step by step. Click any missing item or use the quick actions above!" }
   ]);
   
+  // Update AI welcome message based on source (from-scratch vs upload)
+  useEffect(() => {
+    const resumeSource = localStorage.getItem('bpoc_resume_source');
+    const aiAnalysis = localStorage.getItem('bpoc_ai_analysis');
+    
+    // Different welcome messages based on path
+    if (resumeSource === 'from_scratch') {
+      // NEW RESUME PATH - Help them build from scratch
+      setAiMessages([{
+        role: 'ai',
+        content: `👋 Hi! I'm here to help you BUILD your first resume!\n\n🆕 Since you're starting fresh, I'll guide you through each section:\n\n1️⃣ **Summary** - Let's create a powerful intro\n2️⃣ **Experience** - We'll highlight your work history\n3️⃣ **Skills** - I'll help pick the right keywords\n4️⃣ **Education** - Add your qualifications\n\n✨ Click any section to start, or use "AI Improve" to let me write content for you!\n\n💡 Tip: Based on what you told me earlier, I already have ideas for your resume!`
+      }]);
+    } else if (resumeSource === 'existing_resume' && aiAnalysis) {
+      // EXISTING RESUME PATH - Help them improve
+      try {
+        const analysis = JSON.parse(aiAnalysis);
+        const missingCount = (analysis.improvements?.length || 0);
+        const score = analysis.overallScore || 70;
+        
+        if (missingCount > 0 || score < 80) {
+          setAiMessages([{
+            role: 'ai',
+            content: `👋 Welcome back! I've analyzed your existing resume and found some opportunities to improve.\n\n📊 Your current score: ${score}/100\n\n${missingCount > 0 ? `📝 ${missingCount} areas to enhance - click the items in "Missing" section to add them!\n\n` : ''}Use the quick actions above to:\n• ✨ Improve sections with AI\n• 🎯 Optimize for ATS\n• 📄 Change your template style`
+          }]);
+        }
+      } catch (e) {
+        // Keep default message
+      }
+    } else if (aiAnalysis) {
+      // Fallback - has analysis but no source flag
+      try {
+        const analysis = JSON.parse(aiAnalysis);
+        const missingCount = (analysis.improvements?.length || 0);
+        const score = analysis.overallScore || 70;
+        
+        if (missingCount > 0 || score < 80) {
+          setAiMessages([{
+            role: 'ai',
+            content: `👋 Welcome! I've analyzed your resume.\n\n📊 Score: ${score}/100\n\n${missingCount > 0 ? `📝 ${missingCount} areas to enhance!\n\n` : ''}Click any section to improve it with AI!`
+          }]);
+        }
+      } catch (e) {
+        // Keep default message
+      }
+    }
+    
+    // Clean up the source flag after reading (one-time use)
+    // localStorage.removeItem('bpoc_resume_source');
+  }, []);
+  
   // Smart input modal
   const [showInputModal, setShowInputModal] = useState(false);
   const [inputModalData, setInputModalData] = useState<{
@@ -266,8 +278,7 @@ export default function ResumeBuildPage() {
     if (!resumeData) return;
     const missing: string[] = [];
     
-    // Check if using mock data (skip some checks for demo)
-    const isMockData = resumeData.name === 'John Doe';
+    // Check missing fields
     
     // Contact info
     if (!resumeData.phone || resumeData.phone === 'Add phone') {

@@ -471,19 +471,19 @@ export default function PlacementsPage() {
 
                           {/* Actions */}
                           <div className="flex gap-2 mt-4">
-                            <Link href={`/recruiter/talent/${placement.candidate_id}`}>
+                            <Link href={`/talent/${placement.candidate_id}`}>
                               <Button size="sm" variant="outline" className="border-white/10 text-gray-400 hover:text-white">
                                 <User className="h-4 w-4 mr-1" />
                                 Profile
                               </Button>
                             </Link>
-                            <Link href={`/recruiter/clients/${placement.client_id}`}>
+                            <Link href={`/clients/${placement.client_id}`}>
                               <Button size="sm" variant="outline" className="border-white/10 text-gray-400 hover:text-white">
                                 <Building2 className="h-4 w-4 mr-1" />
                                 Client
                               </Button>
                             </Link>
-                            <Link href={`/recruiter/contracts/${placement.application_id}`}>
+                            <Link href={`/contracts/${placement.application_id}`}>
                               <Button size="sm" variant="outline" className="border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/10">
                                 <FileText className="h-4 w-4 mr-1" />
                                 View Contract

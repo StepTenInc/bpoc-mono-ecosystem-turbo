@@ -95,7 +95,7 @@ export default function CandidateProfilePage() {
     if (user?.id && candidateId) {
       fetchCandidate();
     }
-  }, [user?.id, candidate_id]);
+  }, [user?.id, candidateId]);
 
   const fetchCandidate = async () => {
     try {

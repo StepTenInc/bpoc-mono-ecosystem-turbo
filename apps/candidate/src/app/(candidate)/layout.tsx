@@ -72,6 +72,25 @@ export default function CandidateLayout({
     try {
       const res = await fetch(`/api/candidates/${userId}`)
       if (!res.ok) {
+        // If candidate doesn't exist, try to create one
+        if (res.status === 404 && user?.email) {
+          console.log('Candidate not found, creating new record...')
+          const createRes = await fetch('/api/candidates/ensure', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              id: userId,
+              email: user.email,
+              first_name: user.user_metadata?.first_name || user.email?.split('@')[0] || 'New',
+              last_name: user.user_metadata?.last_name || 'Candidate',
+            }),
+          })
+          if (createRes.ok) {
+            const { candidate } = await createRes.json()
+            setProfile(candidate)
+            return
+          }
+        }
         console.error('Failed to fetch candidate:', res.status)
         setProfile(null)
         return

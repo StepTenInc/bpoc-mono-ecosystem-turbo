@@ -1,228 +1,110 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { createClient } from '@/lib/supabase/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
-import { verifyAuthToken } from '@/lib/auth/verify-token';
 
 /**
- * GET /api/recruiter/webhooks/[id]
- * Get webhook details and recent deliveries
- */
-export async function GET(
-  request: NextRequest,
-  context: { params: Promise<{ id: string }> }
-) {
-  const { id } = await context.params;
-  try {
-    const auth = await verifyAuthToken(request);
-    const userId = auth.userId;
-
-    if (!userId) {
-      return NextResponse.json({ error: auth.error || 'Unauthorized' }, { status: 401 });
-    }
-
-    // Get recruiter's agency
-    const { data: recruiter } = await supabaseAdmin
-      .from('agency_recruiters')
-      .select('agency_id')
-      .eq('user_id', userId)
-      .single();
-
-    if (!recruiter) {
-      return NextResponse.json({ error: 'Recruiter not found' }, { status: 403 });
-    }
-
-    // Get webhook
-    const { data: webhook, error } = await supabaseAdmin
-      .from('webhooks')
-      .select('*')
-      .eq('id', id)
-      .eq('agency_id', recruiter.agency_id)
-      .single();
-
-    if (error || !webhook) {
-      return NextResponse.json({ error: 'Webhook not found' }, { status: 404 });
-    }
-
-    // Get recent deliveries
-    const { data: deliveries } = await supabaseAdmin
-      .from('webhook_deliveries')
-      .select('*')
-      .eq('webhook_id', id)
-      .order('created_at', { ascending: false })
-      .limit(20);
-
-    return NextResponse.json({
-      webhook: {
-        ...webhook,
-        secret: '••••••••', // Don't expose secret
-      },
-      recentDeliveries: deliveries || [],
-    });
-  } catch (error) {
-    console.error('Error fetching webhook:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
-  }
-}
-
-/**
- * PATCH /api/recruiter/webhooks/[id]
- * Update webhook configuration
- */
-export async function PATCH(
-  request: NextRequest,
-  context: { params: Promise<{ id: string }> }
-) {
-  const { id } = await context.params;
-  try {
-    const auth = await verifyAuthToken(request);
-    const userId = auth.userId;
-
-    if (!userId) {
-      return NextResponse.json({ error: auth.error || 'Unauthorized' }, { status: 401 });
-    }
-
-    // Get recruiter's agency
-    const { data: recruiter } = await supabaseAdmin
-      .from('agency_recruiters')
-      .select('agency_id, role')
-      .eq('user_id', userId)
-      .single();
-
-    if (!recruiter) {
-      return NextResponse.json({ error: 'Recruiter not found' }, { status: 403 });
-    }
-
-    // Only owners/admins can update webhooks
-    if (recruiter.role !== 'owner' && recruiter.role !== 'admin') {
-      return NextResponse.json({ error: 'Only agency owners/admins can manage webhooks' }, { status: 403 });
-    }
-
-    // Verify webhook belongs to agency
-    const { data: webhook } = await supabaseAdmin
-      .from('webhooks')
-      .select('id')
-      .eq('id', id)
-      .eq('agency_id', recruiter.agency_id)
-      .single();
-
-    if (!webhook) {
-      return NextResponse.json({ error: 'Webhook not found' }, { status: 404 });
-    }
-
-    const body = await request.json();
-    const { url, events, description, is_active } = body;
-
-    const updates: any = {};
-
-    if (url !== undefined) {
-      if (!url.match(/^https?:\/\//)) {
-        return NextResponse.json({ error: 'Invalid URL' }, { status: 400 });
-      }
-      updates.url = url;
-    }
-
-    if (events !== undefined) {
-      if (!Array.isArray(events) || events.length === 0) {
-        return NextResponse.json({ error: 'At least one event must be specified' }, { status: 400 });
-      }
-      updates.events = events;
-    }
-
-    if (description !== undefined) {
-      updates.description = description;
-    }
-
-    if (is_active !== undefined) {
-      updates.is_active = is_active;
-    }
-
-    // Update webhook
-    const { data: updated, error } = await supabaseAdmin
-      .from('webhooks')
-      .update(updates)
-      .eq('id', id)
-      .select()
-      .single();
-
-    if (error) {
-      console.error('Error updating webhook:', error);
-      return NextResponse.json({ error: 'Failed to update webhook' }, { status: 500 });
-    }
-
-    return NextResponse.json({
-      success: true,
-      webhook: {
-        ...updated,
-        secret: '••••••••', // Don't expose secret
-      },
-    });
-  } catch (error) {
-    console.error('Error updating webhook:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
-  }
-}
-
-/**
- * DELETE /api/recruiter/webhooks/[id]
+ * DELETE /api/recruiter/webhooks/:id
  * Delete a webhook
  */
 export async function DELETE(
   request: NextRequest,
-  context: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const { id } = await context.params;
   try {
-    const auth = await verifyAuthToken(request);
-    const userId = auth.userId;
-
-    if (!userId) {
-      return NextResponse.json({ error: auth.error || 'Unauthorized' }, { status: 401 });
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Get recruiter's agency
+    const { id } = await params;
+
+    // Get agency ID from user
     const { data: recruiter } = await supabaseAdmin
       .from('agency_recruiters')
-      .select('agency_id, role')
-      .eq('user_id', userId)
+      .select('agency_id')
+      .eq('user_id', user.id)
       .single();
 
     if (!recruiter) {
-      return NextResponse.json({ error: 'Recruiter not found' }, { status: 403 });
+      return NextResponse.json({ error: 'Not a recruiter' }, { status: 403 });
     }
 
-    // Only owners/admins can delete webhooks
-    if (recruiter.role !== 'owner' && recruiter.role !== 'admin') {
-      return NextResponse.json({ error: 'Only agency owners/admins can manage webhooks' }, { status: 403 });
-    }
-
-    // Verify webhook belongs to agency
-    const { data: webhook } = await supabaseAdmin
-      .from('webhooks')
-      .select('id')
-      .eq('id', id)
-      .eq('agency_id', recruiter.agency_id)
-      .single();
-
-    if (!webhook) {
-      return NextResponse.json({ error: 'Webhook not found' }, { status: 404 });
-    }
-
-    // Delete webhook (cascade will delete deliveries)
+    // Verify webhook belongs to agency and delete
     const { error } = await supabaseAdmin
       .from('webhooks')
       .delete()
-      .eq('id', id);
+      .eq('id', id)
+      .eq('agency_id', recruiter.agency_id);
 
     if (error) {
-      console.error('Error deleting webhook:', error);
+      console.error('Failed to delete webhook:', error);
       return NextResponse.json({ error: 'Failed to delete webhook' }, { status: 500 });
     }
 
-    return NextResponse.json({
-      success: true,
-      message: 'Webhook deleted successfully',
-    });
+    return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Error deleting webhook:', error);
+    console.error('Webhook DELETE error:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
+}
+
+/**
+ * PATCH /api/recruiter/webhooks/:id
+ * Update a webhook
+ */
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const { id } = await params;
+    const body = await request.json();
+    const { url, events, description, is_active } = body;
+
+    // Get agency ID from user
+    const { data: recruiter } = await supabaseAdmin
+      .from('agency_recruiters')
+      .select('agency_id')
+      .eq('user_id', user.id)
+      .single();
+
+    if (!recruiter) {
+      return NextResponse.json({ error: 'Not a recruiter' }, { status: 403 });
+    }
+
+    // Build update object
+    const updateData: any = { updated_at: new Date().toISOString() };
+    if (url) updateData.url = url;
+    if (events) updateData.events = events;
+    if (description !== undefined) updateData.description = description;
+    if (is_active !== undefined) updateData.is_active = is_active;
+
+    // Update webhook
+    const { data: webhook, error } = await supabaseAdmin
+      .from('webhooks')
+      .update(updateData)
+      .eq('id', id)
+      .eq('agency_id', recruiter.agency_id)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Failed to update webhook:', error);
+      return NextResponse.json({ error: 'Failed to update webhook' }, { status: 500 });
+    }
+
+    return NextResponse.json({ webhook });
+  } catch (error) {
+    console.error('Webhook PATCH error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

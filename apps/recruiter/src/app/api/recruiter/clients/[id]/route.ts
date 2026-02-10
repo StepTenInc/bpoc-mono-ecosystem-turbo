@@ -140,7 +140,7 @@ export async function GET(
       const { count } = await supabaseAdmin
         .from('job_applications')
         .select('id', { count: 'exact', head: true })
-        .in('job_id', job_id_list)
+        .in('job_id', jobIds)
         .eq('status', 'hired');
       placementCount = count || 0;
     }
@@ -154,14 +154,14 @@ export async function GET(
         supabaseAdmin
           .from('job_applications')
           .select('created_at')
-          .in('job_id', job_id_list)
+          .in('job_id', jobIds)
           .order('created_at', { ascending: false })
           .limit(1)
           .maybeSingle(),
         supabaseAdmin
           .from('video_call_rooms')
           .select('created_at')
-          .in('job_id', job_id_list)
+          .in('job_id', jobIds)
           .order('created_at', { ascending: false })
           .limit(1)
           .maybeSingle(),

@@ -228,7 +228,7 @@ export default function RecruiterOnboardingPage() {
                   
                   <div className="flex items-center gap-4">
                     {getStatusBadge(onboarding)}
-                    <Link href={`/recruiter/applications/${onboarding.application_id}`}>
+                    <Link href={`/applications/${onboarding.application_id}`}>
                       <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white">
                         View <ChevronRight className="h-4 w-4 ml-1" />
                       </Button>

@@ -457,7 +457,7 @@ export default function RecruiterOffersPage() {
     return `${Math.floor(diffDays / 7)}w ago`;
   };
 
-  const handleWithdrawClick = (offer_id: string) => {
+  const handleWithdrawClick = (offerId: string) => {
     setSelectedOfferId(offerId);
     setWithdrawalReason('');
     setWithdrawDialogOpen(true);

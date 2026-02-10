@@ -88,14 +88,14 @@ export default function RecruiterLayoutClient({
   }, [recruiter, isAuthPage, isVerificationPage]);
 
   // Show celebration when recruiter becomes verified
-  // Track previous status to detect the transition, or show on first verified load
+  // Track previous status to detect the transition - only show ONCE per recruiter ever
   useEffect(() => {
     if (recruiter?.verificationStatus === 'verified' && !isAuthPage) {
-      // Show if we haven't celebrated for THIS verification
-      const celebratedForId = sessionStorage.getItem('verification-celebrated-id');
+      // Show if we haven't celebrated for THIS recruiter (persists across sessions)
+      const celebratedForId = localStorage.getItem('verification-celebrated-id');
       if (celebratedForId !== recruiter.id) {
         setShowVerifiedCelebration(true);
-        sessionStorage.setItem('verification-celebrated-id', recruiter.id);
+        localStorage.setItem('verification-celebrated-id', recruiter.id);
       }
     }
   }, [recruiter, isAuthPage]);

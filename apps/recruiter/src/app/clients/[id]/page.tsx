@@ -341,7 +341,7 @@ export default function ClientDetailPage() {
                   <Briefcase className="h-5 w-5 text-orange-400" />
                   Jobs
                 </CardTitle>
-                <Link href={`/recruiter/jobs/create?clientId=${client.id}`}>
+                <Link href={`/jobs/create?clientId=${client.id}`}>
                   <Button size="sm" className="bg-gradient-to-r from-orange-500 to-amber-600">
                     <Plus className="h-4 w-4 mr-1" />
                     Add Job
@@ -352,7 +352,7 @@ export default function ClientDetailPage() {
                 {client.jobs && client.jobs.length > 0 ? (
                   <div className="space-y-3">
                     {client.jobs.map((job) => (
-                      <Link key={job.id} href={`/recruiter/jobs/${job.id}/edit`}>
+                      <Link key={job.id} href={`/jobs/${job.id}/edit`}>
                         <div className="p-4 rounded-lg bg-white/5 hover:bg-white/10 transition-all cursor-pointer">
                           <div className="flex items-center justify-between">
                             <div>
@@ -371,7 +371,7 @@ export default function ClientDetailPage() {
                   <div className="text-center py-8">
                     <Briefcase className="h-12 w-12 text-gray-500 mx-auto mb-3" />
                     <p className="text-gray-400">No jobs yet</p>
-                    <Link href={`/recruiter/jobs/create?clientId=${client.id}`}>
+                    <Link href={`/jobs/create?clientId=${client.id}`}>
                       <Button size="sm" className="mt-3 bg-gradient-to-r from-orange-500 to-amber-600">
                         <Plus className="h-4 w-4 mr-1" />
                         Create First Job

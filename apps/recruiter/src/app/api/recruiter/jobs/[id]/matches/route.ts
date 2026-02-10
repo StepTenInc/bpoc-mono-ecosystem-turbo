@@ -58,7 +58,7 @@ export async function GET(
             const { data: profiles } = await supabaseAdmin
                 .from('candidate_profiles')
                 .select('candidate_id, headline, location_city, work_status')
-                .in('candidate_id', candidate_id_list);
+                .in('candidate_id', candidateIds);
 
             candidateProfiles = profiles || [];
         }

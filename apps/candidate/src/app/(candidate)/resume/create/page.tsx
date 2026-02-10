@@ -84,11 +84,11 @@ export default function CreateFromScratchPage() {
         localStorage.setItem('bpoc_ai_analysis', JSON.stringify(data.analysis || {}));
       }
 
-      // Step 3: Redirect to builder
-      setProcessingStep('Opening Resume Builder...');
+      // Step 3: Redirect to AI analysis step (same as upload path!)
+      setProcessingStep('Opening AI Assistant...');
       
-      toast.success('Resume created! Now customize it.');
-      router.push('/resume/build');
+      toast.success('Resume created! Let AI enhance it.');
+      router.push('/resume/create/analysis');
       
     } catch (error) {
       console.error('Error processing:', error);
@@ -117,9 +117,31 @@ export default function CreateFromScratchPage() {
         const audioBlob = new Blob(chunksRef.current, { type: 'audio/webm' });
         stream.getTracks().forEach(track => track.stop());
         
-        // TODO: Send to Whisper API for transcription
-        // For now, show a message
-        toast.info('Voice transcription coming soon! Please type or paste for now.');
+        // Send to Whisper API for transcription
+        try {
+          toast.info('Transcribing your voice...');
+          
+          const formData = new FormData();
+          formData.append('audio', audioBlob, 'recording.webm');
+          
+          const response = await fetch('/api/transcribe', {
+            method: 'POST',
+            body: formData,
+          });
+          
+          const result = await response.json();
+          
+          if (result.success && result.text) {
+            // Append transcribed text to existing text
+            setTextContent(prev => prev ? `${prev}\n\n${result.text}` : result.text);
+            toast.success('Voice transcribed! You can keep talking or edit the text.');
+          } else {
+            toast.error(result.error || 'Transcription failed. Please try again or type instead.');
+          }
+        } catch (error) {
+          console.error('Transcription error:', error);
+          toast.error('Could not transcribe. Please type instead.');
+        }
       };
 
       mediaRecorder.start();
@@ -216,7 +238,7 @@ Example: I worked at Jollibee for 2 years as a crew member, then I got a job at 
               ) : (
                 <>
                   <Mic className="w-4 h-4 mr-2" />
-                  Or Use Voice (Coming Soon)
+                  Or Use Voice
                 </>
               )}
             </Button>

@@ -944,7 +944,7 @@ export default function RecruiterDashboard() {
   const fetchDashboardData = async () => {
     try {
       const token = await getSessionToken();
-      const response = await fetch('/api/recruiter/dashboard/stats', {
+      const response = await fetch('/api//stats', {
         headers: {
           'Authorization': `Bearer ${token}`,
           'x-user-id': user?.id || '',
@@ -1007,7 +1007,7 @@ export default function RecruiterDashboard() {
         title: 'Complete your agency profile',
         description: 'Add your company details and branding',
         completed: false, // TODO: Check actual completion status
-        href: '/recruiter/settings',
+        href: '/settings',
         icon: Building2,
       },
       {
@@ -1017,7 +1017,7 @@ export default function RecruiterDashboard() {
           ? 'Create a job posting to attract candidates'
           : 'Complete verification before posting jobs',
         completed: stats.activeJobs > 0,
-        href: verificationStatus === 'verified' ? '/recruiter/jobs/create' : '#',
+        href: verificationStatus === 'verified' ? '/jobs/create' : '#',
         icon: Plus,
       },
       {
@@ -1025,7 +1025,7 @@ export default function RecruiterDashboard() {
         title: 'Search the talent pool',
         description: 'Find candidates for your open roles',
         completed: false, // TODO: Track if user has visited talent page
-        href: '/recruiter/talent',
+        href: '/talent',
         icon: Search,
       },
       {
@@ -1033,7 +1033,7 @@ export default function RecruiterDashboard() {
         title: 'Schedule your first interview',
         description: 'Set up a video call with a candidate',
         completed: stats.scheduledInterviews > 0,
-        href: '/recruiter/interviews',
+        href: '/interviews',
         icon: Video,
       },
     ];
@@ -1050,7 +1050,7 @@ export default function RecruiterDashboard() {
   const loadPipelineData = async () => {
     try {
       const token = await getSessionToken();
-      const response = await fetch('/api/recruiter/applications?limit=50', {
+      const response = await fetch('/api/applications?limit=50', {
         headers: {
           'Authorization': `Bearer ${token}`,
           'x-user-id': user?.id || '',
@@ -1134,7 +1134,7 @@ export default function RecruiterDashboard() {
       const clientsWithPipeline = await Promise.all(
         clientsData.slice(0, 4).map(async (client: any) => {
           try {
-            const jobsResponse = await fetch(`/api/recruiter/jobs?clientId=${client.id}`, {
+            const jobsResponse = await fetch(`/api/jobs?clientId=${client.id}`, {
               headers: {
                 'Authorization': `Bearer ${token}`,
                 'x-user-id': user?.id || '',
@@ -1259,7 +1259,7 @@ export default function RecruiterDashboard() {
           description: notif.message || notif.description || '',
           timestamp: formatTimeAgo(notif.created_at || notif.timestamp),
           read: notif.read || notif.isRead || false,
-          actionUrl: notif.actionUrl || notif.link || '/recruiter/dashboard',
+          actionUrl: notif.actionUrl || notif.link || '/',
         };
       });
 
@@ -1294,14 +1294,14 @@ export default function RecruiterDashboard() {
       value: stats.activeJobs,
       icon: Briefcase,
       color: 'from-orange-500 to-amber-500',
-      href: '/recruiter/jobs',
+      href: '/jobs',
     },
     {
       title: 'Applications',
       value: stats.total_applications,
       icon: FileText,
       color: 'from-cyan-500 to-blue-500',
-      href: '/recruiter/applications',
+      href: '/applications',
       badge: stats.newApplicationsToday > 0 ? `+${stats.newApplicationsToday} today` : undefined,
     },
     {
@@ -1309,14 +1309,14 @@ export default function RecruiterDashboard() {
       value: stats.scheduledInterviews,
       icon: Calendar,
       color: 'from-purple-500 to-pink-500',
-      href: '/recruiter/interviews',
+      href: '/interviews',
     },
     {
       title: 'Pending Offers',
       value: stats.pendingOffers,
       icon: Gift,
       color: 'from-emerald-500 to-green-500',
-      href: '/recruiter/offers',
+      href: '/offers',
     },
   ];
 
@@ -1499,7 +1499,7 @@ export default function RecruiterDashboard() {
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 1.1 + index * 0.05 }}
                     >
-                      <Link href={`/recruiter/talent/${app.candidate_id}`}>
+                      <Link href={`/talent/${app.candidate_id}`}>
                         <div className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/10 hover:border-cyan-500/30 hover:bg-white/10 transition-all group/item cursor-pointer">
                           <div className="flex items-center gap-4">
                             <Avatar className="h-10 w-10">

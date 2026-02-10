@@ -66,6 +66,9 @@ export async function GET(request: NextRequest) {
         phone: agency.phone,
         website: agency.website,
         logo_url: agency.logo_url,
+        logo_symbol_url: agency.logo_symbol_url,
+        logo_stacked_url: agency.logo_stacked_url,
+        logo_landscape_url: agency.logo_landscape_url,
         description: agency.description,
         address: agency.address,
         city: agency.city,
@@ -154,7 +157,10 @@ export async function PATCH(request: NextRequest) {
       email,
       phone,
       website,
-      logoUrl,
+      logo_url,
+      logo_symbol_url,
+      logo_stacked_url,
+      logo_landscape_url,
       description,
       address,
       city,
@@ -183,7 +189,14 @@ export async function PATCH(request: NextRequest) {
     if (email !== undefined) agencyUpdateData.email = email;
     if (phone !== undefined) agencyUpdateData.phone = phone;
     if (website !== undefined) agencyUpdateData.website = website;
-    if (logoUrl !== undefined) agencyUpdateData.logo_url = logoUrl;
+    if (logo_url !== undefined) agencyUpdateData.logo_url = logo_url;
+    if (logo_symbol_url !== undefined) {
+      agencyUpdateData.logo_symbol_url = logo_symbol_url;
+      // Also update main logo_url if not set
+      if (!agencyUpdateData.logo_url) agencyUpdateData.logo_url = logo_symbol_url;
+    }
+    if (logo_stacked_url !== undefined) agencyUpdateData.logo_stacked_url = logo_stacked_url;
+    if (logo_landscape_url !== undefined) agencyUpdateData.logo_landscape_url = logo_landscape_url;
     if (description !== undefined) agencyUpdateData.description = description;
     if (address !== undefined) agencyUpdateData.address = address;
     if (city !== undefined) agencyUpdateData.city = city;

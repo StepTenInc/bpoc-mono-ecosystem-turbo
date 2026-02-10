@@ -2,6 +2,149 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { transformToApi, transformFromApi } from '@/lib/api/transform';
 import { webhookApplicationCreated } from '@/lib/webhooks/events';
+import { validateApiKey, getAgencyClientIds } from '../auth';
+import { handleCorsOptions, withCors } from '../cors';
+
+/**
+ * OPTIONS - CORS preflight
+ */
+export async function OPTIONS(request: NextRequest) {
+  return handleCorsOptions(request);
+}
+
+/**
+ * GET /api/v1/applications
+ * List applications for agency's jobs
+ * 
+ * Query params:
+ *   ?status=submitted (filter by status)
+ *   ?jobId=uuid (filter by job)
+ *   ?clientId=uuid (filter by client)
+ *   ?releasedToClient=true (filter by release status)
+ *   ?limit=50
+ *   ?offset=0
+ */
+export async function GET(request: NextRequest) {
+  const auth = await validateApiKey(request);
+  if ('error' in auth) {
+    return withCors(
+      NextResponse.json({ error: auth.error }, { status: auth.status }),
+      request,
+      'rateLimit' in auth ? auth.rateLimit : undefined
+    );
+  }
+
+  const { searchParams } = new URL(request.url);
+  const status = searchParams.get('status');
+  const jobId = searchParams.get('jobId');
+  const clientId = searchParams.get('clientId');
+  const releasedToClient = searchParams.get('releasedToClient');
+  const limit = Math.min(parseInt(searchParams.get('limit') || '50'), 100);
+  const offset = parseInt(searchParams.get('offset') || '0');
+
+  try {
+    // Get agency's clients (or specific client if filtered)
+    let clientIds: string[];
+    if (clientId) {
+      const allClientIds = await getAgencyClientIds(auth.agency_id);
+      if (!allClientIds.includes(clientId)) {
+        return withCors(NextResponse.json({ error: 'Client not found' }, { status: 404 }), request);
+      }
+      clientIds = [clientId];
+    } else {
+      clientIds = await getAgencyClientIds(auth.agency_id);
+    }
+
+    if (clientIds.length === 0) {
+      return withCors(NextResponse.json({ applications: [], total: 0 }), request);
+    }
+
+    // Get jobs (optionally filtered)
+    let jobQuery = supabaseAdmin
+      .from('jobs')
+      .select('id, title')
+      .in('agency_client_id', clientIds);
+
+    if (jobId) {
+      jobQuery = jobQuery.eq('id', jobId);
+    }
+
+    const { data: jobs } = await jobQuery;
+    const jobIds = jobs?.map(j => j.id) || [];
+    const jobMap = Object.fromEntries((jobs || []).map(j => [j.id, j.title]));
+
+    if (jobIds.length === 0) {
+      return withCors(NextResponse.json({ applications: [], total: 0 }), request);
+    }
+
+    // Get applications with candidate details
+    let query = supabaseAdmin
+      .from('job_applications')
+      .select(`
+        id,
+        status,
+        job_id,
+        candidate_id,
+        released_to_client,
+        created_at,
+        updated_at,
+        candidates (
+          id,
+          first_name,
+          last_name,
+          email
+        )
+      `, { count: 'exact' })
+      .in('job_id', jobIds)
+      .order('created_at', { ascending: false })
+      .range(offset, offset + limit - 1);
+
+    if (status) {
+      query = query.eq('status', status);
+    }
+
+    if (releasedToClient !== null) {
+      query = query.eq('released_to_client', releasedToClient === 'true');
+    }
+
+    const { data: applications, count, error } = await query;
+
+    if (error) {
+      console.error('Applications fetch error:', error);
+      return withCors(NextResponse.json({ error: 'Failed to fetch applications' }, { status: 500 }), request);
+    }
+
+    // Format response
+    const formattedApplications = (applications || []).map(app => ({
+      id: app.id,
+      status: app.status,
+      job_id: app.job_id,
+      job_title: jobMap[app.job_id] || 'Unknown',
+      candidate_id: app.candidate_id,
+      candidate: app.candidates ? {
+        id: (app.candidates as any).id,
+        first_name: (app.candidates as any).first_name,
+        last_name: (app.candidates as any).last_name,
+        email: (app.candidates as any).email,
+        name: `${(app.candidates as any).first_name} ${(app.candidates as any).last_name}`.trim(),
+      } : null,
+      released_to_client: app.released_to_client,
+      created_at: app.created_at,
+      updated_at: app.updated_at,
+    }));
+
+    return withCors(NextResponse.json({
+      applications: formattedApplications,
+      total: count || 0,
+      limit,
+      offset,
+    }), request);
+
+  } catch (error) {
+    console.error('Applications GET error:', error);
+    return withCors(NextResponse.json({ error: 'Internal server error' }, { status: 500 }), request);
+  }
+}
 
 // POST /api/v1/applications
 // Public endpoint for submitting applications (e.g. from Shore Agents)
@@ -101,7 +244,7 @@ export async function POST(request: NextRequest) {
       .from('job_applications')
       .select('id')
       .eq('job_id', job_id)
-      .eq('candidate_id', candidate_id)
+      .eq('candidate_id', candidateId)
       .single();
 
     if (existingApp) {

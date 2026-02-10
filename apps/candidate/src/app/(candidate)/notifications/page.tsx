@@ -28,33 +28,6 @@ interface Notification {
   created_at: string
 }
 
-const mockNotifications: Notification[] = [
-  {
-    id: '1',
-    type: 'application',
-    title: 'Application Received',
-    message: 'Your application for Customer Service Representative at ABC Corp has been received',
-    read: false,
-    created_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-  },
-  {
-    id: '2',
-    type: 'interview',
-    title: 'Interview Scheduled',
-    message: 'You have an interview scheduled for tomorrow at 2:00 PM',
-    read: false,
-    created_at: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
-  },
-  {
-    id: '3',
-    type: 'system',
-    title: 'Profile Incomplete',
-    message: 'Complete your profile to get better job matches',
-    read: true,
-    created_at: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
-  },
-]
-
 const getNotificationIcon = (type: string) => {
   switch (type) {
     case 'application':
@@ -74,13 +47,26 @@ export default function NotificationsPage() {
   const [notifications, setNotifications] = useState<Notification[]>([])
 
   useEffect(() => {
-    // Simulate loading
-    const timer = setTimeout(() => {
-      setNotifications(mockNotifications)
-      setLoading(false)
-    }, 500)
+    // Fetch notifications from API
+    const fetchNotifications = async () => {
+      try {
+        const res = await fetch('/api/notifications')
+        if (res.ok) {
+          const data = await res.json()
+          setNotifications(data.notifications || [])
+        } else {
+          // No notifications endpoint yet - start empty
+          setNotifications([])
+        }
+      } catch (error) {
+        console.error('Failed to fetch notifications:', error)
+        setNotifications([])
+      } finally {
+        setLoading(false)
+      }
+    }
     
-    return () => clearTimeout(timer)
+    fetchNotifications()
   }, [])
 
   const unreadCount = notifications.filter(n => !n.read).length

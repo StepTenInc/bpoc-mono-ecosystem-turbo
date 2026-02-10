@@ -79,6 +79,21 @@ const PIPELINE_STEPS = [
   { key: 'hired', label: 'Hired', icon: Award },
 ];
 
+// Statuses where rejection is allowed
+// - Can reject: new/submitted/applied, reviewing, shortlisted, interviewed (decision made)
+// - Cannot reject: interview scheduled (let it happen), offer sent (waiting for response), 
+//                  offer_accepted/onboarding (they accepted!), hired, rejected
+const REJECTABLE_STATUSES = new Set([
+  'new', 'submitted', 'applied', 'invited',
+  'under_review', 'reviewing', 
+  'shortlisted',
+  'interviewed', // After interview, recruiter can decide to reject
+]);
+
+function canRejectApplication(status: string): boolean {
+  return REJECTABLE_STATUSES.has(status);
+}
+
 // Status Stepper Component
 function StatusStepper({ currentStatus }: { currentStatus: string }) {
   const currentIndex = PIPELINE_STEPS.findIndex(s => s.key === currentStatus);
@@ -434,6 +449,12 @@ export default function RecruiterApplicationsPage() {
         icon: <Sparkles className="h-4 w-4" />,
         label: 'Offer Sent'
       },
+      offer_accepted: { 
+        color: 'text-emerald-400', 
+        bg: 'bg-emerald-500/10 border-emerald-500/30',
+        icon: <Award className="h-4 w-4" />,
+        label: 'Hired 🎉'
+      },
       hired: { 
         color: 'text-emerald-400', 
         bg: 'bg-emerald-500/10 border-emerald-500/30',
@@ -680,9 +701,9 @@ export default function RecruiterApplicationsPage() {
                 <Card
                   role="button"
                   tabIndex={0}
-                  onClick={() => router.push(`/recruiter/applications/${app.id}`)}
+                  onClick={() => router.push(`/applications/${app.id}`)}
                   onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') router.push(`/recruiter/applications/${app.id}`);
+                    if (e.key === 'Enter' || e.key === ' ') router.push(`/applications/${app.id}`);
                   }}
                   className={`
                   bg-white/5 backdrop-blur-xl border-white/10 transition-all overflow-hidden
@@ -713,7 +734,7 @@ export default function RecruiterApplicationsPage() {
 
                         {/* Avatar with Score Ring */}
                         <div className="relative">
-                          <Link href={`/recruiter/talent/${app.candidate_id}`}>
+                          <Link href={`/talent/${app.candidate_id}`}>
                             <Avatar className="h-14 w-14 cursor-pointer hover:ring-2 hover:ring-orange-500/50 transition-all">
                               <AvatarImage src={app.candidate_avatar} />
                               <AvatarFallback className="bg-gradient-to-br from-orange-500 to-amber-600 text-white text-lg">
@@ -731,7 +752,7 @@ export default function RecruiterApplicationsPage() {
                         {/* Info */}
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-3 mb-2">
-                            <Link href={`/recruiter/applications/${app.id}`} className="hover:text-orange-400 transition-colors">
+                            <Link href={`/applications/${app.id}`} className="hover:text-orange-400 transition-colors">
                               <h3 className="text-white font-semibold text-lg">{app.candidate_name}</h3>
                             </Link>
                             <Badge variant="outline" className={`${statusConfig.bg} ${statusConfig.color} text-xs`}>
@@ -851,8 +872,8 @@ export default function RecruiterApplicationsPage() {
                             </>
                           )}
 
-                          {/* Reject button - for all active statuses (last in order) */}
-                          {app.status !== 'hired' && app.status !== 'rejected' && (
+                          {/* Reject button - only for rejectable statuses */}
+                          {canRejectApplication(app.status) && (
                             <Button
                               size="sm"
                               onClick={() => openReject(app.id, app.candidate_name)}
@@ -872,11 +893,28 @@ export default function RecruiterApplicationsPage() {
                             </Link>
                           )}
 
-                          {app.status === 'hired' && (
-                            <Link href="/placements">
-                              <Button size="sm" className="h-8 px-3 min-w-[120px] justify-center bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 border border-emerald-500/30">
-                                <Award className="h-4 w-4 mr-1.5" />
-                                View Placement
+                          {(app.status === 'hired' || app.status === 'offer_accepted') && (
+                            <div className="flex gap-2">
+                              <Link href="/onboarding">
+                                <Button size="sm" className="h-8 px-3 min-w-[100px] justify-center bg-cyan-500/20 text-cyan-400 hover:bg-cyan-500/30 border border-cyan-500/30">
+                                  <FileText className="h-4 w-4 mr-1.5" />
+                                  Onboarding
+                                </Button>
+                              </Link>
+                              <Link href="/placements">
+                                <Button size="sm" className="h-8 px-3 min-w-[100px] justify-center bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 border border-emerald-500/30">
+                                  <Award className="h-4 w-4 mr-1.5" />
+                                  Placement
+                                </Button>
+                              </Link>
+                            </div>
+                          )}
+                          
+                          {app.status === 'offer_sent' && (
+                            <Link href="/offers">
+                              <Button size="sm" className="h-8 px-3 min-w-[120px] justify-center bg-pink-500/20 text-pink-400 hover:bg-pink-500/30 border border-pink-500/30">
+                                <Sparkles className="h-4 w-4 mr-1.5" />
+                                View Offer
                               </Button>
                             </Link>
                           )}
@@ -890,7 +928,7 @@ export default function RecruiterApplicationsPage() {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end" className="bg-[#0a0a0f] border-white/10 w-48">
                               <DropdownMenuItem asChild>
-                                <Link href={`/recruiter/talent/${app.candidate_id}`} className="text-gray-300 hover:text-white cursor-pointer flex items-center">
+                                <Link href={`/talent/${app.candidate_id}`} className="text-gray-300 hover:text-white cursor-pointer flex items-center">
                                   <User className="h-4 w-4 mr-2" />
                                   View Full Profile
                                 </Link>
@@ -907,7 +945,7 @@ export default function RecruiterApplicationsPage() {
                                 {isExpanded ? 'Hide Details' : 'Show Details'}
                               </DropdownMenuItem>
                               <DropdownMenuSeparator className="bg-white/10" />
-                              {app.status !== 'hired' && app.status !== 'rejected' && (
+                              {canRejectApplication(app.status) && (
                                 <DropdownMenuItem 
                                   className="text-red-400 hover:text-red-300 cursor-pointer"
                                   onClick={() => openReject(app.id, app.candidate_name)}
@@ -1015,7 +1053,7 @@ export default function RecruiterApplicationsPage() {
                                     </Button>
                                   </a>
                                 )}
-                                <Link href={`/recruiter/talent/${app.candidate_id}`}>
+                                <Link href={`/talent/${app.candidate_id}`}>
                                   <Button size="sm" variant="outline" className="border-orange-500/30 text-orange-400 hover:bg-orange-500/10">
                                     View Complete Profile
                                     <ExternalLink className="h-4 w-4 ml-2" />

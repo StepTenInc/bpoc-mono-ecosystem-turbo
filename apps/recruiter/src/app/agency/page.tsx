@@ -49,6 +49,9 @@ interface Agency {
   phone: string;
   website: string;
   logo_url: string;
+  logo_symbol_url: string | null;
+  logo_stacked_url: string | null;
+  logo_landscape_url: string | null;
   description: string;
   address: string;
   city: string;
@@ -94,10 +97,15 @@ interface Permissions {
   canManageClients: boolean;
 }
 
+type LogoType = 'symbol' | 'stacked' | 'landscape';
+
 export default function AgencyPage() {
   const { user } = useAuth();
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const logoSymbolInputRef = useRef<HTMLInputElement>(null);
+  const logoStackedInputRef = useRef<HTMLInputElement>(null);
+  const logoLandscapeInputRef = useRef<HTMLInputElement>(null);
   
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -117,6 +125,9 @@ export default function AgencyPage() {
     phone: '',
     website: '',
     logo_url: '',
+    logo_symbol_url: '',
+    logo_stacked_url: '',
+    logo_landscape_url: '',
     description: '',
     // Profile fields
     foundedYear: '',
@@ -131,6 +142,7 @@ export default function AgencyPage() {
     facebookUrl: '',
     twitterUrl: '',
   });
+  const [uploadingLogo, setUploadingLogo] = useState<LogoType | null>(null);
 
   useEffect(() => {
     if (user?.id) fetchAgency();
@@ -159,6 +171,9 @@ export default function AgencyPage() {
           phone: data.agency.phone || '',
           website: data.agency.website || '',
           logo_url: data.agency.logo_url || '',
+          logo_symbol_url: data.agency.logo_symbol_url || data.agency.logo_url || '',
+          logo_stacked_url: data.agency.logo_stacked_url || '',
+          logo_landscape_url: data.agency.logo_landscape_url || '',
           description: data.agency.description || '',
           foundedYear: data.profile?.foundedYear?.toString() || '',
           employeeCount: data.profile?.employeeCount || '',
@@ -181,7 +196,7 @@ export default function AgencyPage() {
     }
   };
 
-  const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>, logoType: LogoType = 'symbol') => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -195,11 +210,12 @@ export default function AgencyPage() {
       return;
     }
 
+    setUploadingLogo(logoType);
     setUploading(true);
     
     try {
       const fileExt = file.name.split('.').pop();
-      const fileName = `agency-${agency?.id}-${Date.now()}.${fileExt}`;
+      const fileName = `agency-${agency?.id}-${logoType}-${Date.now()}.${fileExt}`;
       const filePath = `logos/${fileName}`;
 
       const { error } = await supabase.storage
@@ -215,14 +231,26 @@ export default function AgencyPage() {
         .from('recruiter')
         .getPublicUrl(filePath);
 
-      setFormData(prev => ({ ...prev, logo_url: publicUrl }));
-      toast.success('Logo uploaded successfully');
+      // Update the appropriate logo field
+      const fieldKey = logoType === 'symbol' ? 'logo_symbol_url' : 
+                       logoType === 'stacked' ? 'logo_stacked_url' : 'logo_landscape_url';
+      
+      setFormData(prev => ({ 
+        ...prev, 
+        [fieldKey]: publicUrl,
+        // Also update main logo_url if it's the symbol (for backwards compatibility)
+        ...(logoType === 'symbol' ? { logo_url: publicUrl } : {})
+      }));
+      
+      const logoNames = { symbol: 'Symbol', stacked: 'Stacked', landscape: 'Landscape' };
+      toast.success(`${logoNames[logoType]} logo uploaded successfully`);
       
     } catch (error) {
       console.error('Upload error:', error);
       toast.error('Failed to upload logo');
     } finally {
       setUploading(false);
+      setUploadingLogo(null);
     }
   };
 
@@ -415,33 +443,15 @@ export default function AgencyPage() {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
-          {/* Logo Section */}
+          {/* Logo Section - Agency Info */}
           <div className="flex items-center gap-6 pb-6 border-b border-white/10">
             <div className="relative">
               <Avatar className="h-24 w-24 rounded-xl">
-                <AvatarImage src={formData.logo_url} alt={formData.name} className="object-cover" />
+                <AvatarImage src={formData.logo_symbol_url || formData.logo_url} alt={formData.name} className="object-cover" />
                 <AvatarFallback className="bg-gradient-to-br from-orange-500 to-amber-600 text-white text-2xl rounded-xl">
                   {formData.name?.substring(0, 2).toUpperCase() || 'AG'}
                 </AvatarFallback>
               </Avatar>
-              <button 
-                onClick={() => fileInputRef.current?.click()}
-                disabled={uploading || !permissions?.canManageAgency}
-                className="absolute -bottom-2 -right-2 p-2 rounded-full bg-orange-500 text-white hover:bg-orange-600 transition-colors disabled:opacity-50"
-              >
-                {uploading ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <Camera className="h-4 w-4" />
-                )}
-              </button>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                onChange={handleLogoUpload}
-                className="hidden"
-              />
             </div>
             <div>
               <h3 className="text-xl font-semibold text-white">{formData.name || 'Your Agency'}</h3>
@@ -457,6 +467,129 @@ export default function AgencyPage() {
                   {formData.website.replace(/^https?:\/\//, '')}
                 </a>
               )}
+            </div>
+          </div>
+
+          {/* Logo Upload Section - 3 Types */}
+          <div className="pb-6 border-b border-white/10">
+            <h4 className="text-sm font-medium text-white mb-3 flex items-center gap-2">
+              <Camera className="h-4 w-4 text-orange-400" />
+              Brand Logos
+            </h4>
+            <p className="text-xs text-gray-500 mb-4">Upload your logo in different formats for use across documents and platform</p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {/* Symbol Logo (Square) */}
+              <div className="relative group">
+                <div className="aspect-square rounded-xl border-2 border-dashed border-white/20 bg-white/5 flex flex-col items-center justify-center overflow-hidden hover:border-orange-500/50 transition-colors">
+                  {formData.logo_symbol_url ? (
+                    <img src={formData.logo_symbol_url} alt="Symbol" className="w-full h-full object-contain p-4" />
+                  ) : (
+                    <div className="text-center p-4">
+                      <div className="w-12 h-12 rounded-lg bg-white/10 mx-auto mb-2 flex items-center justify-center">
+                        <span className="text-xl font-bold text-gray-400">S</span>
+                      </div>
+                      <p className="text-xs text-gray-500">Square icon</p>
+                    </div>
+                  )}
+                  <button 
+                    onClick={() => logoSymbolInputRef.current?.click()}
+                    disabled={uploading || !permissions?.canManageAgency}
+                    className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity disabled:cursor-not-allowed"
+                  >
+                    {uploadingLogo === 'symbol' ? (
+                      <Loader2 className="h-6 w-6 text-white animate-spin" />
+                    ) : (
+                      <Upload className="h-6 w-6 text-white" />
+                    )}
+                  </button>
+                </div>
+                <p className="text-xs text-gray-400 text-center mt-2 font-medium">Symbol</p>
+                <p className="text-[10px] text-gray-500 text-center">1:1 ratio, for icons</p>
+                <input
+                  ref={logoSymbolInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => handleLogoUpload(e, 'symbol')}
+                  className="hidden"
+                />
+              </div>
+
+              {/* Stacked Logo (Vertical) */}
+              <div className="relative group">
+                <div className="aspect-square rounded-xl border-2 border-dashed border-white/20 bg-white/5 flex flex-col items-center justify-center overflow-hidden hover:border-orange-500/50 transition-colors">
+                  {formData.logo_stacked_url ? (
+                    <img src={formData.logo_stacked_url} alt="Stacked" className="w-full h-full object-contain p-4" />
+                  ) : (
+                    <div className="text-center p-4">
+                      <div className="w-10 h-8 rounded bg-white/10 mx-auto mb-1 flex items-center justify-center">
+                        <span className="text-sm font-bold text-gray-400">S</span>
+                      </div>
+                      <div className="w-16 h-2 rounded bg-white/10 mx-auto mb-2"></div>
+                      <p className="text-xs text-gray-500">Stacked layout</p>
+                    </div>
+                  )}
+                  <button 
+                    onClick={() => logoStackedInputRef.current?.click()}
+                    disabled={uploading || !permissions?.canManageAgency}
+                    className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity disabled:cursor-not-allowed"
+                  >
+                    {uploadingLogo === 'stacked' ? (
+                      <Loader2 className="h-6 w-6 text-white animate-spin" />
+                    ) : (
+                      <Upload className="h-6 w-6 text-white" />
+                    )}
+                  </button>
+                </div>
+                <p className="text-xs text-gray-400 text-center mt-2 font-medium">Stacked</p>
+                <p className="text-[10px] text-gray-500 text-center">Vertical with text</p>
+                <input
+                  ref={logoStackedInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => handleLogoUpload(e, 'stacked')}
+                  className="hidden"
+                />
+              </div>
+
+              {/* Landscape Logo (Horizontal) */}
+              <div className="relative group">
+                <div className="aspect-square rounded-xl border-2 border-dashed border-white/20 bg-white/5 flex flex-col items-center justify-center overflow-hidden hover:border-orange-500/50 transition-colors">
+                  {formData.logo_landscape_url ? (
+                    <img src={formData.logo_landscape_url} alt="Landscape" className="w-full h-full object-contain p-4" />
+                  ) : (
+                    <div className="text-center p-4">
+                      <div className="flex items-center justify-center gap-1 mb-2">
+                        <div className="w-6 h-6 rounded bg-white/10 flex items-center justify-center">
+                          <span className="text-xs font-bold text-gray-400">S</span>
+                        </div>
+                        <div className="w-12 h-3 rounded bg-white/10"></div>
+                      </div>
+                      <p className="text-xs text-gray-500">Horizontal layout</p>
+                    </div>
+                  )}
+                  <button 
+                    onClick={() => logoLandscapeInputRef.current?.click()}
+                    disabled={uploading || !permissions?.canManageAgency}
+                    className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity disabled:cursor-not-allowed"
+                  >
+                    {uploadingLogo === 'landscape' ? (
+                      <Loader2 className="h-6 w-6 text-white animate-spin" />
+                    ) : (
+                      <Upload className="h-6 w-6 text-white" />
+                    )}
+                  </button>
+                </div>
+                <p className="text-xs text-gray-400 text-center mt-2 font-medium">Landscape</p>
+                <p className="text-[10px] text-gray-500 text-center">Horizontal with text</p>
+                <input
+                  ref={logoLandscapeInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => handleLogoUpload(e, 'landscape')}
+                  className="hidden"
+                />
+              </div>
             </div>
           </div>
 

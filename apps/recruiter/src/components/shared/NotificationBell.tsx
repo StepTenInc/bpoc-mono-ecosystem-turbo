@@ -36,10 +36,8 @@ export function NotificationBell() {
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
-  const roleBase =
-    pathname?.startsWith('/recruiter') ? 'recruiter' :
-    pathname?.startsWith('/admin') ? 'admin' :
-    'candidate';
+  // In recruiter app, always use 'recruiter' as the roleBase
+  const roleBase = 'recruiter';
 
   const apiBase = `/api/${roleBase}/notifications`;
 

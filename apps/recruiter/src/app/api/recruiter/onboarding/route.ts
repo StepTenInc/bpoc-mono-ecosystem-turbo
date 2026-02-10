@@ -54,11 +54,13 @@ export async function GET(request: NextRequest) {
     }]));
 
     // Get applications for these jobs that have onboarding
+    // Note: 'onboarding' is not a valid ApplicationStatus enum - candidates at onboarding stage 
+    // have status 'offer_accepted' or 'hired'
     const { data: applications } = await supabaseAdmin
       .from('job_applications')
       .select('id, job_id, candidate_id')
-      .in('job_id', job_id_list)
-      .in('status', ['offer_accepted', 'hired', 'onboarding']);
+      .in('job_id', jobIds)
+      .in('status', ['offer_accepted', 'hired']);
 
     if (!applications || applications.length === 0) {
       return NextResponse.json({ onboardings: [] });

@@ -11,13 +11,12 @@ export async function GET(request: NextRequest) {
     }
 
     // Get recruiter's agency
-    let agency_id: string | null = null;
     const { data: recruiter } = await supabaseAdmin
       .from('agency_recruiters')
       .select('agency_id')
       .eq('user_id', auth.userId)
       .single();
-    agencyId = recruiter?.agency_id || null;
+    const agencyId = recruiter?.agency_id || null;
 
     // If no agency, return empty stats
     if (!agencyId) {
@@ -78,7 +77,7 @@ export async function GET(request: NextRequest) {
             title
           )
         `)
-        .in('job_id', job_id_list)
+        .in('job_id', jobIds)
         .order('created_at', { ascending: false })
         .limit(5)
       : { data: [] };
@@ -105,7 +104,30 @@ export async function GET(request: NextRequest) {
 
   } catch (error) {
     console.error('Dashboard stats error:', error);
-    return NextResponse.json({ error: 'Failed to fetch stats' }, { status: 500 });
+    // Fail gracefully - return empty data instead of 500
+    return NextResponse.json({
+      stats: {
+        activeJobs: 0,
+        newApplications: 0,
+        pendingInterviews: 0,
+        offersDue: 0,
+        placementsThisMonth: 0,
+        applicationsThisWeek: 0,
+        averageTimeToHire: 0,
+        conversionRate: 0,
+      },
+      funnel: {
+        submitted: 0,
+        underReview: 0,
+        shortlisted: 0,
+        interviewed: 0,
+        offerSent: 0,
+        hired: 0,
+        rejected: 0,
+      },
+      recentApplications: [],
+      error: 'Failed to fetch stats - showing empty data',
+    });
   }
 }
 

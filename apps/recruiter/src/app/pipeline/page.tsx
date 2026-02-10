@@ -418,7 +418,7 @@ function CandidateCard({
             <GripVertical className="h-4 w-4" />
           </div>
           
-          <Link href={`/recruiter/talent/${candidate.candidate_id}`} className="flex-shrink-0">
+          <Link href={`/talent/${candidate.candidate_id}`} className="flex-shrink-0">
             <Avatar className="h-10 w-10 hover:ring-2 hover:ring-cyber-blue/50 transition-all">
               <AvatarImage src={candidate.candidate_avatar} />
               <AvatarFallback className="bg-gradient-to-br from-cyan-500 to-blue-600 text-white text-sm">
@@ -428,7 +428,7 @@ function CandidateCard({
           </Link>
 
           <div className="flex-1 min-w-0">
-            <Link href={`/recruiter/talent/${candidate.candidate_id}`}>
+            <Link href={`/talent/${candidate.candidate_id}`}>
               <h4 className="text-white font-medium text-sm truncate hover:text-cyber-blue transition-colors">
                 {candidate.candidate_name}
               </h4>
@@ -539,7 +539,7 @@ function CandidateCard({
           </a>
 
           {/* View Profile */}
-          <Link href={`/recruiter/talent/${candidate.candidate_id}`}>
+          <Link href={`/talent/${candidate.candidate_id}`}>
             <Button size="sm" variant="ghost" className="h-8 w-8 p-0 text-gray-400 hover:text-white hover:bg-white/10 rounded-full">
               <User className="h-4 w-4" />
             </Button>

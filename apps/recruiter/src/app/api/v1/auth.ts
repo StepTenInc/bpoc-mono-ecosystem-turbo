@@ -80,7 +80,7 @@ export async function getAgencyClientIds(agency_id: string): Promise<string[]> {
   const { data: clients } = await supabaseAdmin
     .from('agency_clients')
     .select('id')
-    .eq('agency_id', agencyId);
+    .eq('agency_id', agency_id);
   
   return clients?.map(c => c.id) || [];
 }

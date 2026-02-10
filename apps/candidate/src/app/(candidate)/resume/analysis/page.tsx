@@ -539,7 +539,11 @@ export default function ResumeAnalysisPage() {
               className="flex justify-center pt-6"
             >
               <Button
-                onClick={() => router.push('/candidate/resume/build')}
+                onClick={() => {
+                  // Mark this as "existing resume" path so builder knows context
+                  localStorage.setItem('bpoc_resume_source', 'existing_resume');
+                  router.push('/candidate/resume/build');
+                }}
                 className="relative overflow-hidden bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white px-10 py-6 text-lg rounded-xl shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 transition-all"
               >
                 <Sparkles className="h-5 w-5 mr-2" />

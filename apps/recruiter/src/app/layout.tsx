@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { VideoCallProvider } from "@/contexts/VideoCallContext";
 import RecruiterLayoutClient from "@/components/recruiter/RecruiterLayoutClient";
 
 const geistSans = localFont({
@@ -27,9 +28,11 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} bg-[#0B0B0D] text-gray-300 antialiased`}>
         <AuthProvider>
-          <RecruiterLayoutClient>
-            {children}
-          </RecruiterLayoutClient>
+          <VideoCallProvider>
+            <RecruiterLayoutClient>
+              {children}
+            </RecruiterLayoutClient>
+          </VideoCallProvider>
         </AuthProvider>
       </body>
     </html>

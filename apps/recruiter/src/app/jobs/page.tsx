@@ -453,7 +453,7 @@ export default function RecruiterJobsPage() {
 
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-3 flex-wrap mb-2">
-                              <Link href={`/recruiter/jobs/${job.id}`}>
+                              <Link href={`/jobs/${job.id}`}>
                                 <h3 className="text-xl font-semibold text-white hover:text-orange-400 transition-colors">
                                   {job.title}
                                 </h3>
@@ -540,7 +540,7 @@ export default function RecruiterJobsPage() {
 
                         {/* Actions */}
                         <div className="flex items-center gap-2">
-                          <Link href={`/recruiter/applications?jobId=${job.id}`}>
+                          <Link href={`/applications?jobId=${job.id}`}>
                             <Button
                               size="sm"
                               className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 shadow-lg shadow-purple-500/20"
@@ -558,7 +558,7 @@ export default function RecruiterJobsPage() {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end" className="bg-[#0a0a0f] border-white/10 w-56">
                               <DropdownMenuItem
-                                onClick={() => window.location.href = `/recruiter/jobs/${job.id}/edit`}
+                                onClick={() => window.location.href = `/jobs/${job.id}/edit`}
                                 className="text-gray-300 hover:text-white hover:bg-white/10 cursor-pointer"
                               >
                                 <Edit className="h-4 w-4 mr-2" />

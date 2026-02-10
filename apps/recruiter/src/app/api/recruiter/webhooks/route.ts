@@ -1,88 +1,47 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { createClient } from '@/lib/supabase/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
-import { verifyAuthToken } from '@/lib/auth/verify-token';
 import crypto from 'crypto';
 
 /**
  * GET /api/recruiter/webhooks
- * List all webhooks for the recruiter's agency
+ * List webhooks for the current agency
  */
 export async function GET(request: NextRequest) {
   try {
-    const auth = await verifyAuthToken(request);
-    const userId = auth.userId;
-
-    if (!userId) {
-      return NextResponse.json({ error: auth.error || 'Unauthorized' }, { status: 401 });
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Get recruiter's agency
+    // Get agency ID from user
     const { data: recruiter } = await supabaseAdmin
       .from('agency_recruiters')
       .select('agency_id')
-      .eq('user_id', userId)
+      .eq('user_id', user.id)
       .single();
 
     if (!recruiter) {
-      return NextResponse.json({ error: 'Recruiter not found' }, { status: 403 });
+      return NextResponse.json({ error: 'Not a recruiter' }, { status: 403 });
     }
 
-    // Get all webhooks for this agency
+    // Get webhooks
     const { data: webhooks, error } = await supabaseAdmin
       .from('webhooks')
-      .select(`
-        id,
-        url,
-        events,
-        description,
-        is_active,
-        created_at,
-        updated_at,
-        last_triggered_at,
-        created_by
-      `)
+      .select('id, url, events, description, is_active, last_triggered_at, created_at')
       .eq('agency_id', recruiter.agency_id)
       .order('created_at', { ascending: false });
 
     if (error) {
-      console.error('Error fetching webhooks:', error);
+      console.error('Failed to fetch webhooks:', error);
       return NextResponse.json({ error: 'Failed to fetch webhooks' }, { status: 500 });
     }
 
-    // Get delivery stats for each webhook
-    const webhooksWithStats = await Promise.all(
-      (webhooks || []).map(async (webhook) => {
-        const { count: totalDeliveries } = await supabaseAdmin
-          .from('webhook_deliveries')
-          .select('*', { count: 'exact', head: true })
-          .eq('webhook_id', webhook.id);
-
-        const { count: successfulDeliveries } = await supabaseAdmin
-          .from('webhook_deliveries')
-          .select('*', { count: 'exact', head: true })
-          .eq('webhook_id', webhook.id)
-          .eq('status', 'sent');
-
-        const { count: failedDeliveries } = await supabaseAdmin
-          .from('webhook_deliveries')
-          .select('*', { count: 'exact', head: true })
-          .eq('webhook_id', webhook.id)
-          .eq('status', 'failed');
-
-        return {
-          ...webhook,
-          stats: {
-            total: totalDeliveries || 0,
-            successful: successfulDeliveries || 0,
-            failed: failedDeliveries || 0,
-          },
-        };
-      })
-    );
-
-    return NextResponse.json({ webhooks: webhooksWithStats });
+    return NextResponse.json({ webhooks });
   } catch (error) {
-    console.error('Error in webhooks GET:', error);
+    console.error('Webhooks GET error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -93,63 +52,42 @@ export async function GET(request: NextRequest) {
  */
 export async function POST(request: NextRequest) {
   try {
-    const auth = await verifyAuthToken(request);
-    const userId = auth.userId;
-
-    if (!userId) {
-      return NextResponse.json({ error: auth.error || 'Unauthorized' }, { status: 401 });
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Get recruiter's agency
+    // Get agency ID from user
     const { data: recruiter } = await supabaseAdmin
       .from('agency_recruiters')
-      .select('agency_id, role')
-      .eq('user_id', userId)
+      .select('agency_id')
+      .eq('user_id', user.id)
       .single();
 
     if (!recruiter) {
-      return NextResponse.json({ error: 'Recruiter not found' }, { status: 403 });
-    }
-
-    // Only owners/admins can create webhooks
-    if (recruiter.role !== 'owner' && recruiter.role !== 'admin') {
-      return NextResponse.json({ error: 'Only agency owners/admins can manage webhooks' }, { status: 403 });
+      return NextResponse.json({ error: 'Not a recruiter' }, { status: 403 });
     }
 
     const body = await request.json();
     const { url, events, description } = body;
 
-    // Validation
-    if (!url || !url.match(/^https?:\/\//)) {
-      return NextResponse.json({ error: 'Invalid URL. Must start with http:// or https://' }, { status: 400 });
-    }
-
-    if (!events || !Array.isArray(events) || events.length === 0) {
-      return NextResponse.json({ error: 'At least one event must be specified' }, { status: 400 });
-    }
-
-    // Validate event types
-    const validEventPrefixes = [
-      'application.',
-      'interview.',
-      'offer.',
-      'video.',
-      'placement.',
-      'candidate.',
-    ];
-
-    const invalidEvents = events.filter((event: string) =>
-      !validEventPrefixes.some((prefix) => event.startsWith(prefix))
-    );
-
-    if (invalidEvents.length > 0) {
-      return NextResponse.json({
-        error: `Invalid event types: ${invalidEvents.join(', ')}`,
+    if (!url || !events || events.length === 0) {
+      return NextResponse.json({ 
+        error: 'url and events are required' 
       }, { status: 400 });
     }
 
-    // Generate secret for HMAC signatures
-    const secret = crypto.randomBytes(32).toString('hex');
+    // Validate URL
+    try {
+      new URL(url);
+    } catch {
+      return NextResponse.json({ error: 'Invalid URL' }, { status: 400 });
+    }
+
+    // Generate webhook secret
+    const secret = `whsec_${crypto.randomBytes(24).toString('hex')}`;
 
     // Create webhook
     const { data: webhook, error } = await supabaseAdmin
@@ -161,31 +99,22 @@ export async function POST(request: NextRequest) {
         description: description || null,
         secret,
         is_active: true,
-        created_by: userId,
+        created_by: user.id,
       })
-      .select()
+      .select('id, url, events, secret, created_at')
       .single();
 
     if (error) {
-      console.error('Error creating webhook:', error);
+      console.error('Failed to create webhook:', error);
       return NextResponse.json({ error: 'Failed to create webhook' }, { status: 500 });
     }
 
-    return NextResponse.json({
-      success: true,
-      webhook: {
-        id: webhook.id,
-        url: webhook.url,
-        events: webhook.events,
-        description: webhook.description,
-        secret: webhook.secret, // Only shown once!
-        is_active: webhook.is_active,
-        created_at: webhook.created_at,
-      },
-      message: 'Webhook created successfully. Save the secret - it will not be shown again!',
+    return NextResponse.json({ 
+      webhook,
+      message: 'Webhook created successfully. Store the secret securely - it will not be shown again.',
     }, { status: 201 });
   } catch (error) {
-    console.error('Error creating webhook:', error);
+    console.error('Webhooks POST error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

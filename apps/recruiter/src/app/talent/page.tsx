@@ -461,7 +461,7 @@ export default function TalentPoolPage() {
                   <CardContent className="p-6 relative z-10">
                     {/* Header */}
                     <div className="flex items-start gap-4 mb-4">
-                      <Link href={`/recruiter/talent/${candidate.id}`}>
+                      <Link href={`/talent/${candidate.id}`}>
                         <Avatar className="h-16 w-16 cursor-pointer hover:ring-4 hover:ring-orange-500/30 transition-all">
                           <AvatarImage src={candidate.avatar_url} />
                           <AvatarFallback className="bg-gradient-to-br from-orange-500 to-amber-600 text-white text-xl font-semibold">
@@ -470,7 +470,7 @@ export default function TalentPoolPage() {
                         </Avatar>
                       </Link>
                       <div className="flex-1 min-w-0">
-                        <Link href={`/recruiter/talent/${candidate.id}`}>
+                        <Link href={`/talent/${candidate.id}`}>
                           <h3 className="text-white font-semibold text-lg group-hover:text-orange-400 transition-colors truncate">
                             {candidate.first_name} {candidate.last_name}
                           </h3>
@@ -560,7 +560,7 @@ export default function TalentPoolPage() {
 
                     {/* Actions */}
                     <div className="flex gap-2">
-                      <Link href={`/recruiter/talent/${candidate.id}`} className="flex-1">
+                      <Link href={`/talent/${candidate.id}`} className="flex-1">
                         <Button
                           size="sm"
                           className="w-full bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 shadow-lg shadow-orange-500/20"

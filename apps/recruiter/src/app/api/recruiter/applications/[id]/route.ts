@@ -164,7 +164,7 @@ export async function GET(
       ? await supabaseAdmin
         .from('candidate_profiles')
         .select('location, location_city, location_province, location_country')
-        .eq('candidate_id', candidate_id)
+        .eq('candidate_id', candidateId)
         .maybeSingle()
       : { data: null };
 

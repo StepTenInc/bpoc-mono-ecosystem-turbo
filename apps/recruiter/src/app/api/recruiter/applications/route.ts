@@ -74,11 +74,12 @@ export async function GET(request: NextRequest) {
         released_at,
         released_by
       `)
-      .in('job_id', job_id_list)
+      .in('job_id', jobIds)
       .order('created_at', { ascending: false });
 
     if (appsError || !applications) {
-      return NextResponse.json({ error: 'Failed to fetch applications' }, { status: 500 });
+      // Fail gracefully - return empty array
+      return NextResponse.json({ applications: [], error: 'Failed to fetch applications - showing empty data' });
     }
 
     // Get candidate details
@@ -88,7 +89,7 @@ export async function GET(request: NextRequest) {
     const { data: candidates } = await supabaseAdmin
       .from('candidates')
       .select('id, first_name, last_name, email, avatar_url')
-      .in('id', candidate_id_list);
+      .in('id', candidateIds);
 
     const candidateMap = Object.fromEntries(
       (candidates || []).map(c => [c.id, c])
@@ -107,7 +108,7 @@ export async function GET(request: NextRequest) {
       const { data: profiles } = await supabaseAdmin
         .from('candidate_profiles')
         .select('candidate_id, location, experience_years')
-        .in('candidate_id', candidate_id_list);
+        .in('candidate_id', candidateIds);
       
       profileMap = Object.fromEntries(
         (profiles || []).map(p => [p.candidate_id, p])
@@ -117,7 +118,7 @@ export async function GET(request: NextRequest) {
       const { data: aiAnalyses } = await supabaseAdmin
         .from('candidate_ai_analysis')
         .select('candidate_id, overall_score')
-        .in('candidate_id', candidate_id_list);
+        .in('candidate_id', candidateIds);
       
       aiAnalysisMap = Object.fromEntries(
         (aiAnalyses || []).map(a => [a.candidate_id, a])
@@ -129,7 +130,7 @@ export async function GET(request: NextRequest) {
       const { data: skills } = await supabaseAdmin
         .from('candidate_skills')
         .select('candidate_id, name')
-        .in('candidate_id', candidate_id_list);
+        .in('candidate_id', candidateIds);
       
       (skills || []).forEach(s => {
         if (!skillsMap[s.candidate_id]) skillsMap[s.candidate_id] = [];
@@ -140,7 +141,7 @@ export async function GET(request: NextRequest) {
       const { data: resumes } = await supabaseAdmin
         .from('candidate_resumes')
         .select('candidate_id, id, file_name, file_url, is_primary, uploaded_at, created_at')
-        .in('candidate_id', candidate_id_list);
+        .in('candidate_id', candidateIds);
       
       // Choose the "best" resume per candidate: primary > newest
       (resumes || []).forEach((r: any) => {
@@ -224,7 +225,12 @@ export async function GET(request: NextRequest) {
 
   } catch (error) {
     console.error('Error in recruiter applications:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    // Fail gracefully - return empty array instead of 500
+    return NextResponse.json({ 
+      applications: [], 
+      total: 0,
+      error: 'Internal server error - showing empty data' 
+    });
   }
 }
 

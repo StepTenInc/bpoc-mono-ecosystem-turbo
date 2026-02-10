@@ -14,7 +14,7 @@ interface CompanyVerificationResult {
 }
 
 async function verifyCompanyWithSerper(
-  company_name: string,
+  companyName: string,
   website?: string
 ): Promise<CompanyVerificationResult> {
   if (!SERPER_API_KEY) {
@@ -159,7 +159,8 @@ export async function GET(request: NextRequest) {
 
     if (clientsError) {
       console.error('Error fetching clients:', clientsError);
-      return NextResponse.json({ error: 'Failed to fetch clients' }, { status: 500 });
+      // Fail gracefully - return empty array instead of 500
+      return NextResponse.json({ clients: [], error: 'Failed to fetch clients - showing empty data' });
     }
 
     const clientIds = (clients || []).map(c => c.id);
@@ -198,7 +199,7 @@ export async function GET(request: NextRequest) {
         const { data: hiredApps } = await supabaseAdmin
           .from('job_applications')
           .select('id, job_id')
-          .in('job_id', job_id_list)
+          .in('job_id', jobIds)
           .eq('status', 'hired');
 
         for (const a of hiredApps || []) {
@@ -257,7 +258,12 @@ export async function GET(request: NextRequest) {
 
   } catch (error) {
     console.error('Error fetching clients:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    // Fail gracefully - return empty array instead of 500
+    return NextResponse.json({ 
+      clients: [], 
+      total: 0,
+      error: 'Internal server error - showing empty data' 
+    });
   }
 }
 

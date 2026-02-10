@@ -426,7 +426,7 @@ export default function ClientsPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.03 }}
               >
-                <Link href={`/recruiter/clients/${client.id}`}>
+                <Link href={`/clients/${client.id}`}>
                   <Card className="bg-white/5 backdrop-blur-xl border-white/10 hover:border-orange-500/30 transition-all h-full cursor-pointer group overflow-hidden relative">
                     {/* Glassmorphism hover effect */}
                     <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -524,7 +524,7 @@ export default function ClientsPage() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: i * 0.02 }}
               >
-                <Link href={`/recruiter/clients/${client.id}`}>
+                <Link href={`/clients/${client.id}`}>
                   <Card className="bg-white/5 backdrop-blur-xl border-white/10 hover:border-orange-500/30 transition-all cursor-pointer group">
                     <CardContent className="p-4">
                       <div className="flex items-center gap-4">
@@ -565,7 +565,7 @@ export default function ClientsPage() {
                             onClick={(e) => {
                               e.preventDefault();
                               e.stopPropagation();
-                              window.location.href = `/recruiter/jobs/create?clientId=${client.id}`;
+                              window.location.href = `/jobs/create?clientId=${client.id}`;
                             }}
                             className="text-orange-400 hover:text-orange-300 hover:bg-orange-500/10"
                           >

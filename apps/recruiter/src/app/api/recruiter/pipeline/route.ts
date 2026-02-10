@@ -84,7 +84,7 @@ export async function GET(request: NextRequest) {
         created_at,
         updated_at
       `)
-      .in('job_id', job_id_list)
+      .in('job_id', jobIds)
       .order('created_at', { ascending: false });
 
     if (appError) {
@@ -113,13 +113,13 @@ export async function GET(request: NextRequest) {
       supabaseAdmin
         .from('candidates')
         .select('id, first_name, last_name, email, avatar_url')
-        .in('id', candidate_id_list),
+        .in('id', candidateIds),
       
       // Candidate profiles (for location) - optional
       supabaseAdmin
         .from('candidate_profiles')
         .select('candidate_id, location')
-        .in('candidate_id', candidate_id_list)
+        .in('candidate_id', candidateIds)
         .then(res => res)
         .catch(() => ({ data: [] })),
       

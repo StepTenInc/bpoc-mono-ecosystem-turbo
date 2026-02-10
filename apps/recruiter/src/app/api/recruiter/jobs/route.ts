@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
       return roleErrorResponse(auth);
     }
 
-    const { agency_id } = auth.user!;
+    const { agencyId } = auth.user!;
 
     // Get agency_client ids for this agency
     const { data: clients, error: clientsError } = await supabaseAdmin
@@ -86,6 +86,10 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ jobs: formattedJobs });
   } catch (error) {
     console.error('Recruiter jobs error:', error);
-    return NextResponse.json({ error: 'Failed to fetch jobs' }, { status: 500 });
+    // Fail gracefully - return empty array instead of 500
+    return NextResponse.json({ 
+      jobs: [], 
+      error: 'Failed to fetch jobs - showing empty data' 
+    });
   }
 }

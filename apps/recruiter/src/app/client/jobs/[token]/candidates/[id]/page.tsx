@@ -560,7 +560,7 @@ export default function CandidateProfilePage() {
     if (token && candidateId) {
       fetchProfile();
     }
-  }, [token, candidate_id]);
+  }, [token, candidateId]);
 
   if (loading) {
     return (

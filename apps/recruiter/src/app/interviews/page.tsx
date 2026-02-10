@@ -127,7 +127,7 @@ export default function RecruiterInterviewsPage() {
     setActionLoading(offerModal.id);
     try {
       const token = await getSessionToken();
-      const response = await fetch('/api/recruiter/offers', {
+      const response = await fetch('/api/offers', {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -140,7 +140,7 @@ export default function RecruiterInterviewsPage() {
         toast.success(`Offer sent to ${offerModal.candidate_name}! 🎉`);
         setOfferModal(null);
         setOfferSalary('');
-        window.location.href = '/recruiter/offers';
+        window.location.href = '/offers';
       } else {
         const data = await response.json();
         toast.error(data.error || 'Failed to send offer');
@@ -296,7 +296,7 @@ export default function RecruiterInterviewsPage() {
                           </div>
                           <div className="flex items-center gap-3">
                             <Badge className={`${statusConfig.color} border`}>{statusConfig.label}</Badge>
-                            <Link href={`/recruiter/applications/${interview.application_id}`}>
+                            <Link href={`/applications/${interview.application_id}`}>
                               <Button size="sm" className="bg-purple-500 hover:bg-purple-600 text-white">
                                 Coordinate
                               </Button>

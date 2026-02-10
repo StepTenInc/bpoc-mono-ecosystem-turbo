@@ -173,7 +173,7 @@ export default function VideoCallModal({
   const handleOpenCandidateProfile = useCallback(() => {
     if (!participantUserId) return;
     // Works for both route-group and non-group routes depending on your app mapping.
-    window.open(`/recruiter/talent/${participantUserId}`, '_blank', 'noopener,noreferrer');
+    window.open(`/talent/${participantUserId}`, '_blank', 'noopener,noreferrer');
   }, [participantUserId]);
 
   // Toggle fullscreen
