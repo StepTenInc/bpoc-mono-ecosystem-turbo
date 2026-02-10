@@ -153,6 +153,57 @@ export default function InterviewRecordingsPage() {
     }
   }, [user?.id, session?.access_token]);
 
+  // Poll for transcription status updates when any recording is processing
+  useEffect(() => {
+    const processingRecordings = recordings.filter(r => r.transcript?.status === 'processing');
+    
+    if (processingRecordings.length === 0 || !session?.access_token) return;
+
+    const pollInterval = setInterval(async () => {
+      console.log('[Recordings] Polling for transcription updates...');
+      
+      for (const recording of processingRecordings) {
+        try {
+          const transResponse = await fetch(`/api/video/transcribe?room_id=${recording.room_id}`, {
+            headers: { 'Authorization': `Bearer ${session.access_token}` },
+            credentials: 'include',
+          });
+          
+          if (transResponse.ok) {
+            const transData = await transResponse.json();
+            const updatedTranscript = transData.transcripts?.[0];
+            
+            if (updatedTranscript && updatedTranscript.status !== 'processing') {
+              // Update the recording with new transcript data
+              setRecordings(prev => prev.map(r => 
+                r.id === recording.id ? { ...r, transcript: updatedTranscript } : r
+              ));
+              
+              if (selectedRecording?.id === recording.id) {
+                setSelectedRecording({ ...recording, transcript: updatedTranscript });
+              }
+              
+              // Show toast notification
+              if (updatedTranscript.status === 'completed') {
+                toast.success('Transcription completed!', {
+                  description: `${updatedTranscript.word_count || 0} words transcribed`,
+                });
+              } else if (updatedTranscript.status === 'failed') {
+                toast.error('Transcription failed', {
+                  description: updatedTranscript.error_message || 'Unknown error',
+                });
+              }
+            }
+          }
+        } catch (err) {
+          console.error('[Recordings] Poll error:', err);
+        }
+      }
+    }, 10000); // Poll every 10 seconds
+
+    return () => clearInterval(pollInterval);
+  }, [recordings, session?.access_token, selectedRecording]);
+
   const fetchRecordings = async () => {
     // Guard: ensure session is available
     if (!session?.access_token) {

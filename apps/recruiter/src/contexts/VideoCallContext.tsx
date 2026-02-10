@@ -510,13 +510,23 @@ export function VideoCallProvider({ children }: { children: React.ReactNode }) {
 
       setCallState(initialState);
       closeCallUi();
-      toast.info('Call ended');
+      
+      // Show appropriate message based on recording/transcription
+      if (callState.isHost) {
+        toast.success('Call ended. Recording saved!', {
+          description: 'Transcription will be ready in 2-3 minutes. Check the Recordings page.',
+          duration: 6000,
+        });
+      } else {
+        toast.info('Call ended');
+      }
 
     } catch (error) {
       console.error('Failed to leave call:', error);
       // Still reset state even if API call fails
       setCallState(initialState);
       closeCallUi();
+      toast.info('Call ended');
     }
   }, [callState.isHost, callState.roomId, closeCallUi]);
 
