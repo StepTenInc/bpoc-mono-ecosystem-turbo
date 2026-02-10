@@ -332,6 +332,8 @@ function APIPageContent() {
   const [testResults, setTestResults] = useState<Record<string, TestResult>>({});
   const [requestBody, setRequestBody] = useState<string>('');
   const [activeResponseTab, setActiveResponseTab] = useState<'response' | 'code'>('response');
+  const [showRegenerateConfirm, setShowRegenerateConfirm] = useState(false);
+  const [isRegenerating, setIsRegenerating] = useState(false);
 
   const baseUrl = 'https://recruiter.bpoc.ai/api/v1';
 
@@ -364,7 +366,7 @@ function APIPageContent() {
   };
 
   const regenerateApiKey = async () => {
-    if (!confirm('Regenerate API key? Current integrations will stop working.')) return;
+    setIsRegenerating(true);
     try {
       const res = await fetch('/api/recruiter/agency/api-key', { method: 'POST' });
       if (res.ok) {
@@ -373,6 +375,9 @@ function APIPageContent() {
       }
     } catch (error) {
       console.error('Failed to regenerate:', error);
+    } finally {
+      setIsRegenerating(false);
+      setShowRegenerateConfirm(false);
     }
   };
 
@@ -536,11 +541,12 @@ print(data)`;
               <h2 className="text-xl font-semibold">Your API Key</h2>
             </div>
             <button
-              onClick={regenerateApiKey}
-              className="flex items-center gap-2 px-3 py-1.5 bg-white/10 hover:bg-white/20 rounded-lg text-sm transition-colors"
+              onClick={() => setShowRegenerateConfirm(true)}
+              disabled={isRegenerating}
+              className="flex items-center gap-2 px-3 py-1.5 bg-white/10 hover:bg-white/20 rounded-lg text-sm transition-colors disabled:opacity-50"
             >
-              <RefreshCw className="h-4 w-4" />
-              Regenerate
+              {isRegenerating ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
+              {isRegenerating ? 'Regenerating...' : 'Regenerate'}
             </button>
           </div>
           <div className="flex items-center gap-3">
@@ -1299,6 +1305,49 @@ print(f"Found {len(jobs['jobs'])} active jobs")`}
           </div>
         )}
       </div>
+
+      {/* Regenerate Confirmation Modal */}
+      {showRegenerateConfirm && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-gray-900 border border-white/20 rounded-2xl p-6 max-w-md mx-4 shadow-2xl">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-3 bg-orange-500/20 rounded-full">
+                <AlertCircle className="h-6 w-6 text-orange-400" />
+              </div>
+              <h3 className="text-xl font-bold text-white">Regenerate API Key?</h3>
+            </div>
+            <p className="text-gray-400 mb-6">
+              This will invalidate your current API key immediately. Any integrations using the old key will stop working.
+            </p>
+            <div className="flex gap-3 justify-end">
+              <button
+                onClick={() => setShowRegenerateConfirm(false)}
+                disabled={isRegenerating}
+                className="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg text-white transition-colors disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={regenerateApiKey}
+                disabled={isRegenerating}
+                className="px-4 py-2 bg-orange-500 hover:bg-orange-600 rounded-lg text-white font-medium transition-colors flex items-center gap-2 disabled:opacity-50"
+              >
+                {isRegenerating ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Regenerating...
+                  </>
+                ) : (
+                  <>
+                    <RefreshCw className="h-4 w-4" />
+                    Yes, Regenerate
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
