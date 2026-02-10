@@ -8,7 +8,7 @@ export async function POST(request: NextRequest) {
   try {
     const { job_id, resumeId } = await request.json();
 
-    if (!jobId) {
+    if (!job_id) {
       return NextResponse.json({ error: 'Job ID is required' }, { status: 400 });
     }
 
@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
       .from('job_applications')
       .insert({
         candidate_id: user.id,
-        job_id: jobId,
+        job_id: job_id,
         resume_id: resumeId || null,
         status: 'submitted',
       })

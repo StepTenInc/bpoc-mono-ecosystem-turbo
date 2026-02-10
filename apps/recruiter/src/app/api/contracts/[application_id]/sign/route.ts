@@ -41,16 +41,10 @@ export async function POST(
     const { application_id } = await params;
 
     // Verify authentication
-    const authHeader = req.headers.get('authorization');
-    const token = authHeader?.replace('Bearer ', '');
+    const { userId, error: authError } = await verifyAuthToken(req);
     
-    if (!token) {
-      return NextResponse.json({ error: 'No token provided' }, { status: 401 });
-    }
-
-    const userId = await verifyAuthToken(token);
     if (!userId) {
-      return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
+      return NextResponse.json({ error: authError || 'Unauthorized' }, { status: 401 });
     }
 
     // Get signature data from request

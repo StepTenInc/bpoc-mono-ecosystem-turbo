@@ -44,7 +44,7 @@ export async function GET(_request: NextRequest) {
         .eq('job_id', job.id)
 
       const realApplicants = count || job.applicants_count || 0
-      const employment_type: string[] = []
+      const employmentType: string[] = []
       if (job.work_type) employmentType.push(capitalize(String(job.work_type)))
       if (job.experience_level) employmentType.push(capitalize(String(job.experience_level)))
       const salary = formatSalary(String(job.currency || 'PHP'), job.salary_min != null ? Number(job.salary_min) : null, job.salary_max != null ? Number(job.salary_max) : null, String(job.salary_type || 'monthly'))

@@ -42,15 +42,15 @@ function extractNameFromResumeData(resumeData: any): { first_name: string; last_
   
   if (typeof name === 'string' && name.trim()) {
     const nameParts = name.trim().split(/\s+/);
-    const firstName = nameParts[0] || 'user';
-    const lastName = nameParts.slice(1).join(' ') || 'profile';
+    const first_name = nameParts[0] || 'user';
+    const last_name = nameParts.slice(1).join(' ') || 'profile';
     return { first_name, last_name, fullName: name };
   }
   
   // Fallback: try first_name and last_name fields
   if (resumeData.first_name || resumeData.last_name) {
-    const firstName = resumeData.first_name || 'user';
-    const lastName = resumeData.last_name || 'profile';
+    const first_name = resumeData.first_name || 'user';
+    const last_name = resumeData.last_name || 'profile';
     return { first_name, last_name, fullName: `${first_name} ${last_name}`.trim() };
   }
   
@@ -137,9 +137,9 @@ async function uploadResumeFile(fileData: string, file_name: string, candidate_i
     const fileBuffer = Buffer.from(base64Data, 'base64');
 
     // Generate unique filename with folder structure: resumes/{userId}/{timestamp}-{filename}
-    const fileExt = fileName.split('.').pop() || 'pdf';
+    const fileExt = file_name.split('.').pop() || 'pdf';
     const timestamp = Date.now();
-    const storageFileName = `${RESUMES_FOLDER}/${candidateId}/${timestamp}-${fileName}`;
+    const storageFileName = `${RESUMES_FOLDER}/${candidate_id}/${timestamp}-${file_name}`;
 
     console.log('📤 Uploading resume file to storage:', {
       bucket: CANDIDATE_BUCKET,
@@ -343,7 +343,7 @@ export async function POST(request: NextRequest) {
     const { first_name, last_name, fullName } = extractNameFromResumeData(resumeData);
     
     // Generate slug in format: firstName-lastName-XX
-    const slug = generateResumeSlug(firstName, last_name, userId);
+    const slug = generateResumeSlug(first_name, last_name, userId);
     
     // Generate title: "Full Name's Resume"
     const title = fullName ? `${fullName}'s Resume` : 'Resume';
@@ -352,8 +352,8 @@ export async function POST(request: NextRequest) {
       slug,
       title,
       fullName,
-      firstName,
-      lastName
+      first_name,
+      last_name
     });
 
     // Check if an extracted resume already exists for this candidate

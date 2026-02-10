@@ -112,16 +112,19 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Failed to generate API key' }, { status: 500 });
     }
 
-    // Log this action
-    await supabaseAdmin
-      .from('admin_audit_log')
-      .insert({
-        agency_id: recruiter.agency_id,
-        user_id: user.id,
-        action: 'api_key_regenerated',
-        details: { timestamp: new Date().toISOString() },
-      })
-      .catch(() => {}); // Non-critical
+    // Log this action (non-critical, don't block on errors)
+    try {
+      await supabaseAdmin
+        .from('admin_audit_log')
+        .insert({
+          agency_id: recruiter.agency_id,
+          user_id: user.id,
+          action: 'api_key_regenerated',
+          details: { timestamp: new Date().toISOString() },
+        });
+    } catch {
+      // Ignore audit log errors
+    }
 
     return NextResponse.json({
       apiKey: agency.api_key,

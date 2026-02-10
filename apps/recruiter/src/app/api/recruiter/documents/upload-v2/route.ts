@@ -204,7 +204,7 @@ function crossCheckDocuments(docs: ExtractedDocData[]): {
 
   return {
     companyNameConsistent,
-    companyName,
+    company_name: companyName,
     tinNumber,
     address,
     city,
@@ -240,7 +240,7 @@ export async function POST(req: Request) {
     }
 
     // Get authenticated user
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -352,7 +352,7 @@ export async function POST(req: Request) {
         originalFileName: docs[i].name,
       })),
       crossCheck: {
-        companyNameConsistent: verification.company_nameConsistent,
+        companyNameConsistent: verification.companyNameConsistent,
         isBpoCompany: verification.isBpoCompany,
         issues: verification.issues,
       },

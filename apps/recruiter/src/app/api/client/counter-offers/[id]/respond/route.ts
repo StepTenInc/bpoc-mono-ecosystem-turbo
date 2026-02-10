@@ -29,7 +29,7 @@ export async function POST(
     if (!tokenData || !tokenData.isValid) {
       return NextResponse.json({ error: 'Invalid or expired token' }, { status: 401 });
     }
-    const jobId = tokenData.job_id;
+    const jobId = tokenData.jobId;
 
     // Get counter offer with related offer and application
     const { data: counterOffer, error: coError } = await supabaseAdmin

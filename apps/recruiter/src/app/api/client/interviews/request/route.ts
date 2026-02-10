@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
         released_to_client
       `)
       .eq('id', application_id)
-      .eq('job_id', tokenData.job_id)
+      .eq('job_id', tokenData.jobId)
       .single();
 
     if (appError || !application) {
@@ -89,7 +89,7 @@ export async function POST(request: NextRequest) {
           companies(name)
         )
       `)
-      .eq('id', tokenData.job_id)
+      .eq('id', tokenData.jobId)
       .single();
 
     if (!job) {
@@ -99,9 +99,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get client timezone from agency_clients
-    const clientTimezone = job.agency_clients?.client_timezone || 'Australia/Sydney';
-    const clientName = job.agency_clients?.companies?.name || job.agency_clients?.primary_contact_name || 'Client';
+    // Get client details from agency_clients (Supabase returns single object due to .single())
+    const agencyClient = job.agency_clients as any;
+    const clientTimezone = agencyClient?.client_timezone || 'Australia/Sydney';
+    const clientName = agencyClient?.companies?.name || agencyClient?.primary_contact_name || 'Client';
+    const agencyId = agencyClient?.agency_id;
 
     // Process proposed times - convert from client's local time to UTC
     // The times from client are already in their local time, we convert to UTC for storage
@@ -172,7 +174,7 @@ export async function POST(request: NextRequest) {
         interview_id: interview.id,
         proposed_times: processedTimes,
         status: 'pending',
-        proposed_by: tokenData.clientUserId || null,
+        proposed_by: null, // Client portal users don't have user IDs
         metadata: {
           proposed_via: 'client_portal',
           message: message || null,
@@ -191,7 +193,7 @@ export async function POST(request: NextRequest) {
     const { data: recruiters } = await supabaseAdmin
       .from('agency_recruiters')
       .select('user_id')
-      .eq('agency_id', job.agency_clients?.agency_id)
+      .eq('agency_id', agencyId)
       .eq('status', 'active');
 
     // Create notifications for recruiters

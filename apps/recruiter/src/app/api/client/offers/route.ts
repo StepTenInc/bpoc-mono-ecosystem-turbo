@@ -20,14 +20,14 @@ export async function POST(request: NextRequest) {
     if (!tokenData || !tokenData.isValid) {
       return NextResponse.json({ error: 'Invalid or expired token' }, { status: 401 });
     }
-    const jobId = tokenData.job_id;
+    const jobId = tokenData.jobId;
 
     // Verify application belongs to this job
     const { data: application, error: appError } = await supabaseAdmin
       .from('job_applications')
       .select('id, candidate_id, status')
       .eq('id', application_id)
-      .eq('job_id', job_id)
+      .eq('job_id', jobId)
       .single();
 
     if (appError || !application) {

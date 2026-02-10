@@ -58,7 +58,7 @@ export async function POST(
         client_decision
       `)
       .eq('id', id)
-      .eq('job_id', tokenData.job_id)
+      .eq('job_id', tokenData.jobId)
       .single();
 
     if (appError || !application) {

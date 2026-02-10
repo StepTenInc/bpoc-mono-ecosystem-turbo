@@ -87,7 +87,7 @@ export async function GET(
       .single();
 
     // Verify interview belongs to a job accessible by this token
-    if (application.job_id !== tokenData.job_id) {
+    if (application.job_id !== tokenData.jobId) {
       return NextResponse.json(
         { error: 'This interview does not belong to your job' },
         { status: 403 }
@@ -113,7 +113,7 @@ export async function GET(
     const { data: job } = await supabaseAdmin
       .from('jobs')
       .select('title')
-      .eq('id', tokenData.job_id)
+      .eq('id', tokenData.jobId)
       .single();
 
     // Log access

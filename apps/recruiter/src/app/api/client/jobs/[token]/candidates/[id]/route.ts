@@ -61,7 +61,7 @@ export async function GET(
         client_notes
       `)
       .eq('id', application_id)
-      .eq('job_id', tokenData.job_id)
+      .eq('job_id', tokenData.jobId)
       .single();
 
     if (appError || !application) {

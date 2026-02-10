@@ -61,7 +61,7 @@ export async function GET(
           )
         )
       `)
-      .eq('id', tokenData.job_id)
+      .eq('id', tokenData.jobId)
       .single();
 
     if (jobError || !job) {
@@ -75,36 +75,36 @@ export async function GET(
     const { count: totalApplicants } = await supabaseAdmin
       .from('job_applications')
       .select('*', { count: 'exact', head: true })
-      .eq('job_id', tokenData.job_id);
+      .eq('job_id', tokenData.jobId);
 
     const { count: shortlisted } = await supabaseAdmin
       .from('job_applications')
       .select('*', { count: 'exact', head: true })
-      .eq('job_id', tokenData.job_id)
+      .eq('job_id', tokenData.jobId)
       .eq('status', 'shortlisted');
 
     const { count: releasedToClient } = await supabaseAdmin
       .from('job_applications')
       .select('*', { count: 'exact', head: true })
-      .eq('job_id', tokenData.job_id)
+      .eq('job_id', tokenData.jobId)
       .eq('released_to_client', true);
 
     const { count: interviewed } = await supabaseAdmin
       .from('job_applications')
       .select('*', { count: 'exact', head: true })
-      .eq('job_id', tokenData.job_id)
+      .eq('job_id', tokenData.jobId)
       .eq('status', 'interviewed');
 
     const { count: offered } = await supabaseAdmin
       .from('job_applications')
       .select('*', { count: 'exact', head: true })
-      .eq('job_id', tokenData.job_id)
+      .eq('job_id', tokenData.jobId)
       .in('status', ['offered', 'offer_accepted']);
 
     const { count: hired } = await supabaseAdmin
       .from('job_applications')
       .select('*', { count: 'exact', head: true })
-      .eq('job_id', tokenData.job_id)
+      .eq('job_id', tokenData.jobId)
       .eq('status', 'hired');
 
     // Fetch released candidates (only those marked as released_to_client)
@@ -116,7 +116,7 @@ export async function GET(
         released_at,
         candidate_id
       `)
-      .eq('job_id', tokenData.job_id)
+      .eq('job_id', tokenData.jobId)
       .eq('released_to_client', true)
       .order('released_at', { ascending: false });
 
@@ -192,7 +192,7 @@ export async function GET(
       jobTokenId: tokenData.tokenId,
       action: 'viewed_job_dashboard',
       metadata: {
-        job_id: tokenData.job_id,
+        job_id: tokenData.jobId,
         job_title: job.title,
       },
       ipAddress,
@@ -222,8 +222,8 @@ export async function GET(
         experienceLevel: job.experience_level,
       },
       client: {
-        name: job.agency_client?.company?.name || 'Unknown Company',
-        timezone: job.agency_client?.client_timezone || 'Australia/Sydney',
+        name: (job.agency_client as any)?.company?.name || 'Unknown Company',
+        timezone: (job.agency_client as any)?.client_timezone || 'Australia/Sydney',
       },
       statistics: {
         totalApplicants: totalApplicants || 0,
