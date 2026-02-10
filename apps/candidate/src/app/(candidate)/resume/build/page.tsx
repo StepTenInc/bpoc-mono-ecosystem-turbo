@@ -526,23 +526,15 @@ export default function ResumeBuildPage() {
 
   // Image handling
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // #region agent log
-    console.log('[DEBUG] handleImageUpload triggered', { filesCount: e.target.files?.length });
-    // #endregion
     const file = e.target.files?.[0];
-    if (!file) {
-      console.log('[DEBUG] handleImageUpload: no file selected');
-      return;
-    }
-    console.log('[DEBUG] handleImageUpload: file selected', { name: file.name, size: file.size, type: file.type });
+    if (!file) return;
     const reader = new FileReader();
     reader.onload = () => {
-      console.log('[DEBUG] handleImageUpload: FileReader loaded, opening crop modal');
       setTempImage(reader.result as string);
       setShowCropModal(true);
     };
     reader.onerror = (err) => {
-      console.error('[DEBUG] handleImageUpload: FileReader error', err);
+      console.error('Image upload error:', err);
     };
     reader.readAsDataURL(file);
   };
@@ -552,25 +544,16 @@ export default function ResumeBuildPage() {
   }, []);
 
   const handleCropSave = async () => {
-    // #region agent log
-    console.log('[DEBUG] handleCropSave called', { hasTemp: !!tempImage, hasPixels: !!croppedAreaPixels });
-    // #endregion
     if (!tempImage || !croppedAreaPixels) {
       toast.error('No image to crop');
       return;
     }
     try {
       const croppedBlob = await getCroppedImg(tempImage, croppedAreaPixels);
-      // #region agent log
-      console.log('[DEBUG] croppedBlob created', { blobSize: croppedBlob?.size });
-      // #endregion
       // Convert Blob to data URL for display
       const reader = new FileReader();
       reader.onloadend = () => {
         const dataUrl = reader.result as string;
-        // #region agent log
-        console.log('[DEBUG] dataUrl ready', { length: dataUrl?.length, isDataUrl: dataUrl?.startsWith('data:') });
-        // #endregion
         setProfileImage(dataUrl);
         // persist locally immediately
         setResumeData((prev: any) => {
@@ -590,16 +573,13 @@ export default function ResumeBuildPage() {
       };
       reader.readAsDataURL(croppedBlob);
     } catch (err) {
-      console.error('[DEBUG] Crop error:', err);
+      console.error('Image crop error:', err);
       toast.error('Failed to crop image. Try a different photo.');
     }
   };
 
   // AI Improve
   const handleAiImprove = async (section: string, content: string | any) => {
-    // #region agent log
-    console.log('[DEBUG] handleAiImprove called', { section, contentType: typeof content, contentLength: typeof content === 'string' ? content?.length : 'object' });
-    // #endregion
     if (!content) {
       toast.error('No content to improve');
       return;
@@ -659,9 +639,6 @@ export default function ResumeBuildPage() {
 
   // Optimize for ATS
   const handleOptimizeATS = async () => {
-    // #region agent log
-    console.log('[DEBUG] handleOptimizeATS called', { hasSummary: !!resumeData?.summary, experienceCount: resumeData?.experience?.length || 0 });
-    // #endregion
     setAiLoading(true);
     setAiMessages(prev => [...prev, 
       { role: 'user', content: 'Optimize my resume for ATS' },
@@ -706,13 +683,9 @@ export default function ResumeBuildPage() {
 
   // Smart modal opener for different field types
   const openSmartModal = (fieldType: string) => {
-    // #region agent log
-    console.log('[DEBUG] openSmartModal called', { fieldType, fieldLower: fieldType.toLowerCase() });
-    // #endregion
     const fieldLower = fieldType.toLowerCase();
     
     if (fieldLower.includes('phone')) {
-      console.log('[DEBUG] openSmartModal: matched PHONE');
       setInputModalData({
         title: '📱 Add Your Phone Number',
         fields: [
@@ -724,11 +697,9 @@ export default function ResumeBuildPage() {
         }
       });
       setInputValues({ phone: resumeData?.phone || '' });
-      console.log('[DEBUG] Setting showInputModal to TRUE for phone');
       setShowInputModal(true);
       
     } else if (fieldLower.includes('location')) {
-      console.log('[DEBUG] openSmartModal: matched LOCATION');
       setInputModalData({
         title: '📍 Where Are You Located?',
         fields: [
@@ -742,11 +713,9 @@ export default function ResumeBuildPage() {
         }
       });
       setInputValues({ city: '', country: 'Philippines' });
-      console.log('[DEBUG] Setting showInputModal to TRUE for location');
       setShowInputModal(true);
       
     } else if (fieldLower.includes('education') || fieldLower.includes('school') || fieldLower.includes('degree')) {
-      console.log('[DEBUG] openSmartModal: matched EDUCATION');
       setInputModalData({
         title: '🎓 Tell Me About Your Education',
         fields: [
@@ -769,7 +738,6 @@ export default function ResumeBuildPage() {
       setShowInputModal(true);
       
     } else if (fieldLower.includes('experience') || fieldLower.includes('work') || fieldLower.includes('job')) {
-      console.log('[DEBUG] openSmartModal: matched EXPERIENCE/WORK/JOB');
       setInputModalData({
         title: '💼 Add Work Experience',
         fields: [
@@ -793,7 +761,6 @@ export default function ResumeBuildPage() {
         }
       });
       setInputValues({ title: '', company: '', duration: '', achievement1: '', achievement2: '' });
-      console.log('[DEBUG] Setting showInputModal to TRUE for experience');
       setShowInputModal(true);
       
     } else if (fieldLower.includes('skill')) {
@@ -905,18 +872,12 @@ export default function ResumeBuildPage() {
 
   // Wrapper for the add missing info button
   const handleAddMissingInfo = (field: string) => {
-    // #region agent log
-    console.log('[DEBUG] handleAddMissingInfo called', { field });
-    // #endregion
     addAiMessage('user', `I want to add ${field}`);
     openSmartModal(field);
   };
 
   // Improve all sections
   const handleImproveAll = async () => {
-    // #region agent log
-    console.log('[DEBUG] handleImproveAll called', { hasSummary: !!resumeData?.summary, hasExperience: resumeData?.experience?.length || 0 });
-    // #endregion
     setAiLoading(true);
     setAiMessages(prev => [...prev, 
       { role: 'user', content: 'Improve my entire resume' },
@@ -1760,7 +1721,7 @@ export default function ResumeBuildPage() {
           <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">🎨 Color Scheme</h3>
           
           {/* Preset Color Schemes */}
-          <div className="grid grid-cols-4 gap-1.5 mb-3">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 mb-3">
             {colorSchemes.filter(cs => cs.id !== 'custom').map(cs => (
               <button
                 key={cs.id}

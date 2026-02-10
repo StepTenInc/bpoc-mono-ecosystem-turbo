@@ -32,14 +32,12 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
 
   const checkAdminStatus = async () => {
     if (!user) {
-      console.log('No user available for admin check')
       setIsAdmin(false)
       setAdminUser(null)
       setLoading(false)
       return
     }
 
-    console.log('Checking admin status for user:', user.id)
     try {
       // Check admin status directly in Railway database
       const response = await fetch(`/api/admin/check-status?userId=${user.id}`, { cache: 'no-store' })
@@ -47,8 +45,6 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
         throw new Error(`HTTP ${response.status}`)
       }
       const data = await response.json()
-      
-      console.log('Admin check response:', data)
       
       if (data.isAdmin) {
         setIsAdmin(true)
