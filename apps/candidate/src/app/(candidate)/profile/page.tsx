@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useToast } from '@/hooks/use-toast'
-import { User, MapPin, Phone, Briefcase, FileText, Loader2, CheckCircle, X, Info, Sparkles, Camera, Edit, XCircle, Eye, Target, Clock } from 'lucide-react'
+import { User, MapPin, Phone, Briefcase, FileText, Loader2, CheckCircle, X, Info, Sparkles, Camera, Edit, XCircle, Eye, Target, Clock, ChevronRight } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { uploadProfilePhoto, optimizeImage } from '@/lib/storage'
@@ -1123,6 +1123,63 @@ export default function CandidateProfilePage() {
             )}
           </div>
         </div>
+
+        {/* Resume Status Card */}
+        <Link href="/resume">
+          <div className={cn(
+            "relative overflow-hidden rounded-xl border backdrop-blur-sm transition-all duration-300 cursor-pointer group",
+            profile?.has_resume 
+              ? "border-emerald-500/30 bg-emerald-500/5 hover:border-emerald-400/50 hover:bg-emerald-500/10" 
+              : "border-orange-500/30 bg-orange-500/5 hover:border-orange-400/50 hover:bg-orange-500/10"
+          )}>
+            <div className="relative p-4 flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className={cn(
+                  "w-12 h-12 rounded-full flex items-center justify-center border-2",
+                  profile?.has_resume 
+                    ? "border-emerald-500/50 bg-emerald-500/10" 
+                    : "border-orange-500/50 bg-orange-500/10"
+                )}>
+                  <FileText className={cn(
+                    "w-6 h-6",
+                    profile?.has_resume ? "text-emerald-400" : "text-orange-400"
+                  )} />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className={cn(
+                      "font-semibold",
+                      profile?.has_resume ? "text-emerald-300" : "text-orange-300"
+                    )}>
+                      {profile?.has_resume ? 'Resume Complete' : 'Resume Not Created'}
+                    </h3>
+                    {profile?.has_resume && (
+                      <span className="px-2 py-0.5 text-[10px] font-bold rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                        BPOC VERIFIED
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-sm text-gray-400 mt-0.5">
+                    {profile?.has_resume 
+                      ? 'Your professional resume is ready for recruiters' 
+                      : 'Create your resume to apply for jobs'}
+                  </p>
+                </div>
+              </div>
+              <div className={cn(
+                "flex items-center gap-2 px-4 py-2 rounded-lg transition-all",
+                profile?.has_resume 
+                  ? "bg-emerald-500/10 text-emerald-400 group-hover:bg-emerald-500/20" 
+                  : "bg-orange-500/10 text-orange-400 group-hover:bg-orange-500/20"
+              )}>
+                <span className="text-sm font-medium">
+                  {profile?.has_resume ? 'View Resume' : 'Create Resume'}
+                </span>
+                <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </div>
+          </div>
+        </Link>
 
         {/* Header Section with Gradient Underline */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-white/5">

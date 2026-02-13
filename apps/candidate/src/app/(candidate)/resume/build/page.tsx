@@ -39,6 +39,7 @@ import Cropper from 'react-easy-crop';
 import { getCroppedImg } from '@/lib/image-crop-utils';
 import { supabase } from '@/lib/supabase';
 import { optimizeImage } from '@/lib/storage';
+import { ResumePreview } from '@/features/resume-builder/components/templates';
 
 // Template definitions - TRULY DIFFERENT LAYOUTS!
 const templates = [

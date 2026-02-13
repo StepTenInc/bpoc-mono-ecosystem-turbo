@@ -1,8 +1,14 @@
 // Resume PDF Processing with pdf-parse
 // Extracts text from PDF files and structures resume data
 
-import { PDFParse } from 'pdf-parse';
 import { AIService } from './ai';
+
+// Dynamic import to avoid Next.js module evaluation issues
+// pdf-parse tries to require 'fs' at import time
+async function getPdfParser() {
+  const pdfParse = await import('pdf-parse');
+  return pdfParse.default;
+}
 
 export interface ResumeData {
   name: string;
@@ -42,7 +48,7 @@ export interface ResumeData {
 }
 
 /**
- * Extract text from PDF buffer using pdf-parse
+ * Extract text from PDF buffer using pdf-parse v1.x
  */
 export async function extractPdfText(pdfBuffer: Buffer): Promise<string> {
   try {
@@ -52,14 +58,15 @@ export async function extractPdfText(pdfBuffer: Buffer): Promise<string> {
 
     console.log('[PDF] Extracting text from PDF, size:', pdfBuffer.length, 'bytes');
 
-    const parser = new PDFParse({ data: pdfBuffer });
-    const data = await parser.getText();
+    // Dynamic import to avoid Next.js bundler issues with pdf-parse
+    const pdf = await getPdfParser();
+    const data = await pdf(pdfBuffer);
 
     if (!data || !data.text) {
       throw new Error('No text extracted from PDF');
     }
 
-    console.log('[PDF] Successfully extracted', data.text.length, 'characters');
+    console.log('[PDF] Successfully extracted', data.text.length, 'characters from', data.numpages, 'pages');
 
     return data.text;
   } catch (error) {

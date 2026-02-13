@@ -14,13 +14,111 @@ const WIZARD_SECTIONS = [
   { key: 'emergency_contact', title: 'Emergency Contact', description: 'Provide emergency contact information', taskType: 'form', icon: 'phone' },
 ];
 
+// Helper function to auto-create onboarding record for hired candidate
+async function createOnboardingForHiredCandidate(userId: string, application: any) {
+  // Fetch candidate details
+  const { data: candidate } = await supabaseAdmin
+    .from('candidates')
+    .select('first_name, last_name, email, birthday, gender')
+    .eq('id', userId)
+    .single();
+
+  const { data: profile } = await supabaseAdmin
+    .from('candidate_profiles')
+    .select('phone')
+    .eq('candidate_id', userId)
+    .single();
+
+  const { data: resume } = await supabaseAdmin
+    .from('candidate_resumes')
+    .select('resume_url')
+    .eq('candidate_id', userId)
+    .eq('is_primary', true)
+    .single();
+
+  // Get job details
+  const { data: jobApp } = await supabaseAdmin
+    .from('job_applications')
+    .select(`
+      id,
+      job:jobs (
+        title,
+        agency_client:agency_clients (
+          company:companies (
+            name
+          )
+        )
+      )
+    `)
+    .eq('id', application.id)
+    .single();
+
+  const job = jobApp?.job as any;
+  const position = job?.title || 'New Position';
+  const company = job?.agency_client?.company?.name || 'Company';
+
+  // Get offer details
+  const { data: offer } = await supabaseAdmin
+    .from('job_offers')
+    .select('salary_offered, start_date')
+    .eq('application_id', application.id)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .single();
+
+  // Create candidate_onboarding record
+  const { data: onboarding, error } = await supabaseAdmin
+    .from('candidate_onboarding')
+    .insert({
+      candidate_id: userId,
+      job_application_id: application.id,
+      
+      // Pre-fill from candidate data
+      first_name: candidate?.first_name || '',
+      last_name: candidate?.last_name || '',
+      email: candidate?.email || '',
+      date_of_birth: candidate?.birthday || null,
+      gender: candidate?.gender || null,
+      contact_no: profile?.phone || '',
+      resume_url: resume?.resume_url || null,
+      
+      // Job details
+      position,
+      assigned_client: company,
+      start_date: offer?.start_date,
+      basic_salary: offer?.salary_offered,
+      
+      // Set initial statuses
+      resume_status: resume?.resume_url ? 'approved' : 'pending',
+      personal_info_status: (candidate?.first_name && candidate?.last_name && candidate?.email) ? 'approved' : 'pending',
+      gov_id_status: 'pending',
+      education_status: 'pending',
+      medical_status: 'pending',
+      data_privacy_status: 'pending',
+      signature_status: 'pending',
+      emergency_contact_status: 'pending',
+      completion_percent: 0,
+      contract_signed: application.status === 'hired',
+    })
+    .select()
+    .single();
+
+  if (error) {
+    console.error('[tasks API] Error auto-creating onboarding:', error);
+    return null;
+  }
+
+  console.log('[tasks API] Auto-created onboarding record:', onboarding.id);
+  return onboarding;
+}
+
 // GET - Fetch onboarding tasks for candidate
 export async function GET(request: NextRequest) {
   try {
     const user = await getUserFromRequest(request);
 
     // Get candidate's onboarding record from the wizard table
-    const { data: onboarding, error: onboardingError } = await supabaseAdmin
+    let { data: onboarding, error: onboardingError } = await supabaseAdmin
       .from('candidate_onboarding')
       .select('*')
       .eq('candidate_id', user.id)
@@ -32,14 +130,16 @@ export async function GET(request: NextRequest) {
       console.error('Error fetching onboarding:', onboardingError);
     }
 
-    // If no onboarding record, check if they have an accepted offer
+    // If no onboarding record, check if they have an accepted offer or are hired
     if (!onboarding) {
-      // Check for accepted offer
+      // Check for hired or offer_accepted application
       const { data: applications } = await supabaseAdmin
         .from('job_applications')
         .select('id, status')
         .eq('candidate_id', user.id)
-        .in('status', ['offer_accepted', 'hired', 'onboarding']);
+        .in('status', ['offer_accepted', 'hired'])
+        .order('updated_at', { ascending: false })
+        .limit(1);
 
       if (!applications || applications.length === 0) {
         return NextResponse.json({ 
@@ -50,18 +150,36 @@ export async function GET(request: NextRequest) {
         });
       }
 
-      return NextResponse.json({ 
-        tasks: [], 
-        progress: { total: 0, completed: 0, pending: 0, overdue: 0, percentage: 0 },
-        onboardingStatus: null,
-        message: 'Onboarding is being prepared. Please check back soon.'
-      });
+      const application = applications[0];
+
+      // Auto-create onboarding record for hired/offer_accepted candidates
+      if (application.status === 'hired' || application.status === 'offer_accepted') {
+        onboarding = await createOnboardingForHiredCandidate(user.id, application);
+        
+        if (!onboarding) {
+          return NextResponse.json({ 
+            tasks: [], 
+            progress: { total: 0, completed: 0, pending: 0, overdue: 0, percentage: 0 },
+            onboardingStatus: null,
+            message: 'Onboarding is being prepared. Please check back soon.'
+          });
+        }
+      } else {
+        return NextResponse.json({ 
+          tasks: [], 
+          progress: { total: 0, completed: 0, pending: 0, overdue: 0, percentage: 0 },
+          onboardingStatus: null,
+          message: 'Onboarding is being prepared. Please check back soon.'
+        });
+      }
     }
 
     // Convert wizard sections to task format
     const tasks = WIZARD_SECTIONS.map((section, index) => {
       const statusKey = `${section.key}_status` as keyof typeof onboarding;
-      const status = onboarding[statusKey] as string || 'pending';
+      // Normalize status to lowercase (some records have 'PENDING' uppercase)
+      const rawStatus = onboarding[statusKey] as string || 'pending';
+      const status = rawStatus.toLowerCase();
       
       return {
         id: `${onboarding.id}-${section.key}`,
@@ -83,10 +201,11 @@ export async function GET(request: NextRequest) {
       };
     });
 
-    // Calculate progress
+    // Calculate progress (statuses are already normalized to lowercase)
     const totalTasks = tasks.length;
     const completedTasks = tasks.filter(t => t.status === 'approved').length;
-    const pendingTasks = tasks.filter(t => ['pending', 'submitted'].includes(t.status)).length;
+    const submittedTasks = tasks.filter(t => t.status === 'submitted').length;
+    const pendingTasks = tasks.filter(t => t.status === 'pending' || t.status === 'rejected').length;
     const overdueTasks = 0; // Could calculate based on start_date
 
     return NextResponse.json({
@@ -94,7 +213,7 @@ export async function GET(request: NextRequest) {
       progress: {
         total: totalTasks,
         completed: completedTasks,
-        pending: pendingTasks,
+        pending: pendingTasks + submittedTasks, // Pending includes both pending and submitted (awaiting review)
         overdue: overdueTasks,
         percentage: onboarding.completion_percent || Math.round((completedTasks / totalTasks) * 100),
       },

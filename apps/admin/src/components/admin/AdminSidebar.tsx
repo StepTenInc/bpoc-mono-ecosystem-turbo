@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -13,7 +13,6 @@ import {
   FileText,
   Calendar,
   Gift,
-  TrendingUp,
   CheckCircle2,
   BarChart3,
   Settings,
@@ -22,9 +21,8 @@ import {
   ChevronLeft,
   ChevronRight,
   Newspaper,
-  Bell,
-  AlertCircle,
-  Mail,
+  CreditCard,
+  ChevronDown,
   X
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -38,27 +36,58 @@ interface NavItem {
   highlight?: boolean;
 }
 
-const navItems: NavItem[] = [
-  { label: 'Dashboard', href: '/', icon: LayoutDashboard },
-  { label: 'Users', href: '/users', icon: Users, highlight: true },
-  { label: 'Recruiters', href: '/recruiters', icon: UserCircle, highlight: true },
-  { label: 'Agencies', href: '/agencies', icon: Building2 },
-  { label: 'Clients', href: '/clients', icon: Building2 },
-  { label: 'Candidates', href: '/candidates', icon: Users },
-  { label: 'Jobs', href: '/jobs', icon: Briefcase },
-  { label: 'Applications', href: '/applications', icon: FileText },
-  { label: 'Interviews', href: '/interviews', icon: Calendar },
-  { label: 'Offers', href: '/offers', icon: Gift },
-  { label: 'Counter Offers', href: '/counter-offers', icon: TrendingUp },
-  { label: 'Onboarding', href: '/onboarding', icon: CheckCircle2 },
-  { label: 'Insights Manager', href: '/insights', icon: Newspaper },
-  { label: 'Analytics', href: '/analytics', icon: BarChart3 },
-  { label: 'Billing', href: '/billing', icon: TrendingUp, highlight: true },
-  { label: 'BPOC Compliance', href: '/hr-assistant', icon: Shield },
-  { label: 'Notifications', href: '/notifications', icon: Bell },
-  { label: 'Outbound', href: '/outbound', icon: Mail, highlight: true },
-  { label: 'Audit Log', href: '/audit-log', icon: Shield },
-  { label: 'Error Dashboard', href: '/errors', icon: AlertCircle },
+interface NavGroup {
+  title: string;
+  items: NavItem[];
+  defaultOpen?: boolean;
+}
+
+// Grouped navigation - much cleaner
+const navGroups: NavGroup[] = [
+  {
+    title: 'Overview',
+    defaultOpen: true,
+    items: [
+      { label: 'Dashboard', href: '/', icon: LayoutDashboard },
+    ]
+  },
+  {
+    title: 'Recruitment',
+    defaultOpen: true,
+    items: [
+      { label: 'Jobs', href: '/jobs', icon: Briefcase },
+      { label: 'Applications', href: '/applications', icon: FileText },
+      { label: 'Interviews', href: '/interviews', icon: Calendar },
+      { label: 'Offers', href: '/offers', icon: Gift },
+      { label: 'Onboarding', href: '/onboarding', icon: CheckCircle2 },
+    ]
+  },
+  {
+    title: 'People',
+    defaultOpen: true,
+    items: [
+      { label: 'Candidates', href: '/candidates', icon: Users },
+      { label: 'Recruiters', href: '/recruiters', icon: UserCircle },
+      { label: 'Users', href: '/users', icon: Users },
+    ]
+  },
+  {
+    title: 'Organizations',
+    defaultOpen: false,
+    items: [
+      { label: 'Agencies', href: '/agencies', icon: Building2 },
+      { label: 'Clients', href: '/clients', icon: Building2 },
+    ]
+  },
+  {
+    title: 'Analytics',
+    defaultOpen: false,
+    items: [
+      { label: 'Insights', href: '/insights', icon: Newspaper },
+      { label: 'Analytics', href: '/analytics', icon: BarChart3 },
+      { label: 'Billing', href: '/billing', icon: CreditCard },
+    ]
+  },
 ];
 
 const bottomNavItems: NavItem[] = [
@@ -75,6 +104,13 @@ interface AdminSidebarProps {
 export default function AdminSidebar({ collapsed = false, onToggle, mobileOpen = false, onMobileClose }: AdminSidebarProps) {
   const pathname = usePathname();
   const { user, signOut } = useAuth();
+  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>(() => {
+    const initial: Record<string, boolean> = {};
+    navGroups.forEach(group => {
+      initial[group.title] = group.defaultOpen ?? true;
+    });
+    return initial;
+  });
 
   const isActive = (href: string) => {
     if (href === '/') {
@@ -83,23 +119,27 @@ export default function AdminSidebar({ collapsed = false, onToggle, mobileOpen =
     return pathname.startsWith(href);
   };
 
+  const toggleGroup = (title: string) => {
+    setExpandedGroups(prev => ({ ...prev, [title]: !prev[title] }));
+  };
+
   const sidebarContent = (
     <>
       {/* Logo */}
       <div className="h-16 flex items-center justify-between px-4 border-b border-white/10">
         {!collapsed && (
           <Link href="/" className="flex items-center gap-3" onClick={onMobileClose}>
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-red-500 to-orange-600 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500 to-orange-600 flex items-center justify-center shadow-lg shadow-red-500/20">
               <Shield className="h-6 w-6 text-white" />
             </div>
             <div>
-              <span className="text-white font-bold text-lg">BPOC</span>
+              <span className="text-white font-bold text-lg tracking-tight">BPOC</span>
               <span className="text-red-400 text-xs block -mt-1">Admin</span>
             </div>
           </Link>
         )}
         {collapsed && (
-          <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-red-500 to-orange-600 flex items-center justify-center mx-auto">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500 to-orange-600 flex items-center justify-center mx-auto shadow-lg shadow-red-500/20">
             <Shield className="h-6 w-6 text-white" />
           </div>
         )}
@@ -121,48 +161,82 @@ export default function AdminSidebar({ collapsed = false, onToggle, mobileOpen =
 
       {/* Navigation */}
       <nav className="flex-1 py-4 overflow-y-auto admin-sidebar-scroll">
-        <ul className="space-y-1 px-3">
-          {navItems.map((item) => {
-            const active = isActive(item.href);
-            return (
-              <li key={item.href}>
-                <Link
-                  href={item.href}
-                  onClick={onMobileClose}
+        {navGroups.map((group) => (
+          <div key={group.title} className="mb-2">
+            {/* Group Header */}
+            {!collapsed && (
+              <button
+                onClick={() => toggleGroup(group.title)}
+                className="w-full flex items-center justify-between px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider hover:text-gray-300 transition-colors"
+              >
+                <span>{group.title}</span>
+                <ChevronDown 
                   className={cn(
-                    'flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200',
-                    item.highlight && !active
-                      ? 'bg-gradient-to-r from-cyan-500/20 to-cyan-600/10 text-cyan-300 border border-cyan-500/30 shadow-lg shadow-cyan-500/20'
-                      : active
-                      ? 'bg-gradient-to-r from-red-500/20 to-orange-500/10 text-red-400 border border-red-500/30'
-                      : 'text-gray-400 hover:text-white hover:bg-white/5'
-                  )}
+                    "h-3 w-3 transition-transform",
+                    expandedGroups[group.title] ? "" : "-rotate-90"
+                  )} 
+                />
+              </button>
+            )}
+            
+            {/* Group Items */}
+            <AnimatePresence initial={false}>
+              {(collapsed || expandedGroups[group.title]) && (
+                <motion.ul
+                  initial={collapsed ? false : { height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="space-y-0.5 px-3 overflow-hidden"
                 >
-                  <item.icon className={cn('h-5 w-5 flex-shrink-0', item.highlight && !active ? 'text-cyan-400' : active && 'text-red-400')} />
-                  {!collapsed && (
-                    <>
-                      <span className="flex-1 font-medium">{item.label}</span>
-                      {item.badge && (
-                        <span className="px-2 py-0.5 text-xs rounded-full bg-red-500/20 text-red-400">
-                          {item.badge}
-                        </span>
-                      )}
-                      {item.highlight && !active && (
-                        <span className="px-2 py-0.5 text-[10px] rounded-full bg-cyan-500/30 text-cyan-200 font-bold">NEW</span>
-                      )}
-                    </>
-                  )}
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
+                  {group.items.map((item) => {
+                    const active = isActive(item.href);
+                    return (
+                      <li key={item.href}>
+                        <Link
+                          href={item.href}
+                          onClick={onMobileClose}
+                          className={cn(
+                            'flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200 group relative',
+                            active
+                              ? 'bg-gradient-to-r from-red-500/20 to-orange-500/10 text-white'
+                              : 'text-gray-400 hover:text-white hover:bg-white/5'
+                          )}
+                        >
+                          {active && (
+                            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-gradient-to-b from-red-500 to-orange-500 rounded-r-full" />
+                          )}
+                          <item.icon className={cn('h-4 w-4 flex-shrink-0', active && 'text-red-400')} />
+                          {!collapsed && (
+                            <>
+                              <span className="flex-1 text-sm font-medium">{item.label}</span>
+                              {item.badge && (
+                                <span className="px-1.5 py-0.5 text-[10px] rounded-full bg-red-500/20 text-red-400 font-medium">
+                                  {item.badge}
+                                </span>
+                              )}
+                            </>
+                          )}
+                          {collapsed && (
+                            <div className="absolute left-full ml-2 px-2 py-1 bg-slate-800 text-white text-xs rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap z-50 border border-white/10">
+                              {item.label}
+                            </div>
+                          )}
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </motion.ul>
+              )}
+            </AnimatePresence>
+          </div>
+        ))}
 
         {/* Divider */}
         <div className="my-4 mx-3 border-t border-white/10" />
 
         {/* Bottom Nav */}
-        <ul className="space-y-1 px-3">
+        <ul className="space-y-0.5 px-3">
           {bottomNavItems.map((item) => {
             const active = isActive(item.href);
             return (
@@ -171,14 +245,22 @@ export default function AdminSidebar({ collapsed = false, onToggle, mobileOpen =
                   href={item.href}
                   onClick={onMobileClose}
                   className={cn(
-                    'flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200',
+                    'flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200 group relative',
                     active
-                      ? 'bg-gradient-to-r from-red-500/20 to-orange-500/10 text-red-400 border border-red-500/30'
+                      ? 'bg-gradient-to-r from-red-500/20 to-orange-500/10 text-white'
                       : 'text-gray-400 hover:text-white hover:bg-white/5'
                   )}
                 >
-                  <item.icon className={cn('h-5 w-5 flex-shrink-0', active && 'text-red-400')} />
-                  {!collapsed && <span className="font-medium">{item.label}</span>}
+                  {active && (
+                    <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-gradient-to-b from-red-500 to-orange-500 rounded-r-full" />
+                  )}
+                  <item.icon className={cn('h-4 w-4 flex-shrink-0', active && 'text-red-400')} />
+                  {!collapsed && <span className="text-sm font-medium">{item.label}</span>}
+                  {collapsed && (
+                    <div className="absolute left-full ml-2 px-2 py-1 bg-slate-800 text-white text-xs rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap z-50 border border-white/10">
+                      {item.label}
+                    </div>
+                  )}
                 </Link>
               </li>
             );
@@ -192,7 +274,7 @@ export default function AdminSidebar({ collapsed = false, onToggle, mobileOpen =
           'flex items-center gap-3 px-3 py-2 rounded-lg bg-white/5',
           collapsed && 'justify-center'
         )}>
-          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-red-500 to-orange-600 flex items-center justify-center flex-shrink-0">
+          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-red-500 to-orange-600 flex items-center justify-center flex-shrink-0 shadow-lg shadow-red-500/20">
             <span className="text-white font-semibold text-sm">
               {user?.email?.charAt(0).toUpperCase() || 'A'}
             </span>
@@ -229,42 +311,24 @@ export default function AdminSidebar({ collapsed = false, onToggle, mobileOpen =
           scrollbar-color: rgba(239, 68, 68, 0.3) transparent;
         }
         .admin-sidebar-scroll::-webkit-scrollbar {
-          width: 5px;
+          width: 4px;
         }
         .admin-sidebar-scroll::-webkit-scrollbar-track {
           background: transparent;
-          margin: 8px 0;
         }
         .admin-sidebar-scroll::-webkit-scrollbar-thumb {
-          background: linear-gradient(
-            180deg,
-            rgba(239, 68, 68, 0.4) 0%,
-            rgba(249, 115, 22, 0.4) 50%,
-            rgba(234, 88, 12, 0.3) 100%
-          );
+          background: rgba(239, 68, 68, 0.3);
           border-radius: 10px;
-          border: 1px solid rgba(255, 255, 255, 0.05);
         }
         .admin-sidebar-scroll::-webkit-scrollbar-thumb:hover {
-          background: linear-gradient(
-            180deg,
-            rgba(239, 68, 68, 0.7) 0%,
-            rgba(249, 115, 22, 0.7) 50%,
-            rgba(234, 88, 12, 0.6) 100%
-          );
-        }
-        .admin-sidebar-scroll::-webkit-scrollbar-button {
-          display: none;
-        }
-        .admin-sidebar-scroll::-webkit-scrollbar-corner {
-          background: transparent;
+          background: rgba(239, 68, 68, 0.5);
         }
       `}</style>
 
       {/* Desktop Sidebar */}
       <motion.aside
         initial={false}
-        animate={{ width: collapsed ? 80 : 280 }}
+        animate={{ width: collapsed ? 80 : 260 }}
         transition={{ duration: 0.2 }}
         className="hidden md:flex fixed left-0 top-0 h-screen bg-slate-950 border-r border-white/10 flex-col z-50"
       >
@@ -286,11 +350,11 @@ export default function AdminSidebar({ collapsed = false, onToggle, mobileOpen =
             />
             {/* Drawer */}
             <motion.aside
-              initial={{ x: -280 }}
+              initial={{ x: -260 }}
               animate={{ x: 0 }}
-              exit={{ x: -280 }}
+              exit={{ x: -260 }}
               transition={{ duration: 0.2, ease: 'easeOut' }}
-              className="md:hidden fixed left-0 top-0 h-screen w-[280px] bg-slate-950 border-r border-white/10 flex flex-col z-50"
+              className="md:hidden fixed left-0 top-0 h-screen w-[260px] bg-slate-950 border-r border-white/10 flex flex-col z-50"
             >
               {sidebarContent}
             </motion.aside>

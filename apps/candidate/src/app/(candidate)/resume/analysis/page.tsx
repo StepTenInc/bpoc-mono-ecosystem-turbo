@@ -223,7 +223,7 @@ export default function ResumeAnalysisPage() {
         </div>
         <Button
           variant="ghost"
-          onClick={() => router.push('/candidate/resume')}
+          onClick={() => router.push('/resume')}
           className="text-gray-400 hover:text-white"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
@@ -542,7 +542,7 @@ export default function ResumeAnalysisPage() {
                 onClick={() => {
                   // Mark this as "existing resume" path so builder knows context
                   localStorage.setItem('bpoc_resume_source', 'existing_resume');
-                  router.push('/candidate/resume/build');
+                  router.push('/resume/build');
                 }}
                 className="relative overflow-hidden bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white px-10 py-6 text-lg rounded-xl shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 transition-all"
               >
@@ -669,7 +669,7 @@ export default function ResumeAnalysisPage() {
           <AlertCircle className="h-12 w-12 text-red-400 mx-auto mb-4" />
           <p className="text-red-300 mb-4">{error}</p>
           <Button
-            onClick={() => router.push('/candidate/resume/upload')}
+            onClick={() => router.push('/resume/upload')}
             className="bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-600 hover:to-purple-700 text-white"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />

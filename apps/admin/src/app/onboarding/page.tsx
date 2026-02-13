@@ -20,7 +20,7 @@ export default function AdminOnboardingPage() {
 
   const fetchOnboardings = async () => {
     try {
-      const res = await fetch('/api/admin/onboarding/pending');
+      const res = await fetch('/api/onboarding/pending');
       const data = await res.json();
       setOnboardings(data.onboardings || []);
     } catch (error) {

@@ -33,18 +33,26 @@ interface CandidateSidebarProps {
   setMobileOpen: (open: boolean) => void
 }
 
+// Clean, focused navigation - Application is the center of everything
 const sidebarItems = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/profile', label: 'Profile', icon: User },
-  { href: '/resume', label: 'Resume Builder', icon: FileText },
+  { 
+    href: '/profile', 
+    label: 'Profile', 
+    icon: User,
+    children: [
+      { href: '/resume', label: 'Build Your Resume ✨', icon: FileText }
+    ]
+  },
   { href: '/jobs', label: 'Jobs', icon: Briefcase },
-  { href: '/applications', label: 'Applications', icon: ClipboardList },
-  { href: '/interviews', label: 'Interviews', icon: MessageSquare },
+  { href: '/applications', label: 'My Applications', icon: ClipboardList },
   { href: '/offers', label: 'Offers', icon: Gift },
-  { href: '/placement', label: 'My Placement', icon: Award },
-  { href: '/onboarding', label: 'Onboarding', icon: CheckCircle, highlight: true },
-  { href: '/hr-assistant', label: 'Your Rights Assistant', icon: Scale },
-  { href: '/notifications', label: 'Notifications', icon: Bell },
+  { href: '/onboarding', label: 'Onboarding', icon: CheckCircle },
+]
+
+// Secondary nav items (bottom section)
+const secondaryItems = [
+  { href: '/help', label: 'Help & Rights', icon: Scale },
   { href: '/settings', label: 'Settings', icon: Settings },
 ]
 
@@ -236,53 +244,119 @@ export function CandidateSidebar({ profile, mobileOpen, setMobileOpen }: Candida
             )}
           </div>
 
-          <nav className="relative z-10 flex-1 px-4 py-6 space-y-1 overflow-y-auto">
-            {sidebarItems.map((item) => {
-              const Icon = item.icon
-              const isActive = pathname === item.href ||
-                (item.href !== '/dashboard' && pathname?.startsWith(item.href))
+          <nav className="relative z-10 flex-1 px-4 py-6 overflow-y-auto flex flex-col">
+            {/* Primary navigation */}
+            <div className="space-y-1">
+              {sidebarItems.map((item) => {
+                const Icon = item.icon
+                const isActive = pathname === item.href
+                const isParentActive = item.children?.some(child => pathname === child.href) || isActive
+                const hasChildren = item.children && item.children.length > 0
 
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={() => setMobileOpen(false)}
-                  className={cn(
-                    "group flex items-center justify-between px-4 py-3 rounded-lg transition-all duration-200",
-                    item.highlight && !isActive
-                      ? "bg-gradient-to-r from-cyan-500/20 to-purple-500/20 text-white border border-cyan-500/30 shadow-[0_0_20px_-5px_rgba(6,182,212,0.3)]"
-                      : isActive
-                      ? "bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 shadow-[0_0_15px_-3px_rgba(6,182,212,0.2)]"
-                      : "text-gray-400 hover:text-white hover:bg-white/5 hover:border-white/10 border border-transparent"
-                  )}
-                >
-                  <div className="flex items-center space-x-3">
-                    <div className="relative">
-                      <Icon className={cn(
-                        "h-5 w-5 transition-colors",
-                        item.highlight && !isActive ? "text-cyan-300" : isActive ? "text-cyan-400" : "text-gray-500 group-hover:text-white"
-                      )} />
-                      {item.href === '/notifications' && unreadNotifications > 0 && (
-                        <div className="absolute -top-2 -right-2 flex items-center justify-center min-w-[18px] h-[18px] bg-gradient-to-r from-orange-500 to-red-500 text-white text-[10px] font-bold rounded-full px-1 shadow-lg animate-pulse">
-                          {unreadNotifications > 99 ? '99+' : unreadNotifications}
-                        </div>
+                return (
+                  <div key={item.href}>
+                    <Link
+                      href={item.href}
+                      onClick={() => setMobileOpen(false)}
+                      className={cn(
+                        "group flex items-center justify-between px-4 py-3 rounded-lg transition-all duration-200",
+                        isParentActive
+                          ? "bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 shadow-[0_0_15px_-3px_rgba(6,182,212,0.2)]"
+                          : "text-gray-400 hover:text-white hover:bg-white/5 hover:border-white/10 border border-transparent"
                       )}
-                    </div>
-                    <span className="font-medium">{item.label}</span>
+                    >
+                      <div className="flex items-center space-x-3">
+                        <Icon className={cn(
+                          "h-5 w-5 transition-colors",
+                          isParentActive ? "text-cyan-400" : "text-gray-500 group-hover:text-white"
+                        )} />
+                        <span className="font-medium">{item.label}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {item.href === '/profile' && completion.percentage === 100 && (
+                          <div className="flex items-center gap-1 bg-green-500/20 border border-green-500/30 text-green-400 px-2 py-0.5 rounded-full">
+                            <CheckCircle className="w-3 h-3" />
+                            <span className="text-[10px] font-bold">100%</span>
+                          </div>
+                        )}
+                        {hasChildren ? (
+                          <ChevronRight className={cn(
+                            "h-4 w-4 transition-transform duration-200",
+                            isParentActive ? "text-cyan-400 rotate-90" : "text-gray-500 group-hover:text-white"
+                          )} />
+                        ) : isActive ? (
+                          <ChevronRight className="h-4 w-4 text-cyan-400 animate-pulse" />
+                        ) : null}
+                      </div>
+                    </Link>
+                    
+                    {/* Sub-items for Profile */}
+                    {hasChildren && isParentActive && (
+                      <div className="ml-4 mt-1 space-y-1 border-l border-white/10 pl-4">
+                        {item.children!.map((child) => {
+                          const ChildIcon = child.icon
+                          const isChildActive = pathname === child.href
+                          
+                          return (
+                            <Link
+                              key={child.href}
+                              href={child.href}
+                              onClick={() => setMobileOpen(false)}
+                              className={cn(
+                                "group flex items-center space-x-3 px-3 py-2 rounded-lg transition-all duration-200 text-sm",
+                                isChildActive
+                                  ? "bg-cyan-500/10 text-cyan-400"
+                                  : "text-gray-500 hover:text-white hover:bg-white/5"
+                              )}
+                            >
+                              <ChildIcon className={cn(
+                                "h-4 w-4 transition-colors",
+                                isChildActive ? "text-cyan-400" : "text-gray-600 group-hover:text-white"
+                              )} />
+                              <span>{child.label}</span>
+                            </Link>
+                          )
+                        })}
+                      </div>
+                    )}
                   </div>
-                  {isActive && <ChevronRight className="h-4 w-4 text-cyan-400 animate-pulse" />}
-                  {item.highlight && !isActive && (
-                    <span className="text-[10px] bg-cyan-500/30 text-cyan-300 px-2 py-0.5 rounded-full font-bold">NEW</span>
-                  )}
-                  {item.href === '/profile' && completion.percentage === 100 && (
-                    <div className="flex items-center gap-1 bg-green-500/20 border border-green-500/30 text-green-400 px-2 py-0.5 rounded-full">
-                      <CheckCircle className="w-3 h-3" />
-                      <span className="text-[10px] font-bold">100%</span>
+                )
+              })}
+            </div>
+
+            {/* Spacer */}
+            <div className="flex-1" />
+
+            {/* Secondary navigation */}
+            <div className="space-y-1 pt-4 border-t border-white/5">
+              {secondaryItems.map((item) => {
+                const Icon = item.icon
+                const isActive = pathname === item.href ||
+                  (item.href !== '/dashboard' && pathname?.startsWith(item.href))
+
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setMobileOpen(false)}
+                    className={cn(
+                      "group flex items-center justify-between px-4 py-2.5 rounded-lg transition-all duration-200",
+                      isActive
+                        ? "bg-white/5 text-white border border-white/10"
+                        : "text-gray-500 hover:text-gray-300 hover:bg-white/5 border border-transparent"
+                    )}
+                  >
+                    <div className="flex items-center space-x-3">
+                      <Icon className={cn(
+                        "h-4 w-4 transition-colors",
+                        isActive ? "text-gray-300" : "text-gray-600 group-hover:text-gray-400"
+                      )} />
+                      <span className="text-sm">{item.label}</span>
                     </div>
-                  )}
-                </Link>
-              )
-            })}
+                  </Link>
+                )
+              })}
+            </div>
           </nav>
 
           <div className="relative z-10 p-4 border-t border-white/10 bg-[#0B0B0D]">

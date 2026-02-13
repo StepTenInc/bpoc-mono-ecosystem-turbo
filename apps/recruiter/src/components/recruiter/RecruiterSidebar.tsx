@@ -6,7 +6,6 @@ import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   LayoutDashboard,
-  User,
   Building2,
   Briefcase,
   Users,
@@ -14,58 +13,68 @@ import {
   Calendar,
   Gift,
   Settings,
-  Key,
   LogOut,
   Search,
   Trophy,
-  Video,
   Kanban,
-  Bell,
   ChevronLeft,
   ChevronRight,
-  X,
   FileCheck,
+  ChevronDown,
 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/shared/ui/avatar';
 import { Badge } from '@/components/shared/ui/badge';
+import { cn } from '@/lib/utils';
 
 interface NavItem {
   name: string;
   href: string;
   icon: React.ElementType;
-  badgeKey?: string; // Key to check for notification count
-  highlight?: boolean; // Highlight special items
+  badgeKey?: string;
 }
 
-const mainNavItems: NavItem[] = [
-  { name: 'Dashboard', href: '/', icon: LayoutDashboard },
-  { name: 'Clients', href: '/clients', icon: Building2 },
-  { name: 'Talent Pool', href: '/talent', icon: Search },
-  { name: 'Jobs', href: '/jobs', icon: Briefcase },
-  { name: 'Applications', href: '/applications', icon: FileText, badgeKey: 'newApplications' },
-  { name: 'Pipeline', href: '/pipeline', icon: Kanban },
-  { name: 'Interviews', href: '/interviews', icon: Calendar, badgeKey: 'pendingInterviews' },
-  { name: 'Recordings', href: '/interviews/recordings', icon: Video },
-  { name: 'Offers', href: '/offers', icon: Gift, badgeKey: 'pendingOffers' },
-  { name: 'Onboarding', href: '/onboarding', icon: FileCheck, badgeKey: 'pendingOnboarding', highlight: true },
-  { name: 'Placements', href: '/placements', icon: Trophy },
-  { name: 'Labor Law Compliance', href: '/hr-assistant', icon: FileCheck },
-  { name: 'Notifications', href: '/notifications', icon: Bell, badgeKey: 'unreadNotifications' },
-];
+interface NavGroup {
+  title: string;
+  items: NavItem[];
+  defaultOpen?: boolean;
+}
 
-const settingsNavItems: NavItem[] = [
-  { name: 'Profile', href: '/profile', icon: User },
-  { name: 'Agency', href: '/agency', icon: Building2 },
-  { name: 'Team', href: '/team', icon: Users },
-  { name: 'API Keys', href: '/settings/api', icon: Key },
-  { name: 'Settings', href: '/settings', icon: Settings },
+// Simplified grouped navigation
+const navGroups: NavGroup[] = [
+  {
+    title: 'Overview',
+    defaultOpen: true,
+    items: [
+      { name: 'Dashboard', href: '/', icon: LayoutDashboard },
+    ]
+  },
+  {
+    title: 'Recruitment',
+    defaultOpen: true,
+    items: [
+      { name: 'Jobs', href: '/jobs', icon: Briefcase },
+      { name: 'Applications', href: '/applications', icon: FileText, badgeKey: 'newApplications' },
+      { name: 'Pipeline', href: '/pipeline', icon: Kanban },
+      { name: 'Interviews', href: '/interviews', icon: Calendar, badgeKey: 'pendingInterviews' },
+      { name: 'Offers', href: '/offers', icon: Gift, badgeKey: 'pendingOffers' },
+      { name: 'Onboarding', href: '/onboarding', icon: FileCheck },
+      { name: 'Placements', href: '/placements', icon: Trophy },
+    ]
+  },
+  {
+    title: 'Resources',
+    defaultOpen: true,
+    items: [
+      { name: 'Clients', href: '/clients', icon: Building2 },
+      { name: 'Talent Pool', href: '/talent', icon: Search },
+    ]
+  },
 ];
 
 interface NotificationBadges {
   newApplications: number;
   pendingInterviews: number;
   pendingOffers: number;
-  unreadNotifications: number;
 }
 
 interface RecruiterSidebarProps {
@@ -75,7 +84,6 @@ interface RecruiterSidebarProps {
     email: string;
     id?: string;
     agency_id?: string;
-    avatar_url?: string;
     agency?: {
       name: string;
       logo_url?: string;
@@ -101,9 +109,14 @@ export default function RecruiterSidebar({
     newApplications: 0,
     pendingInterviews: 0,
     pendingOffers: 0,
-    unreadNotifications: 0,
   });
-  const [showNotifications, setShowNotifications] = useState(false);
+  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>(() => {
+    const initial: Record<string, boolean> = {};
+    navGroups.forEach(group => {
+      initial[group.title] = group.defaultOpen ?? true;
+    });
+    return initial;
+  });
 
   // Fetch notification badges
   useEffect(() => {
@@ -111,7 +124,6 @@ export default function RecruiterSidebar({
       if (!recruiter?.id) return;
       
       try {
-        // Fetch from dashboard stats for real counts
         const response = await fetch('/api/recruiter/dashboard/stats', {
           headers: {
             'x-user-id': recruiter.id,
@@ -125,7 +137,6 @@ export default function RecruiterSidebar({
             newApplications: data.stats?.newApplicationsToday || 0,
             pendingInterviews: data.stats?.scheduledInterviews || 0,
             pendingOffers: data.stats?.pendingOffers || 0,
-            unreadNotifications: 0, // Will be fetched separately
           });
         }
       } catch (error) {
@@ -134,7 +145,6 @@ export default function RecruiterSidebar({
     };
 
     fetchBadges();
-    // Refresh every 30 seconds
     const interval = setInterval(fetchBadges, 30000);
     return () => clearInterval(interval);
   }, [recruiter?.id, recruiter?.agency_id]);
@@ -146,12 +156,14 @@ export default function RecruiterSidebar({
     return pathname.startsWith(href);
   };
 
+  const toggleGroup = (title: string) => {
+    setExpandedGroups(prev => ({ ...prev, [title]: !prev[title] }));
+  };
+
   const getBadgeCount = (badgeKey?: string): number => {
     if (!badgeKey) return 0;
     return badges[badgeKey as keyof NotificationBadges] || 0;
   };
-
-  const totalBadges = badges.newApplications + badges.pendingInterviews + badges.pendingOffers;
 
   return (
     <>
@@ -167,17 +179,19 @@ export default function RecruiterSidebar({
           />
         )}
       </AnimatePresence>
-    <motion.div 
-      className={`h-screen bg-[#0a0a0f] border-r border-white/10 flex flex-col fixed left-0 top-0 z-50 transition-transform duration-300 ease-in-out ${
-        collapsed ? 'w-20' : 'w-64'
-      } ${mobileOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}
-      animate={{ width: collapsed ? 80 : 256 }}
-      transition={{ duration: 0.2, ease: 'easeInOut' }}
-    >
-      {/* Logo & Collapse Toggle */}
-      <div className="p-4 border-b border-white/10">
-        <div className="flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-3">
+
+      <motion.div 
+        className={cn(
+          "h-screen bg-[#0a0a0f] border-r border-white/10 flex flex-col fixed left-0 top-0 z-50 transition-transform duration-300",
+          collapsed ? 'w-20' : 'w-64',
+          mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+        )}
+        animate={{ width: collapsed ? 80 : 256 }}
+        transition={{ duration: 0.2, ease: 'easeInOut' }}
+      >
+        {/* Logo & Collapse Toggle */}
+        <div className="h-16 flex items-center justify-between px-4 border-b border-white/10">
+          <Link href="/" className="flex items-center gap-3" onClick={onMobileClose}>
             {recruiter?.agency?.logo_url ? (
               <Avatar className="h-10 w-10 rounded-xl">
                 <AvatarImage src={recruiter.agency.logo_url} alt={recruiter.agency.name} />
@@ -186,229 +200,199 @@ export default function RecruiterSidebar({
                 </AvatarFallback>
               </Avatar>
             ) : (
-              <div className="p-2 rounded-xl bg-gradient-to-br from-orange-500 to-amber-600">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500 to-amber-600 flex items-center justify-center shadow-lg shadow-orange-500/20">
                 <Building2 className="h-6 w-6 text-white" />
               </div>
             )}
-            <AnimatePresence>
-              {!collapsed && (
-                <motion.div
-                  initial={{ opacity: 0, width: 0 }}
-                  animate={{ opacity: 1, width: 'auto' }}
-                  exit={{ opacity: 0, width: 0 }}
-                  className="overflow-hidden"
-                >
-                  <span className="text-lg font-bold text-white whitespace-nowrap">
-                    {recruiter?.agency?.name || 'BPOC'}
-                  </span>
-                  <span className="text-xs block text-orange-400">Recruiter</span>
-                </motion.div>
-              )}
-            </AnimatePresence>
+            {!collapsed && (
+              <div>
+                <span className="text-lg font-bold text-white tracking-tight">
+                  {recruiter?.agency?.name || 'BPOC'}
+                </span>
+                <span className="text-xs block text-orange-400 -mt-0.5">Recruiter</span>
+              </div>
+            )}
           </Link>
           
           {onToggleCollapse && (
             <button
               onClick={onToggleCollapse}
-              className="p-1.5 rounded-lg text-gray-400 hover:text-white hover:bg-white/10 transition-colors"
-              title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+              className="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-white/10 transition-colors"
             >
-              {collapsed ? (
-                <ChevronRight className="h-4 w-4" />
-              ) : (
-                <ChevronLeft className="h-4 w-4" />
-              )}
+              {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
             </button>
           )}
         </div>
-      </div>
 
-      {/* Notification Bell (when collapsed or always visible) */}
-      {totalBadges > 0 && (
-        <div className={`px-4 py-2 ${collapsed ? 'text-center' : ''}`}>
-          <button 
-            onClick={() => setShowNotifications(!showNotifications)}
-            className="relative p-2 rounded-lg text-gray-400 hover:text-white hover:bg-white/10 transition-colors"
-          >
-            <Bell className="h-5 w-5" />
-            <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-orange-500 text-white text-xs font-bold flex items-center justify-center">
-              {totalBadges > 9 ? '9+' : totalBadges}
-            </span>
-          </button>
-        </div>
-      )}
-
-      {/* Main Navigation */}
-      <nav className="flex-1 p-2 space-y-1 overflow-y-auto">
-        <div className="mb-4">
-          {!collapsed && (
-            <p className="text-xs text-gray-500 uppercase tracking-wider px-3 mb-2">Main</p>
-          )}
-          {mainNavItems.map((item) => {
-            const active = isActive(item.href);
-            const badgeCount = getBadgeCount(item.badgeKey);
-            
-            return (
-              <Link
-                key={item.name}
-                href={item.href}
-                onClick={onMobileClose}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all relative group ${
-                  item.highlight && !active
-                    ? 'text-white bg-gradient-to-r from-orange-500/20 to-amber-500/20 border border-orange-500/30 shadow-lg shadow-orange-500/20 hover:shadow-orange-500/40'
-                    : active
-                    ? 'text-white bg-orange-500/10'
-                    : 'text-gray-400 hover:text-white hover:bg-white/5'
-                } ${collapsed ? 'justify-center' : ''}`}
-                title={collapsed ? item.name : undefined}
-              >
-                {active && (
-                  <motion.div
-                    layoutId="activeTab"
-                    className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-orange-500 to-amber-500 rounded-full"
-                    initial={false}
-                    transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+        {/* Navigation */}
+        <nav className="flex-1 py-4 overflow-y-auto recruiter-sidebar-scroll">
+          {navGroups.map((group) => (
+            <div key={group.title} className="mb-2">
+              {/* Group Header */}
+              {!collapsed && (
+                <button
+                  onClick={() => toggleGroup(group.title)}
+                  className="w-full flex items-center justify-between px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider hover:text-gray-300 transition-colors"
+                >
+                  <span>{group.title}</span>
+                  <ChevronDown 
+                    className={cn(
+                      "h-3 w-3 transition-transform",
+                      expandedGroups[group.title] ? "" : "-rotate-90"
+                    )} 
                   />
+                </button>
+              )}
+              
+              {/* Group Items */}
+              <AnimatePresence initial={false}>
+                {(collapsed || expandedGroups[group.title]) && (
+                  <motion.ul
+                    initial={collapsed ? false : { height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="space-y-0.5 px-3 overflow-hidden"
+                  >
+                    {group.items.map((item) => {
+                      const active = isActive(item.href);
+                      const badgeCount = getBadgeCount(item.badgeKey);
+                      
+                      return (
+                        <li key={item.name}>
+                          <Link
+                            href={item.href}
+                            onClick={onMobileClose}
+                            className={cn(
+                              'flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200 group relative',
+                              active
+                                ? 'bg-gradient-to-r from-orange-500/20 to-amber-500/10 text-white'
+                                : 'text-gray-400 hover:text-white hover:bg-white/5'
+                            )}
+                          >
+                            {active && (
+                              <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-gradient-to-b from-orange-500 to-amber-500 rounded-r-full" />
+                            )}
+                            <div className="relative">
+                              <item.icon className={cn('h-4 w-4', active && 'text-orange-400')} />
+                              {badgeCount > 0 && collapsed && (
+                                <span className="absolute -top-1 -right-1 h-3 w-3 rounded-full bg-orange-500 text-white text-[8px] font-bold flex items-center justify-center">
+                                  {badgeCount > 9 ? '9+' : badgeCount}
+                                </span>
+                              )}
+                            </div>
+                            {!collapsed && (
+                              <>
+                                <span className="flex-1 text-sm font-medium">{item.name}</span>
+                                {badgeCount > 0 && (
+                                  <Badge className="bg-orange-500/20 text-orange-400 border-orange-500/30 text-[10px] px-1.5">
+                                    {badgeCount}
+                                  </Badge>
+                                )}
+                              </>
+                            )}
+                            {collapsed && (
+                              <div className="absolute left-full ml-2 px-2 py-1 bg-slate-800 text-white text-xs rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap z-50 border border-white/10">
+                                {item.name}
+                                {badgeCount > 0 && <span className="ml-1 text-orange-400">({badgeCount})</span>}
+                              </div>
+                            )}
+                          </Link>
+                        </li>
+                      );
+                    })}
+                  </motion.ul>
                 )}
-                <div className="relative">
-                  <item.icon className={`h-5 w-5 ${item.highlight && !active ? 'text-orange-300' : active ? 'text-orange-400' : ''}`} />
-                  {badgeCount > 0 && collapsed && (
-                    <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-orange-500 text-white text-[10px] font-bold flex items-center justify-center">
-                      {badgeCount > 9 ? '9+' : badgeCount}
-                    </span>
-                  )}
-                </div>
-                <AnimatePresence>
-                  {!collapsed && (
-                    <motion.div
-                      initial={{ opacity: 0, width: 0 }}
-                      animate={{ opacity: 1, width: 'auto' }}
-                      exit={{ opacity: 0, width: 0 }}
-                      className="flex-1 flex items-center justify-between overflow-hidden"
-                    >
-                      <span className="font-medium whitespace-nowrap">{item.name}</span>
-                      {badgeCount > 0 && (
-                        <Badge className="bg-orange-500/20 text-orange-400 border-orange-500/30 text-xs">
-                          {badgeCount}
-                        </Badge>
-                      )}
-                      {item.highlight && !active && (
-                        <Badge className="bg-orange-500/30 text-orange-200 text-[10px] font-bold">NEW</Badge>
-                      )}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-                
-                {/* Tooltip for collapsed mode */}
-                {collapsed && (
-                  <div className="absolute left-full ml-2 px-2 py-1 bg-gray-900 text-white text-sm rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap z-50">
-                    {item.name}
-                    {badgeCount > 0 && (
-                      <span className="ml-2 text-orange-400">({badgeCount})</span>
-                    )}
-                  </div>
-                )}
-              </Link>
-            );
-          })}
-        </div>
+              </AnimatePresence>
+            </div>
+          ))}
 
-        <div className="pt-4 border-t border-white/10">
-          {!collapsed && (
-            <p className="text-xs text-gray-500 uppercase tracking-wider px-3 mb-2">Settings</p>
-          )}
-          {settingsNavItems.map((item) => {
-            const active = isActive(item.href);
-            return (
+          {/* Divider */}
+          <div className="my-4 mx-3 border-t border-white/10" />
+
+          {/* Settings */}
+          <ul className="space-y-0.5 px-3">
+            <li>
               <Link
-                key={item.name}
-                href={item.href}
+                href="/settings"
                 onClick={onMobileClose}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all group ${
-                  active
-                    ? 'text-white bg-orange-500/10'
+                className={cn(
+                  'flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200 group relative',
+                  pathname.startsWith('/settings')
+                    ? 'bg-gradient-to-r from-orange-500/20 to-amber-500/10 text-white'
                     : 'text-gray-400 hover:text-white hover:bg-white/5'
-                } ${collapsed ? 'justify-center' : ''}`}
-                title={collapsed ? item.name : undefined}
+                )}
               >
-                <item.icon className={`h-5 w-5 ${active ? 'text-orange-400' : ''}`} />
-                <AnimatePresence>
-                  {!collapsed && (
-                    <motion.span
-                      initial={{ opacity: 0, width: 0 }}
-                      animate={{ opacity: 1, width: 'auto' }}
-                      exit={{ opacity: 0, width: 0 }}
-                      className="font-medium whitespace-nowrap overflow-hidden"
-                    >
-                      {item.name}
-                    </motion.span>
-                  )}
-                </AnimatePresence>
-                
-                {/* Tooltip for collapsed mode */}
+                {pathname.startsWith('/settings') && (
+                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-gradient-to-b from-orange-500 to-amber-500 rounded-r-full" />
+                )}
+                <Settings className={cn('h-4 w-4', pathname.startsWith('/settings') && 'text-orange-400')} />
+                {!collapsed && <span className="text-sm font-medium">Settings</span>}
                 {collapsed && (
-                  <div className="absolute left-full ml-2 px-2 py-1 bg-gray-900 text-white text-sm rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap z-50">
-                    {item.name}
+                  <div className="absolute left-full ml-2 px-2 py-1 bg-slate-800 text-white text-xs rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap z-50 border border-white/10">
+                    Settings
                   </div>
                 )}
               </Link>
-            );
-          })}
-        </div>
-      </nav>
+            </li>
+          </ul>
+        </nav>
 
-      {/* User Profile */}
-      <div className="p-4 border-t border-white/10">
-        <div className={`flex items-center gap-3 mb-3 ${collapsed ? 'justify-center' : ''}`}>
-          <Avatar className="h-10 w-10 flex-shrink-0">
-            <AvatarImage src={recruiter?.avatar_url} alt={`${recruiter?.first_name} ${recruiter?.last_name}`} />
-            <AvatarFallback className="bg-gradient-to-br from-orange-500 to-amber-600 text-white font-semibold">
+        {/* User Profile */}
+        <div className="p-3 border-t border-white/10">
+          <div className={cn(
+            'flex items-center gap-3 px-3 py-2 rounded-lg bg-white/5',
+            collapsed && 'justify-center'
+          )}>
+            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-orange-500 to-amber-600 flex items-center justify-center text-white font-semibold text-sm flex-shrink-0 shadow-lg shadow-orange-500/20">
               {recruiter?.first_name?.[0] || 'R'}
               {recruiter?.last_name?.[0] || ''}
-            </AvatarFallback>
-          </Avatar>
-          <AnimatePresence>
+            </div>
             {!collapsed && (
-              <motion.div
-                initial={{ opacity: 0, width: 0 }}
-                animate={{ opacity: 1, width: 'auto' }}
-                exit={{ opacity: 0, width: 0 }}
-                className="flex-1 min-w-0 overflow-hidden"
-              >
-                <p className="text-white font-medium truncate">
+              <div className="flex-1 min-w-0">
+                <p className="text-white text-sm font-medium truncate">
                   {recruiter ? `${recruiter.first_name} ${recruiter.last_name}` : 'Recruiter'}
                 </p>
-                <p className="text-gray-400 text-xs truncate">
+                <p className="text-gray-500 text-xs truncate">
                   {recruiter?.agency?.name || 'Agency'}
                 </p>
-              </motion.div>
+              </div>
             )}
-          </AnimatePresence>
+          </div>
+          <button
+            onClick={onSignOut}
+            className={cn(
+              'flex items-center gap-2 w-full mt-2 px-3 py-2 text-gray-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all',
+              collapsed && 'justify-center'
+            )}
+          >
+            <LogOut className="h-4 w-4" />
+            {!collapsed && <span className="text-sm">Sign Out</span>}
+          </button>
         </div>
-        <button
-          onClick={onSignOut}
-          className={`flex items-center gap-2 w-full px-3 py-2 text-gray-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all ${
-            collapsed ? 'justify-center' : ''
-          }`}
-          title={collapsed ? 'Sign Out' : undefined}
-        >
-          <LogOut className="h-4 w-4" />
-          <AnimatePresence>
-            {!collapsed && (
-              <motion.span
-                initial={{ opacity: 0, width: 0 }}
-                animate={{ opacity: 1, width: 'auto' }}
-                exit={{ opacity: 0, width: 0 }}
-                className="text-sm whitespace-nowrap overflow-hidden"
-              >
-                Sign Out
-              </motion.span>
-            )}
-          </AnimatePresence>
-        </button>
-      </div>
-    </motion.div>
+      </motion.div>
+
+      <style jsx global>{`
+        .recruiter-sidebar-scroll {
+          scroll-behavior: smooth;
+          overscroll-behavior: contain;
+          scrollbar-width: thin;
+          scrollbar-color: rgba(249, 115, 22, 0.3) transparent;
+        }
+        .recruiter-sidebar-scroll::-webkit-scrollbar {
+          width: 4px;
+        }
+        .recruiter-sidebar-scroll::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        .recruiter-sidebar-scroll::-webkit-scrollbar-thumb {
+          background: rgba(249, 115, 22, 0.3);
+          border-radius: 10px;
+        }
+        .recruiter-sidebar-scroll::-webkit-scrollbar-thumb:hover {
+          background: rgba(249, 115, 22, 0.5);
+        }
+      `}</style>
     </>
   );
 }
-

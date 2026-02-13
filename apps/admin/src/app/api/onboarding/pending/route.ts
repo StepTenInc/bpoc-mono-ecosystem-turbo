@@ -1,21 +1,16 @@
-import { createClient } from '@/lib/supabase/server';
-
+import { getSupabaseAdmin } from '@/lib/supabase/admin';
 import { NextRequest, NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic';
 
 /**
- * GET /api/admin/onboarding/pending
+ * GET /api/onboarding/pending
  * List all pending onboarding for review
+ * Uses service role key - admin access only (protected by layout auth)
  */
 export async function GET(request: NextRequest) {
     try {
-        const supabase = await createClient();
-
-        const { data: { session } } = await supabase.auth.getSession();
-        if (!session) {
-            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-        }
+        const supabase = getSupabaseAdmin();
 
         // Fetch all incomplete onboardings
         const { data: onboardings, error } = await supabase

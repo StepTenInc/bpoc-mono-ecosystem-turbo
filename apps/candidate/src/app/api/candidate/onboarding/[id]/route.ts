@@ -40,11 +40,16 @@ export async function PATCH(
       'valid_id_url', 'education_doc_url', 'medical_cert_url', 'resume_url', 'signature_url',
     ];
 
-    // Filter to only allowed fields
+    // Filter to only allowed fields and normalize status values
     const updateData: Record<string, any> = {};
     for (const [key, value] of Object.entries(body)) {
       if (allowedFields.includes(key)) {
-        updateData[key] = value;
+        // Normalize status fields to lowercase
+        if (key.endsWith('_status') && typeof value === 'string') {
+          updateData[key] = value.toLowerCase();
+        } else {
+          updateData[key] = value;
+        }
       }
     }
 
@@ -69,7 +74,7 @@ export async function PATCH(
     
     let completedCount = 0;
     for (const field of statusFields) {
-      const status = mergedRecord[field];
+      const status = (mergedRecord[field] || '').toString().toLowerCase();
       if (status === 'approved' || status === 'submitted') {
         completedCount++;
       }

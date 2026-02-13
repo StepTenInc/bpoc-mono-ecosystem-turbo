@@ -19,7 +19,17 @@ import {
   Star,
   CheckCircle,
   AlertCircle,
-  RefreshCw
+  RefreshCw,
+  Home,
+  Sun,
+  Moon,
+  Zap,
+  TrendingUp,
+  Flame,
+  Sparkles,
+  ArrowRight,
+  BadgeCheck,
+  Eye
 } from 'lucide-react'
 import Link from 'next/link'
 
@@ -213,135 +223,187 @@ export default function JobsPage() {
         {filteredJobs.length} job{filteredJobs.length !== 1 ? 's' : ''} found
       </p>
 
-      {/* Jobs List */}
-      <div className="space-y-4">
+      {/* Jobs Grid - Vibrant Style */}
+      <div className="grid gap-6 md:grid-cols-2">
         {filteredJobs.map((job) => (
-          <Card
-            key={job.id}
-            className="bg-white/5 border-white/10 hover:bg-white/10 hover:border-cyan-500/30 transition-all"
-          >
-            <CardContent className="py-6">
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex-1">
-                  <div className="flex items-start gap-4">
-                    {/* Company Logo or Icon */}
-                    <div className="p-3 rounded-lg bg-cyan-500/20 flex-shrink-0">
-                      {job.company_logo ? (
-                        <img src={job.company_logo} alt="" className="h-6 w-6 object-contain" />
-                      ) : (
-                        <Building2 className="h-6 w-6 text-cyan-400" />
-                      )}
-                    </div>
-                    
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3">
-                        <Link 
-                          href={`/jobs/${job.id}`}
-                          className="text-lg font-semibold text-white hover:text-cyan-400 transition-colors"
-                        >
-                          {job.title}
-                        </Link>
-                        
-                        {/* Match Score Badge */}
-                        {job.match_score !== null && job.match_score !== undefined && (
-                          <Badge className={`${getMatchColor(job.match_score)} border-0`}>
-                            <Star className="h-3 w-3 mr-1" />
-                            {job.match_score}% Match
-                          </Badge>
-                        )}
-                      </div>
-                      
-                      <p className="text-gray-400">{job.company}</p>
-                      
-                      {/* Job Details */}
-                      <div className="flex flex-wrap gap-3 mt-3">
-                        <div className="flex items-center gap-1.5 text-gray-400 text-sm">
-                          <Briefcase className="h-4 w-4" />
-                          {formatWorkArrangement(job.work_arrangement)}
-                        </div>
-                        <div className="flex items-center gap-1.5 text-gray-400 text-sm">
-                          <Clock className="h-4 w-4" />
-                          {formatShift(job.shift)}
-                        </div>
-                        {job.experience_level && (
-                          <Badge variant="outline" className="text-gray-400 border-white/20">
-                            {job.experience_level.replace('_', ' ')}
-                          </Badge>
-                        )}
-                      </div>
+          <Link key={job.id} href={`/jobs/${job.id}`} className="block group">
+            <div className={`relative h-full overflow-hidden rounded-2xl transition-all duration-500 hover:-translate-y-2 ${
+              job.match_score && job.match_score >= 85 
+                ? 'bg-gradient-to-br from-orange-500/10 via-red-500/5 to-purple-500/10 border-2 border-orange-500/30 shadow-[0_0_30px_-5px_rgba(249,115,22,0.4)] hover:shadow-[0_0_50px_-5px_rgba(249,115,22,0.6)]'
+                : job.match_score && job.match_score >= 70
+                ? 'bg-gradient-to-br from-cyan-500/10 via-blue-500/5 to-purple-500/10 border-2 border-cyan-500/30 shadow-[0_0_30px_-5px_rgba(6,182,212,0.3)] hover:shadow-[0_0_50px_-5px_rgba(6,182,212,0.5)]'
+                : 'bg-gradient-to-br from-white/[0.06] to-white/[0.02] border border-white/10 hover:border-cyan-500/40 hover:shadow-[0_0_40px_-10px_rgba(6,182,212,0.3)]'
+            }`}>
+              
+              {/* Glow overlay on hover */}
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
+                <div className="absolute top-0 left-1/4 w-1/2 h-24 bg-cyan-500/20 blur-3xl" />
+                <div className="absolute bottom-0 right-1/4 w-1/2 h-24 bg-purple-500/20 blur-3xl" />
+              </div>
 
-                      {/* Salary */}
-                      {(job.salary_min || job.salary_max) && (
-                        <div className="flex items-center gap-1.5 text-cyan-400 text-sm mt-2">
-                          <DollarSign className="h-4 w-4" />
-                          ₱{job.salary_min?.toLocaleString()} - ₱{job.salary_max?.toLocaleString()}/month
-                        </div>
-                      )}
+              {/* Hot Match Ribbon */}
+              {job.match_score && job.match_score >= 85 && (
+                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-orange-500 via-red-500 to-pink-500" />
+              )}
 
-                      {/* Skills */}
-                      {job.skills.length > 0 && (
-                        <div className="flex flex-wrap gap-2 mt-3">
-                          {job.skills.slice(0, 5).map((skill, idx) => (
-                            <Badge key={idx} variant="secondary" className="bg-white/10 text-gray-300 text-xs">
-                              {skill}
-                            </Badge>
-                          ))}
-                          {job.skills.length > 5 && (
-                            <Badge variant="secondary" className="bg-white/10 text-gray-400 text-xs">
-                              +{job.skills.length - 5} more
-                            </Badge>
-                          )}
-                        </div>
-                      )}
-
-                      {/* Match Reasons & Concerns */}
-                      {job.match_score !== null && (job.match_reasons?.length || job.match_concerns?.length) && (
-                        <div className="mt-4 space-y-2">
-                          {job.match_reasons?.slice(0, 2).map((reason, idx) => (
-                            <div key={idx} className="flex items-center gap-2 text-green-400 text-sm">
-                              <CheckCircle className="h-4 w-4 flex-shrink-0" />
-                              <span>{reason}</span>
-                            </div>
-                          ))}
-                          {job.match_concerns?.slice(0, 1).map((concern, idx) => (
-                            <div key={idx} className="flex items-center gap-2 text-yellow-400 text-sm">
-                              <AlertCircle className="h-4 w-4 flex-shrink-0" />
-                              <span>{concern}</span>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-
-                      {/* Posted Date */}
-                      <p className="text-gray-500 text-xs mt-3">
-                        Posted {timeAgo(job.posted_at)}
-                      </p>
-                    </div>
+              {/* Match Badge */}
+              {job.match_score !== null && job.match_score !== undefined && (
+                <div className="absolute top-4 right-4 z-10">
+                  <div className={`flex items-center gap-1.5 px-4 py-2 rounded-full font-black text-sm ${
+                    job.match_score >= 85 
+                      ? 'bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-lg shadow-orange-500/50' 
+                      : job.match_score >= 70 
+                      ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-lg shadow-cyan-500/50' 
+                      : 'bg-white/10 text-gray-300'
+                  }`}>
+                    {job.match_score >= 85 ? (
+                      <Flame className="h-4 w-4" />
+                    ) : job.match_score >= 70 ? (
+                      <Sparkles className="h-4 w-4" />
+                    ) : (
+                      <Star className="h-4 w-4" />
+                    )}
+                    <span>{job.match_score}%</span>
                   </div>
                 </div>
+              )}
 
-                {/* Actions */}
-                <div className="flex flex-col items-end gap-3">
-                  <Button
+              <div className="relative p-6">
+                {/* Header */}
+                <div className="flex items-start gap-4 mb-5">
+                  <div className="relative">
+                    <div className={`w-16 h-16 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 ${
+                      job.match_score && job.match_score >= 85
+                        ? 'bg-gradient-to-br from-orange-500/30 to-red-500/30 border-2 border-orange-500/40'
+                        : 'bg-gradient-to-br from-cyan-500/20 to-purple-500/20 border border-white/20'
+                    }`}>
+                      {job.company_logo ? (
+                        <img src={job.company_logo} alt="" className="h-9 w-9 object-contain" />
+                      ) : (
+                        <Building2 className={`h-7 w-7 ${job.match_score && job.match_score >= 85 ? 'text-orange-400' : 'text-cyan-400'}`} />
+                      )}
+                    </div>
+                    <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full border-2 border-[#0B0B0D] flex items-center justify-center shadow-lg shadow-green-500/50">
+                      <BadgeCheck className="h-3 w-3 text-white" />
+                    </div>
+                  </div>
+                  
+                  <div className="flex-1 min-w-0">
+                    <h3 className={`text-xl font-black transition-colors line-clamp-1 ${
+                      job.match_score && job.match_score >= 85
+                        ? 'text-white group-hover:text-orange-400'
+                        : 'text-white group-hover:text-cyan-400'
+                    }`}>
+                      {job.title}
+                    </h3>
+                    <p className="text-gray-400 text-sm mt-1 flex items-center gap-2">
+                      <span className="font-medium">{job.company}</span>
+                      <span className="w-1 h-1 bg-cyan-500 rounded-full" />
+                      <span className="text-gray-500">{timeAgo(job.posted_at)}</span>
+                    </p>
+                  </div>
+
+                  <button
                     onClick={(e) => {
+                      e.preventDefault()
                       e.stopPropagation()
                       toggleSaveJob(job.id)
                     }}
-                    variant="ghost"
-                    size="sm"
-                    className={savedJobs.has(job.id) ? 'text-red-400' : 'text-gray-400'}
+                    className={`p-3 rounded-xl transition-all duration-300 ${
+                      savedJobs.has(job.id) 
+                        ? 'bg-gradient-to-r from-pink-500/30 to-red-500/30 text-pink-400 shadow-lg shadow-pink-500/30' 
+                        : 'bg-white/5 text-gray-500 hover:bg-pink-500/20 hover:text-pink-400'
+                    }`}
                   >
                     <Heart className={`h-5 w-5 ${savedJobs.has(job.id) ? 'fill-current' : ''}`} />
-                  </Button>
-                  <Link href={`/jobs/${job.id}`}>
-                    <Button className="bg-cyan-500 hover:bg-cyan-600 text-white">
-                      View Job
-                    </Button>
-                  </Link>
+                  </button>
+                </div>
+
+                {/* Salary - Big and Bold */}
+                {(job.salary_min || job.salary_max) && (
+                  <div className="mb-5 p-4 rounded-2xl bg-gradient-to-r from-green-500/20 via-emerald-500/10 to-transparent border border-green-500/30 shadow-inner">
+                    <p className="text-[10px] text-green-300 mb-1 uppercase tracking-widest font-bold">Monthly Salary</p>
+                    <p className="text-2xl font-black bg-gradient-to-r from-green-400 to-emerald-300 bg-clip-text text-transparent">
+                      ₱{job.salary_min?.toLocaleString()} - ₱{job.salary_max?.toLocaleString()}
+                    </p>
+                  </div>
+                )}
+
+                {/* Tags - Vibrant */}
+                <div className="flex flex-wrap gap-2 mb-4">
+                  <span className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-500/20 to-blue-500/20 text-cyan-300 text-xs font-bold border border-cyan-500/30 shadow-sm">
+                    {job.work_arrangement === 'remote' ? <Home className="h-4 w-4" /> : <Building2 className="h-4 w-4" />}
+                    {formatWorkArrangement(job.work_arrangement)}
+                  </span>
+                  <span className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-purple-500/20 to-pink-500/20 text-purple-300 text-xs font-bold border border-purple-500/30 shadow-sm">
+                    {job.shift === 'day' ? <Sun className="h-4 w-4" /> : job.shift === 'night' ? <Moon className="h-4 w-4" /> : <Clock className="h-4 w-4" />}
+                    {formatShift(job.shift)}
+                  </span>
+                  {job.industry && (
+                    <span className="inline-flex items-center px-4 py-2 rounded-xl bg-white/5 text-gray-300 text-xs font-medium border border-white/10">
+                      {job.industry}
+                    </span>
+                  )}
+                </div>
+
+                {/* Skills */}
+                {job.skills.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {job.skills.slice(0, 3).map((skill, idx) => (
+                      <span key={idx} className="px-3 py-1.5 rounded-lg bg-cyan-500/10 text-cyan-400/80 text-xs font-medium border border-cyan-500/20">
+                        {skill}
+                      </span>
+                    ))}
+                    {job.skills.length > 3 && (
+                      <span className="px-3 py-1.5 rounded-lg text-gray-500 text-xs font-medium">
+                        +{job.skills.length - 3} more
+                      </span>
+                    )}
+                  </div>
+                )}
+
+                {/* Match Reasons - Glowing */}
+                {job.match_score !== null && job.match_score >= 70 && job.match_reasons?.length > 0 && (
+                  <div className={`p-4 rounded-xl mb-4 ${
+                    job.match_score >= 85 
+                      ? 'bg-gradient-to-r from-orange-500/10 to-transparent border border-orange-500/20' 
+                      : 'bg-gradient-to-r from-cyan-500/10 to-transparent border border-cyan-500/20'
+                  }`}>
+                    <p className={`text-[10px] mb-2 uppercase tracking-widest font-bold ${
+                      job.match_score >= 85 ? 'text-orange-400' : 'text-cyan-400'
+                    }`}>Why You Match</p>
+                    <div className="space-y-2">
+                      {job.match_reasons?.slice(0, 2).map((reason, idx) => (
+                        <p key={idx} className="text-sm text-gray-300 flex items-start gap-2">
+                          <CheckCircle className={`h-4 w-4 mt-0.5 flex-shrink-0 ${job.match_score >= 85 ? 'text-orange-400' : 'text-green-400'}`} />
+                          <span>{reason}</span>
+                        </p>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Footer - CTA */}
+                <div className="flex items-center justify-between pt-4 border-t border-white/10">
+                  <div className="flex items-center gap-2">
+                    <span className="relative flex h-3 w-3">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                    </span>
+                    <span className="text-green-400 text-xs font-bold uppercase tracking-wider">Hiring Now</span>
+                  </div>
+                  <span className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-300 group-hover:gap-3 ${
+                    job.match_score && job.match_score >= 85
+                      ? 'bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-lg shadow-orange-500/30 group-hover:shadow-orange-500/50'
+                      : 'bg-gradient-to-r from-cyan-500 to-purple-600 text-white shadow-lg shadow-cyan-500/30 group-hover:shadow-cyan-500/50'
+                  }`}>
+                    View Role
+                    <ArrowRight className="h-4 w-4" />
+                  </span>
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </Link>
         ))}
       </div>
 

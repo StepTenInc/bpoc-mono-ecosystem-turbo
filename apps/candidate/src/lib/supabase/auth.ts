@@ -9,6 +9,7 @@
  */
 
 import { supabaseAdmin } from './admin'
+import { createClient } from './server'
 import type { User } from '@supabase/supabase-js'
 
 /**
@@ -60,6 +61,7 @@ export async function verifyAuthToken(token: string): Promise<User> {
 
 /**
  * Extract and verify auth token from request headers
+ * Falls back to cookie-based auth if no Authorization header
  * 
  * @param request - Next.js Request object
  * @returns User object if valid
@@ -82,11 +84,33 @@ export async function verifyAuthToken(token: string): Promise<User> {
 export async function getUserFromRequest(request: Request): Promise<User> {
   const authHeader = request.headers.get('authorization')
   
-  if (!authHeader) {
-    throw new Error('No authorization header provided')
+  // Try Bearer token first
+  if (authHeader) {
+    try {
+      return await verifyAuthToken(authHeader)
+    } catch (bearerError) {
+      // Bearer failed, fall through to cookie auth
+      console.log('[Auth] Bearer token failed, trying cookie auth')
+    }
   }
   
-  return verifyAuthToken(authHeader)
+  // Fall back to cookie-based auth (browser sessions)
+  try {
+    const supabase = await createClient()
+    const { data: { user }, error } = await supabase.auth.getUser()
+    
+    if (error) {
+      throw new Error(`Cookie auth failed: ${error.message}`)
+    }
+    
+    if (!user) {
+      throw new Error('No authenticated user found')
+    }
+    
+    return user
+  } catch (cookieError) {
+    throw new Error(`Authentication failed: ${cookieError instanceof Error ? cookieError.message : 'Unknown error'}`)
+  }
 }
 
 /**

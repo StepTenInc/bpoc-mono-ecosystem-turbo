@@ -8,6 +8,12 @@ import { CandidateSidebar } from '@/components/CandidateSidebar'
 import { Menu, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
+// Pages that should be fullscreen without the sidebar wrapper
+const FULLSCREEN_PAGES = [
+  '/resume/build',
+  '/resume/preview',
+];
+
 export default function CandidateLayout({
   children,
 }: {
@@ -16,6 +22,9 @@ export default function CandidateLayout({
   const router = useRouter()
   const pathname = usePathname()
   const { user, loading } = useAuth()
+  
+  // Check if this page should be fullscreen (no sidebar/header)
+  const isFullscreenPage = FULLSCREEN_PAGES.some(page => pathname?.includes(page));
   const [mobileOpen, setMobileOpen] = useState(false)
   const [profile, setProfile] = useState<any>(null)
   const [authChecked, setAuthChecked] = useState(false)
@@ -117,6 +126,11 @@ export default function CandidateLayout({
 
   if (!isAuthenticated) {
     return null
+  }
+
+  // Fullscreen pages: render without sidebar/header wrapper
+  if (isFullscreenPage) {
+    return <>{children}</>;
   }
 
   return (

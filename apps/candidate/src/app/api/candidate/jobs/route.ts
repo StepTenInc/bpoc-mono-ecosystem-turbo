@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
     
     const userId = session?.user?.id;
 
-    // Get active jobs with company info
+    // Get active jobs with agency info (NOT client company - that's confidential)
     const { data: jobs, error: jobsError } = await supabaseAdmin
       .from('jobs')
       .select(`
@@ -35,11 +35,13 @@ export async function GET(request: NextRequest) {
         created_at,
         agency_clients (
           id,
-          companies (
+          agencies (
             id,
             name,
-            industry,
             logo_url
+          ),
+          companies (
+            industry
           )
         )
       `)
@@ -87,16 +89,18 @@ export async function GET(request: NextRequest) {
 
     // Format jobs for frontend
     const formattedJobs = (jobs || []).map(job => {
-      const company = (job as any).agency_clients?.companies;
+      const agencyClient = (job as any).agency_clients;
+      const agency = agencyClient?.agencies;
+      const client = agencyClient?.companies; // Only used for industry, never show name
       const match = matchesByJob.get(job.id);
       
       return {
         id: job.id,
         title: job.title,
         slug: job.slug,
-        company: company?.name || 'Company',
-        company_logo: company?.logo_url || null,
-        industry: company?.industry || null,
+        company: agency?.name || 'Recruitment Agency', // AGENCY name only, never client
+        company_logo: agency?.logo_url || null,
+        industry: client?.industry || null, // Industry is OK to show
         description: job.description,
         requirements: job.requirements || [],
         responsibilities: job.responsibilities || [],

@@ -90,8 +90,7 @@ export async function GET(request: NextRequest) {
           response_type,
           status,
           created_at,
-          responded_at,
-          created_by
+          responded_at
         )
       `)
       .in('application_id', appIds)
@@ -206,6 +205,7 @@ export async function GET(request: NextRequest) {
             amount: Number(offer.salary_offered),
             currency: offer.currency,
             created_at: offer.sent_at || offer.created_at,
+            actor: 'recruiter',
           },
           ...(offer.counter_offers || []).flatMap((co: any) => [
             {
@@ -215,28 +215,28 @@ export async function GET(request: NextRequest) {
               currency: co.requested_currency,
               note: co.candidate_message,
               created_at: co.created_at,
-              createdBy: 'candidate',
+              actor: 'candidate',
             },
             ...(co.responded_at ? [{
               id: `${co.id}-response`,
               type: co.response_type === 'accepted' ? 'accepted' : co.response_type === 'rejected' ? 'rejected' : 'note',
               note: co.employer_response,
               created_at: co.responded_at,
-              createdBy: 'recruiter',
+              actor: 'recruiter',
             }] : [])
           ]),
           ...(offer.status === 'accepted' && offer.responded_at ? [{
             id: 'final-accept',
             type: 'accepted',
             created_at: offer.responded_at,
-            createdBy: 'candidate',
+            actor: 'candidate',
           }] : []),
           ...(offer.status === 'rejected' && offer.responded_at ? [{
             id: 'final-reject',
             type: 'rejected',
             note: offer.rejection_reason,
             created_at: offer.responded_at,
-            createdBy: 'candidate',
+            actor: 'candidate',
           }] : []),
         ].sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()),
       };

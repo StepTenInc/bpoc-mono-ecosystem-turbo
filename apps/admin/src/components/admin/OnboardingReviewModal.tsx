@@ -43,7 +43,7 @@ export default function OnboardingReviewModal({ open, onClose, onboarding, onUpd
         setLoading(true);
 
         try {
-            const res = await fetch(`/api/admin/onboarding/${onboarding.id}/${section}`, {
+            const res = await fetch(`/api/onboarding/${onboarding.id}/${section}`, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ status, feedback })

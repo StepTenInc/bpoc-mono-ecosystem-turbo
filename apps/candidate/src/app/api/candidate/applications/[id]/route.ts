@@ -23,9 +23,15 @@ export async function GET(
         jobs(
           id,
           title,
+          description,
+          salary_min,
+          salary_max,
+          currency,
+          work_arrangement,
+          shift,
           agency_clients(
             agencies(name),
-            companies(name)
+            companies(name, industry)
           )
         )
       `)
@@ -33,7 +39,11 @@ export async function GET(
       .eq('candidate_id', user.id)
       .single();
 
-    if (appError || !application) {
+    if (appError) {
+      console.error('Supabase error fetching application:', appError);
+      return NextResponse.json({ error: 'Application not found', details: appError.message }, { status: 404 });
+    }
+    if (!application) {
       return NextResponse.json({ error: 'Application not found' }, { status: 404 });
     }
 
@@ -92,10 +102,76 @@ export async function GET(
       })
       .filter(Boolean);
 
+    // Fetch interviews for this application
+    const { data: interviews } = await supabaseAdmin
+      .from('job_interviews')
+      .select(`
+        id,
+        interview_type,
+        scheduled_at,
+        scheduled_at_ph,
+        scheduled_at_client_local,
+        client_timezone,
+        duration_minutes,
+        location,
+        meeting_link,
+        status,
+        outcome,
+        feedback,
+        rating,
+        interviewer_notes,
+        created_at,
+        updated_at,
+        time_proposals:interview_time_proposals(
+          id,
+          proposed_times,
+          status,
+          proposed_by,
+          created_at
+        )
+      `)
+      .eq('application_id', id)
+      .order('scheduled_at', { ascending: true });
+
+    // Fetch any offers for this application
+    const { data: offers } = await supabaseAdmin
+      .from('job_offers')
+      .select(`
+        id,
+        salary_offered,
+        salary_type,
+        currency,
+        start_date,
+        benefits_offered,
+        additional_terms,
+        status,
+        sent_at,
+        viewed_at,
+        responded_at,
+        expires_at,
+        candidate_response,
+        created_at
+      `)
+      .eq('application_id', id)
+      .order('created_at', { ascending: false });
+
     return NextResponse.json({
       application: {
         ...application,
         calls: filteredCalls,
+        interviews: interviews || [],
+        offers: (offers || []).map((o: any) => ({
+          id: o.id,
+          salary: o.salary_offered,
+          salary_type: o.salary_type,
+          currency: o.currency,
+          start_date: o.start_date,
+          benefits: o.benefits_offered,
+          notes: o.additional_terms,
+          status: o.status,
+          expires_at: o.expires_at,
+          created_at: o.created_at,
+        })),
       },
     });
   } catch (error) {

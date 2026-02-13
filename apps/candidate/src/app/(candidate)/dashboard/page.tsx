@@ -105,7 +105,7 @@ export default function CandidateDashboardPage() {
       
       // Redirect to profile page if incomplete
       if (stats.profile_completion < 100) {
-        router.push('/candidate/profile?welcome=true')
+        router.push('/profile?welcome=true')
       }
     }
   }, [currentUserId, searchParams, stats, router])
@@ -239,13 +239,13 @@ export default function CandidateDashboardPage() {
       key: 'profile',
       label: 'Complete Profile',
       completed: stats?.profile_completion === 100,
-      href: '/candidate/profile'
+      href: '/profile'
     },
     {
       key: 'resume',
       label: 'Build Resume',
       completed: stats?.has_resume || false,
-      href: '/candidate/resume'
+      href: '/resume'
     },
   ]
 
@@ -299,7 +299,7 @@ export default function CandidateDashboardPage() {
                   )}
                 </p>
                 <Button
-                  onClick={() => router.push('/candidate/profile')}
+                  onClick={() => router.push('/profile')}
                   className={cn(
                     "border-none text-white",
                     stats.profile_completion < 25 ? "bg-red-500 hover:bg-red-600" :
