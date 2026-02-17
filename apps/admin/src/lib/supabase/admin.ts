@@ -35,4 +35,7 @@ export const supabase: SupabaseClient = new Proxy({} as SupabaseClient, {
   },
 })
 
+// Alias for backward compatibility with routes using supabaseAdmin
+export const supabaseAdmin = supabase
+
 
