@@ -1,4 +1,62 @@
 import { createClient } from './supabase/client'
+import { NextRequest } from 'next/server'
+import { createServerClient } from '@supabase/ssr'
+import { cookies } from 'next/headers'
+
+// Verify recruiter authentication from API route request
+export async function verifyRecruiterAuth(request: NextRequest): Promise<{
+  isValid: boolean
+  error?: string
+  recruiterId?: string
+  userId?: string
+}> {
+  try {
+    const cookieStore = await cookies()
+    
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          getAll() {
+            return cookieStore.getAll()
+          },
+          setAll(cookiesToSet) {
+            cookiesToSet.forEach(({ name, value, options }) => {
+              cookieStore.set(name, value, options)
+            })
+          },
+        },
+      }
+    )
+
+    const { data: { user }, error } = await supabase.auth.getUser()
+    
+    if (error || !user) {
+      return { isValid: false, error: 'Not authenticated' }
+    }
+
+    // Check if user is a recruiter
+    const { data: recruiter } = await supabase
+      .from('agency_recruiters')
+      .select('id, agency_id, role')
+      .eq('user_id', user.id)
+      .single()
+
+    if (!recruiter) {
+      return { isValid: false, error: 'Not a recruiter' }
+    }
+
+    return {
+      isValid: true,
+      recruiterId: recruiter.id,
+      userId: user.id,
+    }
+  } catch (error) {
+    console.error('Auth verification error:', error)
+    return { isValid: false, error: 'Authentication failed' }
+  }
+}
 
 // Use the SSR browser client to ensure we're reading from the same auth state
 // as the AuthContext (which also uses createClient from supabase/client)
