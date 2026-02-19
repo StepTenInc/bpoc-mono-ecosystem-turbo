@@ -1300,7 +1300,7 @@ export default function RecruiterDashboard() {
     },
     {
       title: 'Applications',
-      value: stats.total_applications,
+      value: stats.totalApplications ?? 0,
       icon: FileText,
       color: 'from-cyan-500 to-blue-500',
       href: '/applications',
