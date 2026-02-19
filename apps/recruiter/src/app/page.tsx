@@ -517,7 +517,7 @@ function MiniPipelinePreview({ stages, loading }: { stages: PipelineStage[]; loa
                     <Avatar key={candidate.id} className="h-6 w-6 border-2 border-[#0a0a0f]">
                       <AvatarImage src={candidate.avatar} />
                       <AvatarFallback className="text-xs bg-gradient-to-br from-gray-600 to-gray-700">
-                        {candidate.name.split(' ').map(n => n[0]).join('')}
+                        {(candidate.name || 'U').split(' ').map(n => n[0]).join('')}
                       </AvatarFallback>
                     </Avatar>
                   ))}
@@ -664,7 +664,7 @@ function TeamLeaderboard({ members, loading }: { members: TeamMember[]; loading:
                   <Avatar className="h-8 w-8">
                     <AvatarImage src={member.avatar} />
                     <AvatarFallback className="bg-gradient-to-br from-amber-500 to-orange-600 text-white text-xs">
-                      {member.name.split(' ').map(n => n[0]).join('')}
+                      {(member.name || 'U').split(' ').map(n => n[0]).join('')}
                     </AvatarFallback>
                   </Avatar>
                   {member.isOnline && (
@@ -1507,7 +1507,7 @@ export default function RecruiterDashboard() {
                             <Avatar className="h-10 w-10">
                               <AvatarImage src={app.candidate_avatar} />
                               <AvatarFallback className="bg-gradient-to-br from-cyan-500 to-blue-600 text-white">
-                                {app.candidate_name.split(' ').map(n => n[0]).join('')}
+                                {(app.candidate_name || 'U').split(' ').map(n => n[0]).join('')}
                               </AvatarFallback>
                             </Avatar>
                             <div>
