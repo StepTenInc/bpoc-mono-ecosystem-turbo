@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase/admin';
 
 /**
- * POST /api/admin/agencies/reassign-recruiter
+ * POST /api/agencies/reassign-recruiter
  * Admin-only: Reassign a recruiter from one agency to another
  * 
  * Body: {
@@ -104,7 +104,7 @@ export async function POST(request: NextRequest) {
 }
 
 /**
- * GET /api/admin/agencies/reassign-recruiter
+ * GET /api/agencies/reassign-recruiter
  * Get all recruiters (for dropdown selection)
  */
 export async function GET(request: NextRequest) {

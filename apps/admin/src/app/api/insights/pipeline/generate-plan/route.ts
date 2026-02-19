@@ -294,7 +294,7 @@ export async function POST(req: NextRequest) {
   } catch (error: any) {
     console.error('❌ Plan generation error:', error);
     await logError(error, {
-      endpoint: '/api/admin/insights/pipeline/generate-plan',
+      endpoint: '/api/insights/pipeline/generate-plan',
       http_method: 'POST',
       external_service: 'claude_sonnet_4',
     });

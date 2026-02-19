@@ -94,7 +94,7 @@ export default function JobsPage() {
   const fetchJobs = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`/api/admin/jobs?search=${searchQuery}&status=${statusFilter}`);
+      const response = await fetch(`/api/jobs?search=${searchQuery}&status=${statusFilter}`);
       const data = await response.json();
       
       if (response.ok) {

@@ -92,7 +92,7 @@ function BriefInputOptions({
         try {
           const formData = new FormData();
           formData.append('audio', blob, 'recording.webm');
-          const res = await fetch('/api/admin/insights/pipeline/voice-personality', { method: 'POST', body: formData });
+          const res = await fetch('/api/insights/pipeline/voice-personality', { method: 'POST', body: formData });
           const json = await res.json();
           const text = json.transcription || json.transcript;
           if (text) { onTranscript(text); toast({ title: 'Transcribed!' }); }
@@ -370,7 +370,7 @@ export default function BriefStage({
     setAiSuggestions([]); // Clear previous suggestions
     setAiCorrections([]); // Clear previous corrections
     try {
-      const res = await fetch('/api/admin/insights/pipeline/fix-brief', {
+      const res = await fetch('/api/insights/pipeline/fix-brief', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ brief: state.transcript })
@@ -459,7 +459,7 @@ export default function BriefStage({
     }, 800);
 
     try {
-      const res = await fetch('/api/admin/insights/pipeline/ideas', {
+      const res = await fetch('/api/insights/pipeline/ideas', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

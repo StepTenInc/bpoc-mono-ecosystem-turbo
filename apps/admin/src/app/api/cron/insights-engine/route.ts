@@ -40,7 +40,7 @@ export async function GET(request: NextRequest) {
         : process.env.NEXT_PUBLIC_APP_URL || 'https://www.bpoc.io';
 
       // Fire and forget - don't wait for the engine to complete
-      fetch(`${BASE_URL}/api/admin/insights/production-queue/process`, {
+      fetch(`${BASE_URL}/api/insights/production-queue/process`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'process-next' }),

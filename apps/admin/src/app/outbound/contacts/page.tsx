@@ -62,7 +62,7 @@ export default function ContactsPage() {
       if (filterValid !== 'all') params.append('email_valid', filterValid);
       if (filterUnsubscribed !== 'all') params.append('unsubscribed', filterUnsubscribed);
 
-      const response = await fetch(`/api/admin/outbound/contacts?${params}`);
+      const response = await fetch(`/api/outbound/contacts?${params}`);
       if (response.ok) {
         const data = await response.json();
         setContacts(data.contacts || []);
@@ -80,7 +80,7 @@ export default function ContactsPage() {
     if (!confirm('Are you sure you want to delete this contact?')) return;
 
     try {
-      const response = await fetch(`/api/admin/outbound/contacts/${id}`, {
+      const response = await fetch(`/api/outbound/contacts/${id}`, {
         method: 'DELETE',
       });
 

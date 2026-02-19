@@ -757,7 +757,7 @@ export default function NoHandsEngine() {
   // Fetch queue data
   const fetchData = useCallback(async () => {
     try {
-      const res = await fetch('/api/admin/insights/production-queue');
+      const res = await fetch('/api/insights/production-queue');
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const json: QueueData = await res.json();
       setData(json);
@@ -826,7 +826,7 @@ export default function NoHandsEngine() {
     setIsStarting(true);
     addLocalLog('🏭 Engine starting — picking next article from queue…', 'info');
     try {
-      const res = await fetch('/api/admin/insights/production-queue', {
+      const res = await fetch('/api/insights/production-queue', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'start' }),
@@ -852,7 +852,7 @@ export default function NoHandsEngine() {
   const handleStop = useCallback(async () => {
     addLocalLog('⏸ Stopping engine after current article…', 'warning');
     try {
-      const res = await fetch('/api/admin/insights/production-queue', {
+      const res = await fetch('/api/insights/production-queue', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'stop' }),
@@ -871,7 +871,7 @@ export default function NoHandsEngine() {
   const handleRetry = useCallback(async (itemId: string) => {
     addLocalLog('🔄 Retrying failed article…', 'info');
     try {
-      await fetch('/api/admin/insights/production-queue', {
+      await fetch('/api/insights/production-queue', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ itemId, action: 'retry' }),

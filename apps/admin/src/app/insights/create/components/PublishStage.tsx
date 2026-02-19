@@ -103,7 +103,7 @@ export default function PublishStage({
       const imageUrl = uploadedImages[`section${index + 1}` as keyof UploadedImages];
       const title = state.plan?.title || state.selectedIdea?.title || '';
 
-      const res = await fetch('/api/admin/insights/generate-alt-text', {
+      const res = await fetch('/api/insights/generate-alt-text', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -138,7 +138,7 @@ export default function PublishStage({
 
     setSavingAltText(index);
     try {
-      const res = await fetch('/api/admin/insights/save-alt-text', {
+      const res = await fetch('/api/insights/save-alt-text', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -183,7 +183,7 @@ export default function PublishStage({
     try {
       const prompt = `${state.plan?.title || state.selectedIdea?.title} - Professional BPO career article hero video`;
 
-      const res = await fetch('/api/admin/insights/generate-video', {
+      const res = await fetch('/api/insights/generate-video', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -211,7 +211,7 @@ export default function PublishStage({
         // Also save directly to insights_posts table so it appears on live site
         if (state.insightId) {
           try {
-            await fetch('/api/admin/insights/save-hero-media', {
+            await fetch('/api/insights/save-hero-media', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
@@ -248,7 +248,7 @@ export default function PublishStage({
       formData.append('file', file);
       formData.append('type', 'video');
 
-      const res = await fetch('/api/admin/insights/upload-video', {
+      const res = await fetch('/api/insights/upload-video', {
         method: 'POST',
         body: formData,
       });
@@ -261,7 +261,7 @@ export default function PublishStage({
         // Also save directly to insights_posts table so it appears on live site
         if (state.insightId) {
           try {
-            await fetch('/api/admin/insights/save-hero-media', {
+            await fetch('/api/insights/save-hero-media', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
@@ -296,7 +296,7 @@ export default function PublishStage({
       const prompt = `${firstLine} - Professional BPO career article illustration`;
 
       // Use Google Imagen for all sections
-      const res = await fetch('/api/admin/insights/generate-image', {
+      const res = await fetch('/api/insights/generate-image', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -327,7 +327,7 @@ export default function PublishStage({
         // Also save directly to insights_posts table so it appears on live site
         if (state.insightId) {
           try {
-            await fetch('/api/admin/insights/save-alt-text', {
+            await fetch('/api/insights/save-alt-text', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
@@ -373,7 +373,7 @@ export default function PublishStage({
       formData.append('file', file);
       formData.append('type', 'section');
 
-      const res = await fetch('/api/admin/insights/upload-image', {
+      const res = await fetch('/api/insights/upload-image', {
         method: 'POST',
         body: formData,
       });
@@ -386,7 +386,7 @@ export default function PublishStage({
         // Also save directly to insights_posts table so it appears on live site
         if (state.insightId) {
           try {
-            await fetch('/api/admin/insights/save-alt-text', {
+            await fetch('/api/insights/save-alt-text', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({

@@ -57,7 +57,7 @@ export default function CreateJobModal({ isOpen, onClose, onJobCreated }: Create
     setError('');
 
     try {
-      const response = await fetch('/api/admin/jobs/create', {
+      const response = await fetch('/api/jobs/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -102,7 +102,7 @@ export default function CreateJobModal({ isOpen, onClose, onJobCreated }: Create
     setError('');
 
     try {
-      const response = await fetch('/api/admin/jobs/create', {
+      const response = await fetch('/api/jobs/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

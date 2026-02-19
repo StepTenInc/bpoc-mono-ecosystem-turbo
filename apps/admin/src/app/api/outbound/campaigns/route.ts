@@ -3,7 +3,7 @@ import { supabase } from '@/lib/supabase/admin';
 import { createClient } from '@/lib/supabase/server';
 
 /**
- * GET /api/admin/outbound/campaigns
+ * GET /api/outbound/campaigns
  * List all campaigns
  */
 export async function GET(request: NextRequest) {
@@ -38,13 +38,13 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ campaigns });
   } catch (error: any) {
-    console.error('[API] Error in GET /api/admin/outbound/campaigns:', error);
+    console.error('[API] Error in GET /api/outbound/campaigns:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
 
 /**
- * POST /api/admin/outbound/campaigns
+ * POST /api/outbound/campaigns
  * Create a new campaign
  */
 export async function POST(request: NextRequest) {
@@ -179,7 +179,7 @@ export async function POST(request: NextRequest) {
       total_recipients: recipients.length,
     }, { status: 201 });
   } catch (error: any) {
-    console.error('[API] Error in POST /api/admin/outbound/campaigns:', error);
+    console.error('[API] Error in POST /api/outbound/campaigns:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

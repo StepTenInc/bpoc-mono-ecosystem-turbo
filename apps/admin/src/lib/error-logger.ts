@@ -79,7 +79,7 @@ export async function logError(
       ? `https://${process.env.VERCEL_URL}` 
       : 'http://localhost:3000';
 
-    await fetch(`${baseUrl}/api/admin/errors/log`, {
+    await fetch(`${baseUrl}/api/errors/log`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(errorPayload),

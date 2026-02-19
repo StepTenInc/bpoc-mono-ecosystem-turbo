@@ -584,7 +584,7 @@ export default function InsightsEditor({ post, isNew = false }: InsightsEditorPr
 
     setAiLoading(true);
     try {
-      const response = await fetch('/api/admin/insights/analyze', {
+      const response = await fetch('/api/insights/analyze', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -649,7 +649,7 @@ export default function InsightsEditor({ post, isNew = false }: InsightsEditorPr
 
     setSectionImproving(sectionNumber);
     try {
-      const response = await fetch('/api/admin/insights/analyze', {
+      const response = await fetch('/api/insights/analyze', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -711,7 +711,7 @@ export default function InsightsEditor({ post, isNew = false }: InsightsEditorPr
 
     setDescriptionLoading(true);
     try {
-      const response = await fetch('/api/admin/insights/analyze', {
+      const response = await fetch('/api/insights/analyze', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -755,7 +755,7 @@ export default function InsightsEditor({ post, isNew = false }: InsightsEditorPr
 
     setAiLoading(true);
     try {
-      const response = await fetch('/api/admin/insights/analyze', {
+      const response = await fetch('/api/insights/analyze', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -814,7 +814,7 @@ export default function InsightsEditor({ post, isNew = false }: InsightsEditorPr
       const { data: posts } = await supabase.from('insights_posts').select('title, slug').neq('id', post?.id);
 
       // 2. Ask AI for suggestions
-      const response = await fetch('/api/admin/insights/analyze', {
+      const response = await fetch('/api/insights/analyze', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -851,7 +851,7 @@ export default function InsightsEditor({ post, isNew = false }: InsightsEditorPr
 
     try {
       // 1. Get target post info via API
-      const targetRes = await fetch(`/api/admin/insights/links?slug=${suggestion.slug}`);
+      const targetRes = await fetch(`/api/insights/links?slug=${suggestion.slug}`);
       const targetPost = await targetRes.json();
 
       if (targetPost.error) {
@@ -871,7 +871,7 @@ export default function InsightsEditor({ post, isNew = false }: InsightsEditorPr
       };
 
       // 3. Save via API (bypasses RLS)
-      const res = await fetch('/api/admin/insights/links', {
+      const res = await fetch('/api/insights/links', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -910,7 +910,7 @@ export default function InsightsEditor({ post, isNew = false }: InsightsEditorPr
     if (!post?.id) return;
 
     try {
-      const res = await fetch('/api/admin/insights/links', {
+      const res = await fetch('/api/insights/links', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -2183,7 +2183,7 @@ export default function InsightsEditor({ post, isNew = false }: InsightsEditorPr
                             onClick={async () => {
                               setImageLoading(true);
                               try {
-                                const res = await fetch('/api/admin/insights/generate-image', {
+                                const res = await fetch('/api/insights/generate-image', {
                                   method: 'POST',
                                   headers: { 'Content-Type': 'application/json' },
                                   body: JSON.stringify({
@@ -2395,7 +2395,7 @@ export default function InsightsEditor({ post, isNew = false }: InsightsEditorPr
                                 const minLoadingTime = 1500;
 
                                 try {
-                                  const res = await fetch('/api/admin/insights/generate-video', {
+                                  const res = await fetch('/api/insights/generate-video', {
                                     method: 'POST',
                                     headers: { 'Content-Type': 'application/json' },
                                     body: JSON.stringify({
@@ -2599,7 +2599,7 @@ export default function InsightsEditor({ post, isNew = false }: InsightsEditorPr
                                     formDataUpload.append('slug', formData.slug || formData.title.toLowerCase().replace(/ /g, '-'));
                                     if (post?.id) formDataUpload.append('postId', post.id);
 
-                                    const res = await fetch('/api/admin/insights/upload-video', {
+                                    const res = await fetch('/api/insights/upload-video', {
                                       method: 'POST',
                                       body: formDataUpload
                                     });
@@ -2763,7 +2763,7 @@ export default function InsightsEditor({ post, isNew = false }: InsightsEditorPr
                                 formDataUpload.append('type', 'body-image');
                                 formDataUpload.append('slug', formData.slug || formData.title.toLowerCase().replace(/ /g, '-'));
 
-                                const res = await fetch('/api/admin/insights/upload-image', {
+                                const res = await fetch('/api/insights/upload-image', {
                                   method: 'POST',
                                   body: formDataUpload
                                 });
@@ -2809,7 +2809,7 @@ export default function InsightsEditor({ post, isNew = false }: InsightsEditorPr
                           onClick={async () => {
                             setBodyImageLoading(prev => ({ ...prev, image0: true }));
                             try {
-                              const res = await fetch('/api/admin/insights/generate-image', {
+                              const res = await fetch('/api/insights/generate-image', {
                                 method: 'POST',
                                 headers: { 'Content-Type': 'application/json' },
                                 body: JSON.stringify({
@@ -2860,7 +2860,7 @@ ABSOLUTELY NO: illustrations, clipart, cartoons, 3D renders, AI artifacts, text 
                               onClick={async () => {
                                 setAltTextGenerating(prev => ({ ...prev, section1: true }));
                                 try {
-                                  const res = await fetch('/api/admin/insights/generate-alt-text', {
+                                  const res = await fetch('/api/insights/generate-alt-text', {
                                     method: 'POST',
                                     headers: { 'Content-Type': 'application/json' },
                                     body: JSON.stringify({
@@ -2897,7 +2897,7 @@ ABSOLUTELY NO: illustrations, clipart, cartoons, 3D renders, AI artifacts, text 
                               onClick={async () => {
                                 setAltTextSaving(prev => ({ ...prev, section1: true }));
                                 try {
-                                  const res = await fetch('/api/admin/insights/save-alt-text', {
+                                  const res = await fetch('/api/insights/save-alt-text', {
                                     method: 'POST',
                                     headers: { 'Content-Type': 'application/json' },
                                     body: JSON.stringify({
@@ -2994,7 +2994,7 @@ ABSOLUTELY NO: illustrations, clipart, cartoons, 3D renders, AI artifacts, text 
                                 formDataUpload.append('type', 'body-image');
                                 formDataUpload.append('slug', formData.slug || formData.title.toLowerCase().replace(/ /g, '-'));
 
-                                const res = await fetch('/api/admin/insights/upload-image', {
+                                const res = await fetch('/api/insights/upload-image', {
                                   method: 'POST',
                                   body: formDataUpload
                                 });
@@ -3040,7 +3040,7 @@ ABSOLUTELY NO: illustrations, clipart, cartoons, 3D renders, AI artifacts, text 
                           onClick={async () => {
                             setBodyImageLoading(prev => ({ ...prev, image1: true }));
                             try {
-                              const res = await fetch('/api/admin/insights/generate-image', {
+                              const res = await fetch('/api/insights/generate-image', {
                                 method: 'POST',
                                 headers: { 'Content-Type': 'application/json' },
                                 body: JSON.stringify({
@@ -3092,7 +3092,7 @@ ABSOLUTELY NO: staged poses, stock photo smiles, illustrations, cartoons, CGI, a
                               onClick={async () => {
                                 setAltTextGenerating(prev => ({ ...prev, section2: true }));
                                 try {
-                                  const res = await fetch('/api/admin/insights/generate-alt-text', {
+                                  const res = await fetch('/api/insights/generate-alt-text', {
                                     method: 'POST',
                                     headers: { 'Content-Type': 'application/json' },
                                     body: JSON.stringify({
@@ -3129,7 +3129,7 @@ ABSOLUTELY NO: staged poses, stock photo smiles, illustrations, cartoons, CGI, a
                               onClick={async () => {
                                 setAltTextSaving(prev => ({ ...prev, section2: true }));
                                 try {
-                                  const res = await fetch('/api/admin/insights/save-alt-text', {
+                                  const res = await fetch('/api/insights/save-alt-text', {
                                     method: 'POST',
                                     headers: { 'Content-Type': 'application/json' },
                                     body: JSON.stringify({
@@ -3226,7 +3226,7 @@ ABSOLUTELY NO: staged poses, stock photo smiles, illustrations, cartoons, CGI, a
                                 formDataUpload.append('type', 'body-image');
                                 formDataUpload.append('slug', formData.slug || formData.title.toLowerCase().replace(/ /g, '-'));
 
-                                const res = await fetch('/api/admin/insights/upload-image', {
+                                const res = await fetch('/api/insights/upload-image', {
                                   method: 'POST',
                                   body: formDataUpload
                                 });
@@ -3272,7 +3272,7 @@ ABSOLUTELY NO: staged poses, stock photo smiles, illustrations, cartoons, CGI, a
                           onClick={async () => {
                             setBodyImageLoading(prev => ({ ...prev, image2: true }));
                             try {
-                              const res = await fetch('/api/admin/insights/generate-image', {
+                              const res = await fetch('/api/insights/generate-image', {
                                 method: 'POST',
                                 headers: { 'Content-Type': 'application/json' },
                                 body: JSON.stringify({
@@ -3325,7 +3325,7 @@ ABSOLUTELY NO: fake enthusiasm, clipart, illustrations, 3D renders, obvious AI g
                               onClick={async () => {
                                 setAltTextGenerating(prev => ({ ...prev, section3: true }));
                                 try {
-                                  const res = await fetch('/api/admin/insights/generate-alt-text', {
+                                  const res = await fetch('/api/insights/generate-alt-text', {
                                     method: 'POST',
                                     headers: { 'Content-Type': 'application/json' },
                                     body: JSON.stringify({
@@ -3362,7 +3362,7 @@ ABSOLUTELY NO: fake enthusiasm, clipart, illustrations, 3D renders, obvious AI g
                               onClick={async () => {
                                 setAltTextSaving(prev => ({ ...prev, section3: true }));
                                 try {
-                                  const res = await fetch('/api/admin/insights/save-alt-text', {
+                                  const res = await fetch('/api/insights/save-alt-text', {
                                     method: 'POST',
                                     headers: { 'Content-Type': 'application/json' },
                                     body: JSON.stringify({

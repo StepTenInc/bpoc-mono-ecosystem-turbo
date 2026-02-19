@@ -3,7 +3,7 @@ import { supabase } from '@/lib/supabase/admin';
 import { createClient } from '@/lib/supabase/server';
 
 /**
- * GET /api/admin/outbound/campaigns/[id]
+ * GET /api/outbound/campaigns/[id]
  * Get campaign details with recipients
  */
 export async function GET(
@@ -53,13 +53,13 @@ export async function GET(
       stats,
     });
   } catch (error: any) {
-    console.error('[API] Error in GET /api/admin/outbound/campaigns/[id]:', error);
+    console.error('[API] Error in GET /api/outbound/campaigns/[id]:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
 
 /**
- * PUT /api/admin/outbound/campaigns/[id]
+ * PUT /api/outbound/campaigns/[id]
  * Update campaign
  */
 export async function PUT(
@@ -107,13 +107,13 @@ export async function PUT(
 
     return NextResponse.json({ campaign });
   } catch (error: any) {
-    console.error('[API] Error in PUT /api/admin/outbound/campaigns/[id]:', error);
+    console.error('[API] Error in PUT /api/outbound/campaigns/[id]:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
 
 /**
- * DELETE /api/admin/outbound/campaigns/[id]
+ * DELETE /api/outbound/campaigns/[id]
  * Delete campaign
  */
 export async function DELETE(
@@ -158,7 +158,7 @@ export async function DELETE(
 
     return NextResponse.json({ success: true });
   } catch (error: any) {
-    console.error('[API] Error in DELETE /api/admin/outbound/campaigns/[id]:', error);
+    console.error('[API] Error in DELETE /api/outbound/campaigns/[id]:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

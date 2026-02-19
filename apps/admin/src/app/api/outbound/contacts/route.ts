@@ -3,7 +3,7 @@ import { supabase } from '@/lib/supabase/admin';
 import { createClient } from '@/lib/supabase/server';
 
 /**
- * GET /api/admin/outbound/contacts
+ * GET /api/outbound/contacts
  * List all contacts with filtering and pagination
  */
 export async function GET(request: NextRequest) {
@@ -75,13 +75,13 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error: any) {
-    console.error('[API] Error in GET /api/admin/outbound/contacts:', error);
+    console.error('[API] Error in GET /api/outbound/contacts:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
 
 /**
- * POST /api/admin/outbound/contacts
+ * POST /api/outbound/contacts
  * Create a new contact manually
  */
 export async function POST(request: NextRequest) {
@@ -135,7 +135,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ contact }, { status: 201 });
   } catch (error: any) {
-    console.error('[API] Error in POST /api/admin/outbound/contacts:', error);
+    console.error('[API] Error in POST /api/outbound/contacts:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

@@ -72,7 +72,7 @@ export default function PlanStage({
     }, 1000);
 
     try {
-      const res = await fetch('/api/admin/insights/pipeline/generate-plan', {
+      const res = await fetch('/api/insights/pipeline/generate-plan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

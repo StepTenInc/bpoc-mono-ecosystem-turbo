@@ -49,7 +49,7 @@ export default function CampaignsPage() {
         params.append('status', statusFilter);
       }
 
-      const response = await fetch(`/api/admin/outbound/campaigns?${params}`);
+      const response = await fetch(`/api/outbound/campaigns?${params}`);
       if (response.ok) {
         const data = await response.json();
         setCampaigns(data.campaigns || []);
@@ -65,7 +65,7 @@ export default function CampaignsPage() {
     if (!confirm('Are you sure you want to send this campaign?')) return;
 
     try {
-      const response = await fetch(`/api/admin/outbound/campaigns/${campaignId}/send`, {
+      const response = await fetch(`/api/outbound/campaigns/${campaignId}/send`, {
         method: 'POST',
       });
 
@@ -83,7 +83,7 @@ export default function CampaignsPage() {
 
   const handlePauseCampaign = async (campaignId: string) => {
     try {
-      const response = await fetch(`/api/admin/outbound/campaigns/${campaignId}/pause`, {
+      const response = await fetch(`/api/outbound/campaigns/${campaignId}/pause`, {
         method: 'POST',
       });
 
@@ -100,7 +100,7 @@ export default function CampaignsPage() {
     if (!confirm('Are you sure you want to delete this campaign?')) return;
 
     try {
-      const response = await fetch(`/api/admin/outbound/campaigns/${campaignId}`, {
+      const response = await fetch(`/api/outbound/campaigns/${campaignId}`, {
         method: 'DELETE',
       });
 

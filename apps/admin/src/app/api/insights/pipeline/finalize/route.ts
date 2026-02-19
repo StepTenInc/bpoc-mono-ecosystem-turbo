@@ -487,7 +487,7 @@ export async function POST(req: NextRequest) {
   } catch (error: any) {
     console.error('❌ Finalize error:', error);
     await logError(error, {
-      endpoint: '/api/admin/insights/pipeline/finalize',
+      endpoint: '/api/insights/pipeline/finalize',
       http_method: 'POST',
       external_service: 'supabase',
     });

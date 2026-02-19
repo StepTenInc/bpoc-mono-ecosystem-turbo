@@ -34,7 +34,7 @@ export default function BillingPage() {
 
   const fetchRevenueData = async () => {
     try {
-      const response = await fetch(`/api/admin/billing/revenue?period=${period}`);
+      const response = await fetch(`/api/billing/revenue?period=${period}`);
       const result = await response.json();
       if (response.ok) setData(result);
     } catch (error) {
@@ -92,7 +92,7 @@ export default function BillingPage() {
           <Button
             className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white"
             onClick={() => {
-              window.location.href = `/api/admin/export/revenue?period=${period}`;
+              window.location.href = `/api/export/revenue?period=${period}`;
             }}
           >
             <Download className="h-4 w-4 mr-2" />

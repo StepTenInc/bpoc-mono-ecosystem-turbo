@@ -58,7 +58,7 @@ export default function CandidatesPage() {
   useEffect(() => {
     const fetchCandidates = async () => {
       try {
-        const response = await fetch(`/api/admin/candidates?search=${searchQuery}`);
+        const response = await fetch(`/api/candidates?search=${searchQuery}`);
         const data = await response.json();
         
         if (response.ok) {

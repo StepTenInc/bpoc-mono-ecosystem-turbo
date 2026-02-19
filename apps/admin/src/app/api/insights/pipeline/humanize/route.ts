@@ -186,7 +186,7 @@ export async function POST(req: NextRequest) {
 
     try {
       await logError(error, {
-        endpoint: '/api/admin/insights/pipeline/humanize',
+        endpoint: '/api/insights/pipeline/humanize',
         http_method: 'POST',
         external_service: 'grok',
         step: stepName,

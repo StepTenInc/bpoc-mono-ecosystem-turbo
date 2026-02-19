@@ -74,7 +74,7 @@ export default function RecruitersPage() {
 
   const fetchRecruiters = async () => {
     try {
-      const response = await fetch(`/api/admin/recruiters?status=${statusFilter}`);
+      const response = await fetch(`/api/recruiters?status=${statusFilter}`);
       const data = await response.json();
 
       if (response.ok) {
@@ -91,7 +91,7 @@ export default function RecruitersPage() {
   const handleVerification = async (recruiterId: string, action: 'verify' | 'reject', reason?: string) => {
     setActionLoading(recruiterId);
     try {
-      const response = await fetch(`/api/admin/recruiters/${recruiterId}/verify`, {
+      const response = await fetch(`/api/recruiters/${recruiterId}/verify`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action, reason }),
@@ -119,7 +119,7 @@ export default function RecruitersPage() {
 
     setBulkLoading(true);
     try {
-      const response = await fetch('/api/admin/recruiters/bulk-verify', {
+      const response = await fetch('/api/recruiters/bulk-verify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -154,7 +154,7 @@ export default function RecruitersPage() {
 
     setBulkLoading(true);
     try {
-      const response = await fetch('/api/admin/recruiters/bulk-verify', {
+      const response = await fetch('/api/recruiters/bulk-verify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

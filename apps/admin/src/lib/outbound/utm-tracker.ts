@@ -168,7 +168,7 @@ export function extractUTMParams(url: string): Partial<UTMParams> | null {
  */
 export async function trackSiteVisit(email: string, utmParams: Partial<UTMParams>) {
   try {
-    const response = await fetch('/api/admin/carpet-bomb/track-visit', {
+    const response = await fetch('/api/carpet-bomb/track-visit', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, ...utmParams }),

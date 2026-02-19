@@ -46,7 +46,7 @@ interface LogEntry {
 // ═══════════════════════════════════════════════════════════
 
 async function callCleanupAPI(body: Record<string, unknown>) {
-  const res = await fetch('/api/admin/insights/pipeline/cleanup', {
+  const res = await fetch('/api/insights/pipeline/cleanup', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),

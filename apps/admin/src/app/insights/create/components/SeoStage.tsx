@@ -73,7 +73,7 @@ export default function SeoStage({
     }, 1200);
 
     try {
-      const res = await fetch('/api/admin/insights/pipeline/seo-optimize', {
+      const res = await fetch('/api/insights/pipeline/seo-optimize', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

@@ -98,7 +98,7 @@ export default function AdminClientsPage() {
   const fetchClients = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/admin/clients?search=${encodeURIComponent(searchQuery)}&status=${statusFilter}`);
+      const res = await fetch(`/api/clients?search=${encodeURIComponent(searchQuery)}&status=${statusFilter}`);
       const data = await res.json();
       if (res.ok) {
         setClients(data.clients || []);

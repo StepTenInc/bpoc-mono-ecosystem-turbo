@@ -99,7 +99,7 @@ export default function OutboundResearch() {
     setBacklinkOpportunities([]);
     
     try {
-      const response = await fetch('/api/admin/insights/research', {
+      const response = await fetch('/api/insights/research', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ content, type: 'outbound' })

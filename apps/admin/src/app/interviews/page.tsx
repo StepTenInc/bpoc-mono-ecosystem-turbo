@@ -52,7 +52,7 @@ export default function InterviewsPage() {
 
   const fetchInterviews = async () => {
     try {
-      const response = await fetch(`/api/admin/interviews?status=${statusFilter}`);
+      const response = await fetch(`/api/interviews?status=${statusFilter}`);
       const data = await response.json();
       
       if (response.ok) {

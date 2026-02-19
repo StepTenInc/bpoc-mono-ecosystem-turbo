@@ -98,7 +98,7 @@ export default function RecruiterDetailPage({ params }: { params: Promise<{ id: 
     if (!recruiter) return;
     setAiVerifying(true);
     try {
-      const response = await fetch(`/api/admin/agencies/${recruiter.agency.id}/verify-documents`, {
+      const response = await fetch(`/api/agencies/${recruiter.agency.id}/verify-documents`, {
         method: 'POST',
       });
       const data = await response.json();
@@ -117,7 +117,7 @@ export default function RecruiterDetailPage({ params }: { params: Promise<{ id: 
 
   const fetchRecruiterDetails = async () => {
     try {
-      const response = await fetch(`/api/admin/recruiters/${id}`);
+      const response = await fetch(`/api/recruiters/${id}`);
       const data = await response.json();
       if (data.recruiter) {
         setRecruiter(data.recruiter);
@@ -132,7 +132,7 @@ export default function RecruiterDetailPage({ params }: { params: Promise<{ id: 
   const handleApprove = async () => {
     setApproving(true);
     try {
-      const response = await fetch(`/api/admin/recruiters/${id}/verify`, {
+      const response = await fetch(`/api/recruiters/${id}/verify`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'verify' }),
@@ -160,7 +160,7 @@ export default function RecruiterDetailPage({ params }: { params: Promise<{ id: 
 
     setRejecting(true);
     try {
-      const response = await fetch(`/api/admin/recruiters/${id}/verify`, {
+      const response = await fetch(`/api/recruiters/${id}/verify`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

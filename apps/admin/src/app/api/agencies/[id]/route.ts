@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase/admin';
 
 /**
- * GET /api/admin/agencies/[id]
+ * GET /api/agencies/[id]
  * Fetch detailed agency info for admin
  */
 export async function GET(
@@ -223,7 +223,7 @@ export async function GET(
 }
 
 /**
- * PATCH /api/admin/agencies/[id]
+ * PATCH /api/agencies/[id]
  * Update agency information
  */
 export async function PATCH(

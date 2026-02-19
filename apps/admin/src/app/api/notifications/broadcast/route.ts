@@ -3,7 +3,7 @@ import { verifyAuthToken } from '@/lib/auth/verify-token';
 import { supabase } from '@/lib/supabase/admin';
 
 /**
- * POST /api/admin/notifications/broadcast
+ * POST /api/notifications/broadcast
  * Create a broadcast notification (single row) targeted by role and optional agency scope.
  *
  * Body:

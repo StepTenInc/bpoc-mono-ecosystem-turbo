@@ -78,7 +78,7 @@ export default function AdminApplicationDetailPage() {
 
   const fetchApplication = async () => {
     try {
-      const response = await fetch(`/api/admin/applications/${applicationId}`);
+      const response = await fetch(`/api/applications/${applicationId}`);
 
       const data = await response.json();
 

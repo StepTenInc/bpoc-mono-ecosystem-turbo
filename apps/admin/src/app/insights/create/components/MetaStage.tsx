@@ -61,7 +61,7 @@ export default function MetaStage({
           ].filter(Boolean)
         : state.selectedIdea?.keywords || [];
 
-      const res = await fetch('/api/admin/insights/pipeline/generate-meta', {
+      const res = await fetch('/api/insights/pipeline/generate-meta', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

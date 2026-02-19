@@ -38,7 +38,7 @@ export function AgencyWebhooksView({ agencyId }: AgencyWebhooksViewProps) {
   async function fetchWebhooks() {
     try {
       const token = await getSessionToken();
-      const response = await fetch(`/api/admin/agencies/${agencyId}/webhooks`, {
+      const response = await fetch(`/api/agencies/${agencyId}/webhooks`, {
         headers: { 'Authorization': `Bearer ${token}`, 'x-user-id': user?.id || '' },
       });
 

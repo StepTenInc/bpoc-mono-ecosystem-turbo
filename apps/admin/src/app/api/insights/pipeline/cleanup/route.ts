@@ -137,7 +137,7 @@ async function fixPost(post: PostStatus): Promise<{ fixed: string[]; errors: str
       // Use public domain — VERCEL_URL triggers Vercel middleware loop detection
       const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://www.bpoc.io';
 
-      const response = await fetch(`${BASE_URL}/api/admin/insights/generate-video`, {
+      const response = await fetch(`${BASE_URL}/api/insights/generate-video`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -198,7 +198,7 @@ async function fixPost(post: PostStatus): Promise<{ fixed: string[]; errors: str
 
         const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://www.bpoc.io';
 
-        const response = await fetch(`${BASE_URL}/api/admin/insights/generate-image`, {
+        const response = await fetch(`${BASE_URL}/api/insights/generate-image`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

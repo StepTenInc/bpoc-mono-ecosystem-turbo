@@ -1,7 +1,7 @@
 /**
  * Admin Candidate Reactivation API
  *
- * POST /api/admin/candidates/[id]/reactivate - Reactivate a suspended candidate
+ * POST /api/candidates/[id]/reactivate - Reactivate a suspended candidate
  */
 
 import { NextRequest, NextResponse } from 'next/server';

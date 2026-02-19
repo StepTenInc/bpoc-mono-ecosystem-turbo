@@ -257,7 +257,7 @@ function VoiceRecorder({ onTranscript }: { onTranscript: (text: string) => void 
         try {
           const formData = new FormData();
           formData.append('audio', blob, 'recording.webm');
-          const res = await fetch('/api/admin/insights/pipeline/voice-personality', { method: 'POST', body: formData });
+          const res = await fetch('/api/insights/pipeline/voice-personality', { method: 'POST', body: formData });
           const json = await res.json();
           const text = json.transcription || json.transcript;
           if (text) { onTranscript(text); toast({ title: '✅ Transcribed!' }); }
@@ -451,7 +451,7 @@ export default function CreateInsightPage() {
   // Create a new pipeline in the database
   const createPipeline = useCallback(async (currentState: PipelineState): Promise<string | null> => {
     try {
-      const res = await fetch('/api/admin/content-pipeline/create', {
+      const res = await fetch('/api/content-pipeline/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -477,7 +477,7 @@ export default function CreateInsightPage() {
   // Update pipeline with stage-specific data
   const updatePipeline = useCallback(async (pipelineId: string, stageNum: number, data: Record<string, any>, silent = true) => {
     try {
-      const res = await fetch('/api/admin/content-pipeline/update', {
+      const res = await fetch('/api/content-pipeline/update', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ pipelineId, stage: stageNum, data }),
@@ -498,7 +498,7 @@ export default function CreateInsightPage() {
   // Load a pipeline from the database
   const loadPipelineFromServer = useCallback(async (pipelineId: string) => {
     try {
-      const res = await fetch(`/api/admin/content-pipeline/get?id=${pipelineId}`);
+      const res = await fetch(`/api/content-pipeline/get?id=${pipelineId}`);
       const result = await res.json();
       if (result.success && result.pipeline) {
         const row = result.pipeline;
@@ -582,7 +582,7 @@ export default function CreateInsightPage() {
     (async () => {
       try {
         setLoadingDrafts(true);
-        const res = await fetch('/api/admin/content-pipeline/list?status=active&limit=5');
+        const res = await fetch('/api/content-pipeline/list?status=active&limit=5');
         const result = await res.json();
         if (result.success && result.pipelines?.length > 0) {
           setExistingDrafts(result.pipelines);
@@ -619,7 +619,7 @@ export default function CreateInsightPage() {
           stage,
           data: stageData,
         });
-        navigator.sendBeacon('/api/admin/content-pipeline/update', new Blob([payload], { type: 'application/json' }));
+        navigator.sendBeacon('/api/content-pipeline/update', new Blob([payload], { type: 'application/json' }));
       }
     };
     window.addEventListener('beforeunload', handleBeforeUnload);
@@ -642,7 +642,7 @@ export default function CreateInsightPage() {
   const fixBrief = async () => {
     setLoading(true);
     try {
-      const res = await fetch('/api/admin/insights/pipeline/fix-brief', {
+      const res = await fetch('/api/insights/pipeline/fix-brief', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ brief: state.transcript })
@@ -672,7 +672,7 @@ export default function CreateInsightPage() {
         topic: state.customTopic,
         isPillar: state.isSiloPage || false,
       };
-      const res = await fetch('/api/admin/insights/pipeline/ideas', {
+      const res = await fetch('/api/insights/pipeline/ideas', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(inputPayload)
@@ -700,7 +700,7 @@ export default function CreateInsightPage() {
         isPillar: state.isSiloPage || false,
         includeSerper: true,
       };
-      const res = await fetch('/api/admin/insights/pipeline/research', {
+      const res = await fetch('/api/insights/pipeline/research', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(inputPayload)
@@ -719,7 +719,7 @@ export default function CreateInsightPage() {
   const generatePlan = async () => {
     setLoading(true);
     try {
-      const res = await fetch('/api/admin/insights/pipeline/generate-plan', {
+      const res = await fetch('/api/insights/pipeline/generate-plan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -759,7 +759,7 @@ export default function CreateInsightPage() {
     setWriteWordEstimate(0);
     try {
       const inputPayload = { plan: state.plan, research: state.researchData, idea: state.selectedIdea, isPillar: state.isSiloPage, originalBrief: state.transcript, siloTopic: state.selectedSilo };
-      const res = await fetch('/api/admin/insights/pipeline/write-article', {
+      const res = await fetch('/api/insights/pipeline/write-article', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(inputPayload)
@@ -822,7 +822,7 @@ export default function CreateInsightPage() {
   const humanizeArticle = async () => {
     setLoading(true);
     try {
-      const res = await fetch('/api/admin/insights/pipeline/humanize', {
+      const res = await fetch('/api/insights/pipeline/humanize', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ article: state.article, isPillar: state.isSiloPage, originalBrief: state.transcript })
@@ -855,7 +855,7 @@ export default function CreateInsightPage() {
         originalBrief: state.transcript,
         plan: state.plan,
       };
-      const res = await fetch('/api/admin/insights/pipeline/seo-optimize', {
+      const res = await fetch('/api/insights/pipeline/seo-optimize', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(inputPayload)
@@ -888,7 +888,7 @@ export default function CreateInsightPage() {
         isSiloPage: state.isSiloPage,
         siloSlug: state.isSiloPage && siloData ? siloData.slug : undefined,
       };
-      const res = await fetch('/api/admin/insights/pipeline/generate-meta', {
+      const res = await fetch('/api/insights/pipeline/generate-meta', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(inputPayload)
@@ -921,7 +921,7 @@ export default function CreateInsightPage() {
   // ========== HELPER: SAVE PIPELINE PROGRESS ==========
   const savePipelineProgress = async (pipelineId: string, stageNum: number, data: Record<string, any>, aiLog?: any): Promise<boolean> => {
     try {
-      const res = await fetch('/api/admin/content-pipeline/update', {
+      const res = await fetch('/api/content-pipeline/update', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ pipelineId, stage: stageNum, data, aiLog })
@@ -940,7 +940,7 @@ export default function CreateInsightPage() {
   // ========== HELPER: SAVE TO INSIGHTS_POSTS ==========
   const saveProgress = async (insightId: string, updates: Record<string, any>, pipelineStage: string) => {
     try {
-      const res = await fetch('/api/admin/insights/pipeline/save-progress', {
+      const res = await fetch('/api/insights/pipeline/save-progress', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ insightId, updates, pipelineStage })
@@ -969,7 +969,7 @@ export default function CreateInsightPage() {
         });
 
         // Use pipeline publish route
-        const res = await fetch('/api/admin/content-pipeline/publish', {
+        const res = await fetch('/api/content-pipeline/publish', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -1002,7 +1002,7 @@ export default function CreateInsightPage() {
         const finalContent = state.seoArticle || state.humanizedArticle || state.article;
         const siloData = BPO_SILOS.find(s => s.id === state.selectedSilo);
         // @ts-ignore — fallback publish route
-        const res = await fetch('/api/admin/insights/pipeline/publish', {
+        const res = await fetch('/api/insights/pipeline/publish', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

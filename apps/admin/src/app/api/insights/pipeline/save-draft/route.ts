@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
   } catch (error: any) {
     console.error('❌ Error in save-draft:', error);
     await logError(error, {
-      endpoint: '/api/admin/insights/pipeline/save-draft',
+      endpoint: '/api/insights/pipeline/save-draft',
       http_method: 'POST',
       external_service: 'supabase',
     });
@@ -93,7 +93,7 @@ export async function GET(req: NextRequest) {
   } catch (error: any) {
     console.error('❌ Error in get drafts:', error);
     await logError(error, {
-      endpoint: '/api/admin/insights/pipeline/save-draft',
+      endpoint: '/api/insights/pipeline/save-draft',
       http_method: 'GET',
       external_service: 'supabase',
     });

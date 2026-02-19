@@ -93,10 +93,10 @@ export default function ErrorDashboard() {
 
     try {
       const [errorsRes, statsRes] = await Promise.all([
-        fetch('/api/admin/errors/log?limit=100', {
+        fetch('/api/errors/log?limit=100', {
           headers: { Authorization: `Bearer ${session.access_token}` },
         }),
-        fetch('/api/admin/errors/analyze', {
+        fetch('/api/errors/analyze', {
           headers: { Authorization: `Bearer ${session.access_token}` },
         }),
       ]);
@@ -125,7 +125,7 @@ export default function ErrorDashboard() {
     if (!session?.access_token) return;
     setAnalyzing(errorId);
     try {
-      const res = await fetch('/api/admin/errors/analyze', {
+      const res = await fetch('/api/errors/analyze', {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -151,7 +151,7 @@ export default function ErrorDashboard() {
   const updateStatus = async (errorId: string, newStatus: string) => {
     if (!session?.access_token) return;
     try {
-      const res = await fetch('/api/admin/errors/update', {
+      const res = await fetch('/api/errors/update', {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',

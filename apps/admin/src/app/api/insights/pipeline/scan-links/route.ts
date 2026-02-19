@@ -167,7 +167,7 @@ export async function POST(req: NextRequest) {
   } catch (error: any) {
     console.error('❌ Link scanning error:', error);
     await logError(error, {
-      endpoint: '/api/admin/insights/pipeline/scan-links',
+      endpoint: '/api/insights/pipeline/scan-links',
       http_method: 'POST',
       external_service: 'anthropic',
     });

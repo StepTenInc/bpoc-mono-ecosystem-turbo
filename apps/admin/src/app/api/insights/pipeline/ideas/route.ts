@@ -281,7 +281,7 @@ Return ONLY valid JSON:
   } catch (error: any) {
     console.error('❌ Error generating ideas:', error);
     await logError(error, {
-      endpoint: '/api/admin/insights/pipeline/ideas',
+      endpoint: '/api/insights/pipeline/ideas',
       http_method: 'POST',
       external_service: 'xai-grok',
     });

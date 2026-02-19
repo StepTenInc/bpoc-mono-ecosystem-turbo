@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase/admin';
 
 /**
- * GET /api/admin/analytics/top-performers
+ * GET /api/analytics/top-performers
  * Top 10 jobs, recruiters, and agencies by various metrics
  */
 export async function GET(request: NextRequest) {

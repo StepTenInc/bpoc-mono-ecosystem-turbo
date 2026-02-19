@@ -51,7 +51,7 @@ export default function AgenciesPage() {
   useEffect(() => {
     const fetchAgencies = async () => {
       try {
-        const response = await fetch(`/api/admin/agencies?search=${searchQuery}`);
+        const response = await fetch(`/api/agencies?search=${searchQuery}`);
         const data = await response.json();
         
         if (response.ok) {

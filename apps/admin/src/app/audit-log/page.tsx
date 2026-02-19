@@ -95,7 +95,7 @@ export default function AdminAuditLogPage() {
         return;
       }
 
-      const response = await fetch('/api/admin/audit-log', {
+      const response = await fetch('/api/audit-log', {
         headers: {
           Authorization: `Bearer ${session.access_token}`,
         },

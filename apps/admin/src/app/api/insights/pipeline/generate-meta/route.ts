@@ -427,7 +427,7 @@ export async function POST(req: NextRequest) {
   } catch (error: any) {
     console.error('❌ Meta generation error:', error);
     await logError(error, {
-      endpoint: '/api/admin/insights/pipeline/generate-meta',
+      endpoint: '/api/insights/pipeline/generate-meta',
       http_method: 'POST',
       external_service: 'openai',
     });

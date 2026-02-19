@@ -1,8 +1,8 @@
 /**
  * Admin Notes API - Individual Note Operations
  *
- * PUT    /api/admin/notes/[id]  - Update a note
- * DELETE /api/admin/notes/[id]  - Delete a note
+ * PUT    /api/notes/[id]  - Update a note
+ * DELETE /api/notes/[id]  - Delete a note
  */
 
 import { NextRequest, NextResponse } from 'next/server';

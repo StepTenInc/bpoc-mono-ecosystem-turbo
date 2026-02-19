@@ -3,7 +3,7 @@ import { supabase } from '@/lib/supabase/admin';
 import { createClient } from '@/lib/supabase/server';
 
 /**
- * GET /api/admin/matches/stats
+ * GET /api/matches/stats
  * Get overall match statistics for admin dashboard
  */
 export async function GET(request: NextRequest) {

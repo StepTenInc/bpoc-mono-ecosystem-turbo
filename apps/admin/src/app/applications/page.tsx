@@ -39,7 +39,7 @@ export default function ApplicationsPage() {
 
   const fetchApplications = async () => {
     try {
-      const response = await fetch(`/api/admin/applications?status=${statusFilter}`);
+      const response = await fetch(`/api/applications?status=${statusFilter}`);
       const data = await response.json();
       
       if (response.ok) {

@@ -37,7 +37,7 @@ export default function ResearchStage({
     setImprovingTopic(true);
     try {
       const currentTopic = editedTopic || state.selectedIdea?.title || state.customTopic;
-      const res = await fetch('/api/admin/insights/pipeline/improve-topic', {
+      const res = await fetch('/api/insights/pipeline/improve-topic', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ topic: currentTopic })
@@ -112,7 +112,7 @@ export default function ResearchStage({
     }, 1200);
 
     try {
-      const res = await fetch('/api/admin/insights/pipeline/research', {
+      const res = await fetch('/api/insights/pipeline/research', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

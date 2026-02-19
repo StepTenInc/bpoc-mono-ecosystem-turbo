@@ -7,7 +7,7 @@ const supabase = createClient(
 );
 
 /**
- * GET /api/admin/silos/[id]
+ * GET /api/silos/[id]
  * Get a single silo by ID or slug
  */
 export async function GET(
@@ -53,13 +53,13 @@ export async function GET(
 
     return NextResponse.json({ silo });
   } catch (error: any) {
-    console.error('Error in GET /api/admin/silos/[id]:', error);
+    console.error('Error in GET /api/silos/[id]:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
 
 /**
- * PUT /api/admin/silos/[id]
+ * PUT /api/silos/[id]
  * Update a silo
  */
 export async function PUT(
@@ -141,13 +141,13 @@ export async function PUT(
 
     return NextResponse.json({ silo });
   } catch (error: any) {
-    console.error('Error in PUT /api/admin/silos/[id]:', error);
+    console.error('Error in PUT /api/silos/[id]:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
 
 /**
- * DELETE /api/admin/silos/[id]
+ * DELETE /api/silos/[id]
  * Delete a silo (with safeguards)
  */
 export async function DELETE(
@@ -196,7 +196,7 @@ export async function DELETE(
 
     return NextResponse.json({ success: true, message: 'Silo deleted' });
   } catch (error: any) {
-    console.error('Error in DELETE /api/admin/silos/[id]:', error);
+    console.error('Error in DELETE /api/silos/[id]:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

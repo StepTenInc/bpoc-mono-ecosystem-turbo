@@ -150,7 +150,7 @@ export async function POST(req: NextRequest) {
       engineRunning = true;
 
       // Trigger processing by calling the process endpoint
-      const processUrl = new URL('/api/admin/insights/production-queue/process', req.url);
+      const processUrl = new URL('/api/insights/production-queue/process', req.url);
       
       // Fire-and-forget: trigger the processing pipeline
       fetch(processUrl.toString(), {
@@ -183,7 +183,7 @@ export async function POST(req: NextRequest) {
       if (error) throw error;
 
       // Trigger processing
-      const processUrl = new URL('/api/admin/insights/production-queue/process', req.url);
+      const processUrl = new URL('/api/insights/production-queue/process', req.url);
       fetch(processUrl.toString(), {
         method: 'POST',
         headers: {

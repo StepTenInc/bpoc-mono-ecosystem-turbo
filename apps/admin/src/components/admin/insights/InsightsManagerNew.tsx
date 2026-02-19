@@ -75,7 +75,7 @@ export default function InsightsManagerNew() {
   // Fetch link health data
   const fetchLinkHealth = async () => {
     try {
-      const res = await fetch('/api/admin/insights/link-health?type=overview');
+      const res = await fetch('/api/insights/link-health?type=overview');
       const result = await res.json();
       if (result.success) {
         setLinkHealth(result.summary);
@@ -88,7 +88,7 @@ export default function InsightsManagerNew() {
   // Fetch pending suggestions
   const fetchPendingSuggestions = async () => {
     try {
-      const res = await fetch('/api/admin/insights/approve-link?status=pending');
+      const res = await fetch('/api/insights/approve-link?status=pending');
       const result = await res.json();
       if (result.success) {
         setPendingSuggestions(result.suggestions || []);
@@ -109,7 +109,7 @@ export default function InsightsManagerNew() {
     setScanLoading(true);
     setScanResult(null);
     try {
-      const res = await fetch('/api/admin/insights/scan-links', {
+      const res = await fetch('/api/insights/scan-links', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'scan-all' })
@@ -132,7 +132,7 @@ export default function InsightsManagerNew() {
   // Approve suggestion
   const handleApproveSuggestion = async (suggestionId: string) => {
     try {
-      const res = await fetch('/api/admin/insights/approve-link', {
+      const res = await fetch('/api/insights/approve-link', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ suggestionId })

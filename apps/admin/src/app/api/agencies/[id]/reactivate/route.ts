@@ -1,7 +1,7 @@
 /**
  * Admin Agency Reactivation API
  *
- * POST /api/admin/agencies/[id]/reactivate - Reactivate a suspended agency
+ * POST /api/agencies/[id]/reactivate - Reactivate a suspended agency
  */
 
 import { NextRequest, NextResponse } from 'next/server';

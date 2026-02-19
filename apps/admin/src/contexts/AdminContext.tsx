@@ -40,7 +40,7 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
 
     try {
       // Check admin status directly in Railway database
-      const response = await fetch(`/api/admin/check-status?userId=${user.id}`, { cache: 'no-store' })
+      const response = await fetch(`/api/check-status?userId=${user.id}`, { cache: 'no-store' })
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}`)
       }
@@ -66,7 +66,7 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
     if (!isAdmin || !user) return
 
     try {
-      await fetch('/api/admin/log-action', {
+      await fetch('/api/log-action', {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json'

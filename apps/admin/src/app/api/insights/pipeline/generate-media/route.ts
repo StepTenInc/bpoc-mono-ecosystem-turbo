@@ -276,7 +276,7 @@ export async function POST(req: NextRequest) {
   } catch (error: any) {
     console.error('❌ Media generation error:', error);
     await logError(error, {
-      endpoint: '/api/admin/insights/pipeline/generate-media',
+      endpoint: '/api/insights/pipeline/generate-media',
       http_method: 'POST',
       external_service: 'media_generation',
     });

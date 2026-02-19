@@ -39,7 +39,7 @@ export default function UserDetailPage() {
 
   const fetchUserDetails = async () => {
     try {
-      const response = await fetch(`/api/admin/users/${userId}`);
+      const response = await fetch(`/api/users/${userId}`);
       const data = await response.json();
 
       if (response.ok) {
@@ -64,7 +64,7 @@ export default function UserDetailPage() {
 
     setActionLoading(true);
     try {
-      const response = await fetch(`/api/admin/users/${userId}`, {
+      const response = await fetch(`/api/users/${userId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action }),

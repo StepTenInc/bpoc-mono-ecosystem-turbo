@@ -56,7 +56,7 @@ export default function EditAgencyModal({ agency, isOpen, onClose, onSuccess }: 
 
     try {
       const token = await getSessionToken();
-      const response = await fetch(`/api/admin/agencies/${agency.id}`, {
+      const response = await fetch(`/api/agencies/${agency.id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

@@ -269,7 +269,7 @@ export async function POST(req: NextRequest) {
 
         try {
           await logError(error, {
-            endpoint: '/api/admin/insights/pipeline/write-article',
+            endpoint: '/api/insights/pipeline/write-article',
             http_method: 'POST',
             external_service: 'claude_sonnet_4',
             step: stepName,

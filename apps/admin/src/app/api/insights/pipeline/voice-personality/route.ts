@@ -97,7 +97,7 @@ export async function POST(req: NextRequest) {
 
     // Log error to platform error system
     await logError(error, {
-      endpoint: '/api/admin/insights/pipeline/voice-personality',
+      endpoint: '/api/insights/pipeline/voice-personality',
       http_method: 'POST',
       external_service: 'openai',
     });

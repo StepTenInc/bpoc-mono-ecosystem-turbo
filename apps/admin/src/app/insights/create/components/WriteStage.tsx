@@ -85,7 +85,7 @@ export default function WriteStage({
     }, 1000);
 
     try {
-      const res = await fetch('/api/admin/insights/pipeline/write-article', {
+      const res = await fetch('/api/insights/pipeline/write-article', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

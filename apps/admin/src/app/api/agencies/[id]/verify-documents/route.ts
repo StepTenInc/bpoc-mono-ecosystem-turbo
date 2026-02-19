@@ -421,7 +421,7 @@ export async function POST(
 }
 
 /**
- * PATCH /api/admin/agencies/[id]/verify-documents
+ * PATCH /api/agencies/[id]/verify-documents
  * Admin approve or reject agency documents
  */
 export async function PATCH(

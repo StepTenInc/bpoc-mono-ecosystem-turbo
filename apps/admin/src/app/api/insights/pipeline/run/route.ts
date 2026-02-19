@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
 
       // STAGE 2: Research
       console.log('\n📍 Running Stage 2: Research');
-      const researchRes = await fetch(`${baseUrl}/api/admin/insights/pipeline/research`, {
+      const researchRes = await fetch(`${baseUrl}/api/insights/pipeline/research`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
 
       // STAGE 3: Plan Generation
       console.log('\n📍 Running Stage 3: Plan Generation');
-      const planRes = await fetch(`${baseUrl}/api/admin/insights/pipeline/generate-plan`, {
+      const planRes = await fetch(`${baseUrl}/api/insights/pipeline/generate-plan`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -78,7 +78,7 @@ export async function POST(req: NextRequest) {
       if (startStage <= 4) {
         // STAGE 4: Article Writing
         console.log('\n📍 Running Stage 4: Article Writing');
-        const writeRes = await fetch(`${baseUrl}/api/admin/insights/pipeline/write-article`, {
+        const writeRes = await fetch(`${baseUrl}/api/insights/pipeline/write-article`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -93,7 +93,7 @@ export async function POST(req: NextRequest) {
       if (startStage <= 5) {
         // STAGE 5: Humanization
         console.log('\n📍 Running Stage 5: Humanization');
-        const humanizeRes = await fetch(`${baseUrl}/api/admin/insights/pipeline/humanize`, {
+        const humanizeRes = await fetch(`${baseUrl}/api/insights/pipeline/humanize`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ insightId: currentInsightId }),
@@ -110,7 +110,7 @@ export async function POST(req: NextRequest) {
       if (startStage <= 6) {
         // STAGE 6: SEO + Images
         console.log('\n📍 Running Stage 6: SEO + Images');
-        const seoRes = await fetch(`${baseUrl}/api/admin/insights/pipeline/seo-optimize`, {
+        const seoRes = await fetch(`${baseUrl}/api/insights/pipeline/seo-optimize`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ insightId: currentInsightId }),
@@ -127,7 +127,7 @@ export async function POST(req: NextRequest) {
       if (startStage <= 7) {
         // STAGE 7: Meta + Schema
         console.log('\n📍 Running Stage 7: Meta + Schema');
-        const metaRes = await fetch(`${baseUrl}/api/admin/insights/pipeline/generate-meta`, {
+        const metaRes = await fetch(`${baseUrl}/api/insights/pipeline/generate-meta`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ insightId: currentInsightId }),
@@ -139,7 +139,7 @@ export async function POST(req: NextRequest) {
       if (startStage <= 8) {
         // STAGE 8: Media Generation (Video + Images)
         console.log('\n📍 Running Stage 8: Media Generation');
-        const mediaRes = await fetch(`${baseUrl}/api/admin/insights/pipeline/generate-media`, {
+        const mediaRes = await fetch(`${baseUrl}/api/insights/pipeline/generate-media`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -163,7 +163,7 @@ export async function POST(req: NextRequest) {
       if (startStage <= 9) {
         // STAGE 9: Smart Link Scanner
         console.log('\n📍 Running Stage 9: Smart Link Scanner');
-        const linkRes = await fetch(`${baseUrl}/api/admin/insights/pipeline/scan-links`, {
+        const linkRes = await fetch(`${baseUrl}/api/insights/pipeline/scan-links`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ insightId: currentInsightId }),
@@ -195,7 +195,7 @@ export async function POST(req: NextRequest) {
   } catch (error: any) {
     console.error('❌ Pipeline orchestrator error:', error);
     await logError(error, {
-      endpoint: '/api/admin/insights/pipeline/run',
+      endpoint: '/api/insights/pipeline/run',
       http_method: 'POST',
     });
     return NextResponse.json({

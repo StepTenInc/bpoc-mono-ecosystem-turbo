@@ -35,7 +35,7 @@ export function useInsightEditor(): UseInsightEditorReturn {
     setError(null);
 
     try {
-      const res = await fetch('/api/admin/insights/update', {
+      const res = await fetch('/api/insights/update', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id, updates, seoUpdates }),

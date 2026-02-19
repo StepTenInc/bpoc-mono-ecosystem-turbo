@@ -4,10 +4,10 @@
  * Allows admins to add, view, and manage internal notes on any entity.
  * Notes can be used to document decisions, track issues, or share knowledge.
  *
- * GET    /api/admin/notes?entityType=agency&entityId=123  - Get notes for an entity
- * POST   /api/admin/notes                                  - Create a new note
- * PUT    /api/admin/notes/[id]                            - Update a note
- * DELETE /api/admin/notes/[id]                            - Delete a note
+ * GET    /api/notes?entityType=agency&entityId=123  - Get notes for an entity
+ * POST   /api/notes                                  - Create a new note
+ * PUT    /api/notes/[id]                            - Update a note
+ * DELETE /api/notes/[id]                            - Delete a note
  */
 
 import { NextRequest, NextResponse } from 'next/server';

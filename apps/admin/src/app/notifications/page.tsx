@@ -33,7 +33,7 @@ export default function AdminNotificationsPage() {
     if (!session?.access_token) return;
     setLoading(true);
     try {
-      const res = await fetch('/api/admin/notifications', {
+      const res = await fetch('/api/notifications', {
         headers: { Authorization: `Bearer ${session.access_token}` },
       });
       const data = await res.json();
@@ -59,7 +59,7 @@ export default function AdminNotificationsPage() {
   const markAllRead = async () => {
     if (!session?.access_token) return;
     try {
-      const res = await fetch('/api/admin/notifications', {
+      const res = await fetch('/api/notifications', {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -83,7 +83,7 @@ export default function AdminNotificationsPage() {
   const markRead = async (notificationId: string) => {
     if (!session?.access_token) return;
     try {
-      await fetch('/api/admin/notifications', {
+      await fetch('/api/notifications', {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

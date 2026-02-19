@@ -29,7 +29,7 @@ export interface InsightSilo {
 }
 
 /**
- * GET /api/admin/silos
+ * GET /api/silos
  * List all silos with optional article counts
  */
 export async function GET(req: NextRequest) {
@@ -76,13 +76,13 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({ silos });
   } catch (error: any) {
-    console.error('Error in GET /api/admin/silos:', error);
+    console.error('Error in GET /api/silos:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
 
 /**
- * POST /api/admin/silos
+ * POST /api/silos
  * Create a new silo
  */
 export async function POST(req: NextRequest) {
@@ -161,7 +161,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ silo }, { status: 201 });
   } catch (error: any) {
-    console.error('Error in POST /api/admin/silos:', error);
+    console.error('Error in POST /api/silos:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

@@ -1,7 +1,7 @@
 /**
  * Admin Candidate Suspension API
  *
- * POST /api/admin/candidates/[id]/suspend - Suspend a candidate
+ * POST /api/candidates/[id]/suspend - Suspend a candidate
  */
 
 import { NextRequest, NextResponse } from 'next/server';

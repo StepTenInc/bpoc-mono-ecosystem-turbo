@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase/admin';
 
 /**
- * GET /api/admin/candidates/[id]
+ * GET /api/candidates/[id]
  * Fetch detailed candidate info for admin
  */
 export async function GET(

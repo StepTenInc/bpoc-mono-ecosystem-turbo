@@ -1,12 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase/admin';
+import { verifyAuthToken } from '@/lib/auth/verify-token';
 
 /**
- * GET /api/admin/analytics/overview
+ * GET /api/analytics/overview
  * Comprehensive analytics overview with key metrics
  */
 export async function GET(request: NextRequest) {
   try {
+    // Verify authentication
+    const auth = await verifyAuthToken(request);
+    if (!auth.userId) {
+      return NextResponse.json({ error: auth.error || 'Not authenticated' }, { status: 401 });
+    }
     const { searchParams } = new URL(request.url);
     const period = searchParams.get('period') || 'all'; // 7, 30, 90, all
 

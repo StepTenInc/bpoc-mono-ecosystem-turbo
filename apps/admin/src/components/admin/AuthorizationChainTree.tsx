@@ -36,7 +36,7 @@ export default function AuthorizationChainTree({
 
   const fetchAuthorizationTree = async () => {
     try {
-      const response = await fetch(`/api/admin/recruiters/authorization-tree?agencyId=${agencyId}`);
+      const response = await fetch(`/api/recruiters/authorization-tree?agencyId=${agencyId}`);
       const data = await response.json();
 
       if (response.ok) {

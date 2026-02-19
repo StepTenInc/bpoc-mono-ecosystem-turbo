@@ -143,7 +143,7 @@ export default function AdminAgencyDetailPage() {
   const fetchAvailableRecruiters = async () => {
     try {
       const token = await getSessionToken();
-      const response = await fetch(`/api/admin/agencies/reassign-recruiter?excludeAgencyId=${agencyId}`, {
+      const response = await fetch(`/api/agencies/reassign-recruiter?excludeAgencyId=${agencyId}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await response.json();
@@ -161,7 +161,7 @@ export default function AdminAgencyDetailPage() {
     setReassigning(true);
     try {
       const token = await getSessionToken();
-      const response = await fetch('/api/admin/agencies/reassign-recruiter', {
+      const response = await fetch('/api/agencies/reassign-recruiter', {
         method: 'POST',
         headers: { 
           'Authorization': `Bearer ${token}`,
@@ -196,7 +196,7 @@ export default function AdminAgencyDetailPage() {
 
     try {
       const token = await getSessionToken();
-      const response = await fetch('/api/admin/agencies/remove-recruiter', {
+      const response = await fetch('/api/agencies/remove-recruiter', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -225,7 +225,7 @@ export default function AdminAgencyDetailPage() {
   const fetchAgency = async () => {
     try {
       const token = await getSessionToken();
-      const response = await fetch(`/api/admin/agencies/${agencyId}`, {
+      const response = await fetch(`/api/agencies/${agencyId}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       
@@ -273,7 +273,7 @@ export default function AdminAgencyDetailPage() {
     setter(true);
     try {
       const token = await getSessionToken();
-      const response = await fetch(`/api/admin/agencies/${agencyId}/verify-documents`, {
+      const response = await fetch(`/api/agencies/${agencyId}/verify-documents`, {
         method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${token}`,

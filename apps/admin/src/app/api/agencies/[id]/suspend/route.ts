@@ -1,7 +1,7 @@
 /**
  * Admin Agency Suspension API
  *
- * POST /api/admin/agencies/[id]/suspend - Suspend an agency
+ * POST /api/agencies/[id]/suspend - Suspend an agency
  */
 
 import { NextRequest, NextResponse } from 'next/server';

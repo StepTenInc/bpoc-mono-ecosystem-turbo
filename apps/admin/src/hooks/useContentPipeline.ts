@@ -62,7 +62,7 @@ export function useContentPipeline(): UsePipelineReturn {
     setError(null);
     
     try {
-      const res = await fetch('/api/admin/content-pipeline/create', {
+      const res = await fetch('/api/content-pipeline/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -102,7 +102,7 @@ export function useContentPipeline(): UsePipelineReturn {
     setError(null);
     
     try {
-      const res = await fetch('/api/admin/content-pipeline/update', {
+      const res = await fetch('/api/content-pipeline/update', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -136,7 +136,7 @@ export function useContentPipeline(): UsePipelineReturn {
     setError(null);
     
     try {
-      const res = await fetch(`/api/admin/content-pipeline/get?id=${id}`);
+      const res = await fetch(`/api/content-pipeline/get?id=${id}`);
       const result = await res.json();
       
       if (result.success) {
@@ -166,7 +166,7 @@ export function useContentPipeline(): UsePipelineReturn {
     setError(null);
     
     try {
-      const res = await fetch('/api/admin/content-pipeline/publish', {
+      const res = await fetch('/api/content-pipeline/publish', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ pipelineId, isDraft }),
@@ -200,7 +200,7 @@ export function useContentPipeline(): UsePipelineReturn {
     setError(null);
     
     try {
-      const res = await fetch(`/api/admin/content-pipeline/delete?id=${pipelineId}`, {
+      const res = await fetch(`/api/content-pipeline/delete?id=${pipelineId}`, {
         method: 'DELETE',
       });
       
@@ -278,8 +278,8 @@ function transformPipeline(dbPipeline: any): PipelineData {
 // Helper to list all pipelines
 export async function listPipelines(status?: string): Promise<PipelineData[]> {
   const url = status 
-    ? `/api/admin/content-pipeline/list?status=${status}`
-    : '/api/admin/content-pipeline/list';
+    ? `/api/content-pipeline/list?status=${status}`
+    : '/api/content-pipeline/list';
     
   const res = await fetch(url);
   const result = await res.json();

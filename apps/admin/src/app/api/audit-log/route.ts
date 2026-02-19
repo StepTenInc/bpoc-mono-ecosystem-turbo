@@ -1,7 +1,7 @@
 /**
  * Admin Audit Log API
  *
- * GET /api/admin/audit-log  - View all admin actions (compliance requirement)
+ * GET /api/audit-log  - View all admin actions (compliance requirement)
  *
  * Query parameters:
  * - adminId: Filter by admin who performed action

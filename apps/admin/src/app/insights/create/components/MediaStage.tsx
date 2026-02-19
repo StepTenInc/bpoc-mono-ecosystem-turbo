@@ -68,7 +68,7 @@ export default function MediaStage({
   const handleGenerateHeroVideo = async () => {
     setGeneratingHero(true);
     try {
-      const res = await fetch('/api/admin/insights/generate-video', {
+      const res = await fetch('/api/insights/generate-video', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -108,7 +108,7 @@ export default function MediaStage({
   const handleGenerateHeroImage = async () => {
     setGeneratingHero(true);
     try {
-      const res = await fetch('/api/admin/insights/generate-image', {
+      const res = await fetch('/api/insights/generate-image', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -159,7 +159,7 @@ export default function MediaStage({
       formData.append('file', file);
       formData.append('type', heroType === 'video' ? 'video' : 'image');
 
-      const res = await fetch('/api/admin/upload-media', {
+      const res = await fetch('/api/upload-media', {
         method: 'POST',
         body: formData,
       });
@@ -188,7 +188,7 @@ export default function MediaStage({
       const section = sections[sectionIndex];
       const firstLine = section.split('\n')[0].replace(/^#+\s*/, '');
 
-      const res = await fetch('/api/admin/insights/generate-image', {
+      const res = await fetch('/api/insights/generate-image', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -251,7 +251,7 @@ export default function MediaStage({
       formData.append('file', file);
       formData.append('type', 'image');
 
-      const res = await fetch('/api/admin/upload-media', {
+      const res = await fetch('/api/upload-media', {
         method: 'POST',
         body: formData,
       });

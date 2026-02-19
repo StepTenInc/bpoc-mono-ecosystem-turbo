@@ -89,7 +89,7 @@ export default function CreateCampaignPage() {
         target_filters: targetFilters,
       };
 
-      const response = await fetch('/api/admin/outbound/campaigns', {
+      const response = await fetch('/api/outbound/campaigns', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -105,7 +105,7 @@ export default function CreateCampaignPage() {
 
       // If action is 'send', immediately trigger sending
       if (action === 'send') {
-        const sendResponse = await fetch(`/api/admin/outbound/campaigns/${campaignId}/send`, {
+        const sendResponse = await fetch(`/api/outbound/campaigns/${campaignId}/send`, {
           method: 'POST',
         });
 

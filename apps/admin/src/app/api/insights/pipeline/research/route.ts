@@ -232,7 +232,7 @@ export async function POST(req: NextRequest) {
     console.error('❌ Research error:', error);
     
     await logError(error, {
-      endpoint: '/api/admin/insights/pipeline/research',
+      endpoint: '/api/insights/pipeline/research',
       http_method: 'POST',
       external_service: error.message?.includes('perplexity') ? 'perplexity' : 
                         error.message?.includes('serper') ? 'serper' : undefined,

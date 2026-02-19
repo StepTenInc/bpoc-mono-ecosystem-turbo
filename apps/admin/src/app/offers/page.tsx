@@ -62,7 +62,7 @@ export default function OffersPage() {
 
   const fetchOffers = async () => {
     try {
-      const response = await fetch(`/api/admin/offers?status=${statusFilter}`);
+      const response = await fetch(`/api/offers?status=${statusFilter}`);
       const data = await response.json();
       
       if (response.ok) {

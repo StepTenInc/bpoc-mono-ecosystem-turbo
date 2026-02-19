@@ -115,7 +115,7 @@ export async function POST(req: NextRequest) {
     // If critical or high severity, trigger AI analysis immediately
     if (severity === 'critical' || severity === 'high') {
       // Fire and forget - don't block the response
-      fetch(`${req.nextUrl.origin}/api/admin/errors/analyze`, {
+      fetch(`${req.nextUrl.origin}/api/errors/analyze`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ errorId: data.id }),

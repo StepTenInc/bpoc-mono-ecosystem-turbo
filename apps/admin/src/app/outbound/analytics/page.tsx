@@ -61,7 +61,7 @@ export default function AnalyticsPage() {
 
   const fetchAnalytics = async () => {
     try {
-      const response = await fetch('/api/admin/outbound/analytics');
+      const response = await fetch('/api/outbound/analytics');
       if (response.ok) {
         const data = await response.json();
         setAnalytics(data);

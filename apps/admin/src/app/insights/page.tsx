@@ -36,7 +36,7 @@ export default function InsightsAdminPage() {
 
   const fetchSilos = async () => {
     try {
-      const res = await fetch('/api/admin/silos');
+      const res = await fetch('/api/silos');
       const data = await res.json();
       if (data.silos) {
         setSilos(data.silos);
@@ -156,7 +156,7 @@ export default function InsightsAdminPage() {
     setActionMessage(null);
 
     try {
-      const res = await fetch('/api/admin/insights/publish', {
+      const res = await fetch('/api/insights/publish', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id, action })

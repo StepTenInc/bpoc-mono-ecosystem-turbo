@@ -408,7 +408,7 @@ export async function POST(req: NextRequest) {
   } catch (error: any) {
     console.error('❌ Publish error:', error);
     await logError(error, {
-      endpoint: '/api/admin/content-pipeline/publish',
+      endpoint: '/api/content-pipeline/publish',
       http_method: 'POST',
       external_service: 'supabase',
     });

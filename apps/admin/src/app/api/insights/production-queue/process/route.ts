@@ -152,7 +152,7 @@ export async function POST(req: NextRequest) {
     const brief = buildBrief(item);
 
     // Call the EXISTING orchestrator — same route the UI uses
-    const orchestratorUrl = `${BASE_URL}/api/admin/insights/pipeline/orchestrate`;
+    const orchestratorUrl = `${BASE_URL}/api/insights/pipeline/orchestrate`;
     console.log(`📡 Calling orchestrator: ${orchestratorUrl}`);
 
     const orchResponse = await fetch(orchestratorUrl, {
@@ -202,7 +202,7 @@ export async function POST(req: NextRequest) {
     // Takes ~2 min (video 70s + 3 images 30s + upload 20s). Function has 800s timeout.
     console.log(`🎬 Generating media (video + images)...`);
     try {
-      const mediaRes = await fetch(`${BASE_URL}/api/admin/insights/pipeline/generate-media`, {
+      const mediaRes = await fetch(`${BASE_URL}/api/insights/pipeline/generate-media`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -241,7 +241,7 @@ export async function POST(req: NextRequest) {
 
       if (count && count > 0) {
         console.log(`\n🔄 AUTO-LOOP: ${count} articles remaining. Triggering next...`);
-        const selfUrl = `${BASE_URL}/api/admin/insights/production-queue/process`;
+        const selfUrl = `${BASE_URL}/api/insights/production-queue/process`;
         fetch(selfUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },

@@ -106,7 +106,7 @@ export default function AdminCounterOffersPage() {
     setLoading(true);
     try {
       const token = await getSessionToken();
-      const response = await fetch('/api/admin/counter-offers', {
+      const response = await fetch('/api/counter-offers', {
         headers: token ? { Authorization: `Bearer ${token}` } : undefined,
       });
       const data = await response.json();

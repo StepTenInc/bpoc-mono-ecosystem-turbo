@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from 'next/server';
 export const dynamic = 'force-dynamic';
 
 /**
- * PATCH /api/admin/onboarding/[id]/[section]
+ * PATCH /api/onboarding/[id]/[section]
  * Admin approve/reject onboarding sections
  */
 export async function PATCH(

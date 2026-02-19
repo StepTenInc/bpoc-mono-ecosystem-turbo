@@ -3,7 +3,7 @@ import { supabase } from '@/lib/supabase/admin';
 import { verifyAuthToken } from '@/lib/auth/verify-token';
 
 /**
- * GET /api/admin/agencies/[id]/webhooks
+ * GET /api/agencies/[id]/webhooks
  * Admin endpoint to view webhooks for an agency (read-only)
  */
 export async function GET(

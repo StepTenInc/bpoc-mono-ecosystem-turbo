@@ -65,7 +65,7 @@ export default function UsersPage() {
     try {
       setLoading(true);
       const response = await fetch(
-        `/api/admin/users?search=${searchQuery}&userType=${userTypeFilter}&status=${statusFilter}`
+        `/api/users?search=${searchQuery}&userType=${userTypeFilter}&status=${statusFilter}`
       );
       const data = await response.json();
 
@@ -139,7 +139,7 @@ export default function UsersPage() {
         <Button
           className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white"
           onClick={() => {
-            window.location.href = `/api/admin/export/users?userType=${userTypeFilter}&status=${statusFilter}`;
+            window.location.href = `/api/export/users?userType=${userTypeFilter}&status=${statusFilter}`;
           }}
         >
           <Download className="h-4 w-4 mr-2" />

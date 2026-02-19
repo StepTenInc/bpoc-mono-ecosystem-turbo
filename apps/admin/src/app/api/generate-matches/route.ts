@@ -4,7 +4,7 @@ import { calculateJobMatch, saveJobMatch } from '@/lib/matching/match-service';
 import { CandidateData, JobData } from '@/lib/matching/types';
 
 /**
- * POST /api/admin/generate-matches
+ * POST /api/generate-matches
  * Helper endpoint to generate matches for specific job or all active jobs
  * Body: { job_id?: string, candidate_id?: string }
  */

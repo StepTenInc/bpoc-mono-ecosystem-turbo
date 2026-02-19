@@ -99,7 +99,7 @@ Example:
   } catch (error: any) {
     console.error('❌ Improve brief error:', error);
     await logError(error, {
-      endpoint: '/api/admin/insights/pipeline/fix-brief',
+      endpoint: '/api/insights/pipeline/fix-brief',
       http_method: 'POST',
       external_service: 'openai',
     });

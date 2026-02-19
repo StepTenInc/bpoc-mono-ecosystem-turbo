@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase/admin';
 
 /**
- * POST /api/admin/agencies/remove-recruiter
+ * POST /api/agencies/remove-recruiter
  * Remove a recruiter from an agency
  *
  * Body: { recruiterId: string, reason?: string }

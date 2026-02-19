@@ -1,8 +1,14 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase/admin';
+import { verifyAuthToken } from '@/lib/auth/verify-token';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    // Verify authentication
+    const auth = await verifyAuthToken(request);
+    if (!auth.userId) {
+      return NextResponse.json({ error: auth.error || 'Not authenticated' }, { status: 401 });
+    }
     // Fetch all counts in parallel
     const [
       candidatesResult,

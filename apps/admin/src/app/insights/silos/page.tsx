@@ -61,7 +61,7 @@ export default function SilosAdminPage() {
   const fetchSilos = async () => {
     setLoading(true);
     try {
-      const res = await fetch('/api/admin/silos?includeCount=true');
+      const res = await fetch('/api/silos?includeCount=true');
       const data = await res.json();
       if (data.silos) {
         setSilos(data.silos);
@@ -141,8 +141,8 @@ export default function SilosAdminPage() {
     setSaving(true);
     try {
       const url = isCreating
-        ? '/api/admin/silos'
-        : `/api/admin/silos/${editingSilo?.id}`;
+        ? '/api/silos'
+        : `/api/silos/${editingSilo?.id}`;
 
       const method = isCreating ? 'POST' : 'PUT';
 
@@ -174,7 +174,7 @@ export default function SilosAdminPage() {
 
     setSaving(true);
     try {
-      const res = await fetch(`/api/admin/silos/${deleteConfirm.id}`, {
+      const res = await fetch(`/api/silos/${deleteConfirm.id}`, {
         method: 'DELETE',
       });
 
@@ -201,7 +201,7 @@ export default function SilosAdminPage() {
 
   const toggleActive = async (silo: Silo) => {
     try {
-      const res = await fetch(`/api/admin/silos/${silo.id}`, {
+      const res = await fetch(`/api/silos/${silo.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ is_active: !silo.is_active }),

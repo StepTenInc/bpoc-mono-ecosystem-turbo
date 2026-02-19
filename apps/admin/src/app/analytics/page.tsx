@@ -127,10 +127,10 @@ export default function AdminAnalyticsPage() {
       const headers = { 'Authorization': `Bearer ${token}` };
 
       const [overviewRes, funnelRes, timeSeriesRes, topPerformersRes] = await Promise.all([
-        fetch(`/api/admin/analytics/overview?period=${period}`, { headers }),
-        fetch(`/api/admin/analytics/funnel?period=${period}`, { headers }),
-        fetch(`/api/admin/analytics/time-series?period=${period}`, { headers }),
-        fetch(`/api/admin/analytics/top-performers?period=${period}`, { headers }),
+        fetch(`/api/analytics/overview?period=${period}`, { headers }),
+        fetch(`/api/analytics/funnel?period=${period}`, { headers }),
+        fetch(`/api/analytics/time-series?period=${period}`, { headers }),
+        fetch(`/api/analytics/top-performers?period=${period}`, { headers }),
       ]);
 
       const [overviewData, funnelData, timeSeriesData, topPerformersData] = await Promise.all([

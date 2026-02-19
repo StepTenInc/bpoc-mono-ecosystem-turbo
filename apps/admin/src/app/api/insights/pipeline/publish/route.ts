@@ -426,7 +426,7 @@ NO text overlays, NO watermarks, NO clipart.`;
   } catch (error: any) {
     console.error('❌ Publish error:', error);
     await logError(error, {
-      endpoint: '/api/admin/insights/pipeline/publish',
+      endpoint: '/api/insights/pipeline/publish',
       http_method: 'POST',
       external_service: 'supabase',
     });

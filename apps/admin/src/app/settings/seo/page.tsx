@@ -49,7 +49,7 @@ export default function SEOSettingsPage() {
   const fetchOrganizationSchema = async () => {
     setLoading(true);
     try {
-      const response = await fetch('/api/admin/settings/organization', {
+      const response = await fetch('/api/settings/organization', {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
         },
@@ -75,7 +75,7 @@ export default function SEOSettingsPage() {
 
     setSaving(true);
     try {
-      const response = await fetch('/api/admin/settings/organization', {
+      const response = await fetch('/api/settings/organization', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

@@ -3,7 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import { pauseCampaign } from '@/lib/outbound/campaign-executor';
 
 /**
- * POST /api/admin/outbound/campaigns/[id]/pause
+ * POST /api/outbound/campaigns/[id]/pause
  * Pause a running campaign
  */
 export async function POST(
@@ -25,7 +25,7 @@ export async function POST(
 
     return NextResponse.json({ success: true });
   } catch (error: any) {
-    console.error('[API] Error in POST /api/admin/outbound/campaigns/[id]/pause:', error);
+    console.error('[API] Error in POST /api/outbound/campaigns/[id]/pause:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

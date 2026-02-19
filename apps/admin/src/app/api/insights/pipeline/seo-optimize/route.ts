@@ -409,7 +409,7 @@ export async function POST(req: NextRequest) {
   } catch (error: any) {
     console.error('❌ SEO Optimization error:', error);
     await logError(error, {
-      endpoint: '/api/admin/insights/pipeline/seo-optimize',
+      endpoint: '/api/insights/pipeline/seo-optimize',
       http_method: 'POST',
       external_service: 'claude_sonnet_4',
     });

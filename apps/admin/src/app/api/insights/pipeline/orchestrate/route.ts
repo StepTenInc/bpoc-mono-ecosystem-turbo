@@ -14,7 +14,7 @@
  * 9. Finalize & Publish
  * 
  * USAGE:
- * POST /api/admin/insights/pipeline/orchestrate
+ * POST /api/insights/pipeline/orchestrate
  * Body: { brief: "...", autoPublish: true }
  * 
  * RETURNS:
@@ -180,7 +180,7 @@ export async function POST(req: NextRequest) {
     console.log('━'.repeat(60));
 
     try {
-      const researchResponse = await fetch(`${BASE_URL}/api/admin/insights/pipeline/research`, {
+      const researchResponse = await fetch(`${BASE_URL}/api/insights/pipeline/research`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -223,7 +223,7 @@ export async function POST(req: NextRequest) {
     console.log('━'.repeat(60));
 
     try {
-      const planResponse = await fetch(`${BASE_URL}/api/admin/insights/pipeline/generate-plan`, {
+      const planResponse = await fetch(`${BASE_URL}/api/insights/pipeline/generate-plan`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -273,7 +273,7 @@ export async function POST(req: NextRequest) {
     console.log('━'.repeat(60));
 
     try {
-      const writeResponse = await fetch(`${BASE_URL}/api/admin/insights/pipeline/write-article`, {
+      const writeResponse = await fetch(`${BASE_URL}/api/insights/pipeline/write-article`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -314,7 +314,7 @@ export async function POST(req: NextRequest) {
     console.log('━'.repeat(60));
 
     try {
-      const humanizeResponse = await fetch(`${BASE_URL}/api/admin/insights/pipeline/humanize`, {
+      const humanizeResponse = await fetch(`${BASE_URL}/api/insights/pipeline/humanize`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -353,7 +353,7 @@ export async function POST(req: NextRequest) {
     console.log('━'.repeat(60));
 
     try {
-      const seoResponse = await fetch(`${BASE_URL}/api/admin/insights/pipeline/seo-optimize`, {
+      const seoResponse = await fetch(`${BASE_URL}/api/insights/pipeline/seo-optimize`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -396,7 +396,7 @@ export async function POST(req: NextRequest) {
     console.log('━'.repeat(60));
 
     try {
-      const metaResponse = await fetch(`${BASE_URL}/api/admin/insights/pipeline/generate-meta`, {
+      const metaResponse = await fetch(`${BASE_URL}/api/insights/pipeline/generate-meta`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -440,7 +440,7 @@ export async function POST(req: NextRequest) {
     console.log('━'.repeat(60));
 
     try {
-      const finalizeResponse = await fetch(`${BASE_URL}/api/admin/insights/pipeline/finalize`, {
+      const finalizeResponse = await fetch(`${BASE_URL}/api/insights/pipeline/finalize`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -503,7 +503,7 @@ export async function POST(req: NextRequest) {
       
       if (count && count > 0) {
         console.log(`\n🔄 AUTO-LOOP: ${count} articles remaining. Triggering next...`);
-        fetch(`${BASE_URL}/api/admin/insights/production-queue/process`, {
+        fetch(`${BASE_URL}/api/insights/production-queue/process`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ action: 'process-next' }),
@@ -544,7 +544,7 @@ export async function POST(req: NextRequest) {
     console.error('='.repeat(60));
 
     await logError(error, {
-      endpoint: '/api/admin/insights/pipeline/orchestrate',
+      endpoint: '/api/insights/pipeline/orchestrate',
       http_method: 'POST',
       external_service: 'pipeline_orchestrator',
     });

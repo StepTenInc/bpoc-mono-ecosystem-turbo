@@ -106,7 +106,7 @@ export default function ImportPage() {
       formData.append('column_mapping', JSON.stringify(columnMapping));
       formData.append('dedupe_strategy', dedupeStrategy);
 
-      const response = await fetch('/api/admin/outbound/contacts/import', {
+      const response = await fetch('/api/outbound/contacts/import', {
         method: 'POST',
         body: formData,
       });

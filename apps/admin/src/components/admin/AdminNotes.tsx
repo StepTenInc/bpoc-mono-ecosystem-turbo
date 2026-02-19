@@ -87,7 +87,7 @@ export function AdminNotes({ entityType, entityId, entityName }: AdminNotesProps
       if (!session) return;
 
       const response = await fetch(
-        `/api/admin/notes?entityType=${entityType}&entityId=${entityId}`,
+        `/api/notes?entityType=${entityType}&entityId=${entityId}`,
         {
           headers: {
             Authorization: `Bearer ${session.access_token}`,
@@ -118,7 +118,7 @@ export function AdminNotes({ entityType, entityId, entityName }: AdminNotesProps
 
       if (!session) return;
 
-      const response = await fetch('/api/admin/notes', {
+      const response = await fetch('/api/notes', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -156,7 +156,7 @@ export function AdminNotes({ entityType, entityId, entityName }: AdminNotesProps
 
       if (!session) return;
 
-      const response = await fetch(`/api/admin/notes/${noteId}`, {
+      const response = await fetch(`/api/notes/${noteId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -191,7 +191,7 @@ export function AdminNotes({ entityType, entityId, entityName }: AdminNotesProps
 
       if (!session) return;
 
-      const response = await fetch(`/api/admin/notes/${noteId}`, {
+      const response = await fetch(`/api/notes/${noteId}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${session.access_token}`,

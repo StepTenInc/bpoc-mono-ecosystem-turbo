@@ -3,7 +3,7 @@ import { supabase } from '@/lib/supabase/admin';
 import { createClient } from '@/lib/supabase/server';
 
 /**
- * GET /api/admin/outbound/contacts/[id]
+ * GET /api/outbound/contacts/[id]
  * Get a single contact by ID
  */
 export async function GET(
@@ -59,13 +59,13 @@ export async function GET(
       activityLog: activityLog || [],
     });
   } catch (error: any) {
-    console.error('[API] Error in GET /api/admin/outbound/contacts/[id]:', error);
+    console.error('[API] Error in GET /api/outbound/contacts/[id]:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
 
 /**
- * PUT /api/admin/outbound/contacts/[id]
+ * PUT /api/outbound/contacts/[id]
  * Update a contact
  */
 export async function PUT(
@@ -109,13 +109,13 @@ export async function PUT(
 
     return NextResponse.json({ contact });
   } catch (error: any) {
-    console.error('[API] Error in PUT /api/admin/outbound/contacts/[id]:', error);
+    console.error('[API] Error in PUT /api/outbound/contacts/[id]:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
 
 /**
- * DELETE /api/admin/outbound/contacts/[id]
+ * DELETE /api/outbound/contacts/[id]
  * Delete a contact
  */
 export async function DELETE(
@@ -145,7 +145,7 @@ export async function DELETE(
 
     return NextResponse.json({ success: true });
   } catch (error: any) {
-    console.error('[API] Error in DELETE /api/admin/outbound/contacts/[id]:', error);
+    console.error('[API] Error in DELETE /api/outbound/contacts/[id]:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

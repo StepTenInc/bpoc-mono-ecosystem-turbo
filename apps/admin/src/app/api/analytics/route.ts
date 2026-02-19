@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase/admin';
 
 /**
- * GET /api/admin/analytics
+ * GET /api/analytics
  * Fetch platform analytics for admin billing and tracking
  */
 export async function GET(request: NextRequest) {

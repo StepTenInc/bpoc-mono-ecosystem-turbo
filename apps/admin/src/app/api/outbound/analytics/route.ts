@@ -3,7 +3,7 @@ import { supabase } from '@/lib/supabase/admin';
 import { createClient } from '@/lib/supabase/server';
 
 /**
- * GET /api/admin/outbound/analytics
+ * GET /api/outbound/analytics
  * Get email campaign analytics
  */
 export async function GET(request: NextRequest) {
@@ -86,7 +86,7 @@ export async function GET(request: NextRequest) {
       recentActivity: recentActivity?.slice(0, 20),
     });
   } catch (error: any) {
-    console.error('[API] Error in GET /api/admin/outbound/analytics:', error);
+    console.error('[API] Error in GET /api/outbound/analytics:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

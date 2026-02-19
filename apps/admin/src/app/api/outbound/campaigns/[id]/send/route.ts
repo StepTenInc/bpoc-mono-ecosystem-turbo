@@ -3,7 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import { executeCampaign } from '@/lib/outbound/campaign-executor';
 
 /**
- * POST /api/admin/outbound/campaigns/[id]/send
+ * POST /api/outbound/campaigns/[id]/send
  * Execute campaign (send emails)
  */
 export async function POST(
@@ -31,7 +31,7 @@ export async function POST(
       result,
     });
   } catch (error: any) {
-    console.error('[API] Error in POST /api/admin/outbound/campaigns/[id]/send:', error);
+    console.error('[API] Error in POST /api/outbound/campaigns/[id]/send:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

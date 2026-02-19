@@ -72,7 +72,7 @@ export default function HumanizeStage({
     }, 1500);
 
     try {
-      const res = await fetch('/api/admin/insights/pipeline/humanize', {
+      const res = await fetch('/api/insights/pipeline/humanize', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

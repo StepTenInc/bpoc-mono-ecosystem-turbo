@@ -7,7 +7,7 @@ const supabase = createClient(
 );
 
 /**
- * POST /api/admin/insights/scan-links
+ * POST /api/insights/scan-links
  * Runs the smart link scanner to find missing links
  */
 export async function POST(req: NextRequest) {
@@ -91,7 +91,7 @@ export async function POST(req: NextRequest) {
 }
 
 /**
- * GET /api/admin/insights/scan-links
+ * GET /api/insights/scan-links
  * Get scan overview (which articles need attention)
  */
 export async function GET(req: NextRequest) {

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase/admin';
 
 /**
- * GET /api/admin/analytics/funnel
+ * GET /api/analytics/funnel
  * Recruitment funnel: Applications → Shortlisted → Interviewed → Offered → Hired
  * With conversion rates and filters by date, agency, job
  */

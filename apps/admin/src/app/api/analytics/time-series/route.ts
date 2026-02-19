@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase/admin';
 
 /**
- * GET /api/admin/analytics/time-series
+ * GET /api/analytics/time-series
  * Time-series data for applications and placements over time
  * Supports periods: 7, 30, 90, all
  */

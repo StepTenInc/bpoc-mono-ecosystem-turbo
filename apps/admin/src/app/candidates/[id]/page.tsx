@@ -89,7 +89,7 @@ export default function AdminCandidateDetailPage() {
   const fetchCandidate = async () => {
     try {
       const token = await getSessionToken();
-      const response = await fetch(`/api/admin/candidates/${candidateId}`, {
+      const response = await fetch(`/api/candidates/${candidateId}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       
