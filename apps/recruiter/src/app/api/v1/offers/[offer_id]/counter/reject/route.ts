@@ -154,7 +154,7 @@ export async function POST(
     await supabaseAdmin
       .from('application_activity_timeline')
       .insert({
-        applicationId: application_id,
+        application_id: application_id,
         action_type: sendNewCounter ? 'counter_sent' : 'counter_rejected',
         performed_by_type: 'client',
         performed_by_id: null,
