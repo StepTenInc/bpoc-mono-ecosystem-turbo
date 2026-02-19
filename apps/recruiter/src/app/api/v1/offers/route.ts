@@ -230,7 +230,7 @@ export async function POST(request: NextRequest) {
     const { data: offer, error } = await supabaseAdmin
       .from('job_offers')
       .insert({
-        applicationId: application_id,
+        application_id: application_id,
         salary_offered: salary,
         currency,
         start_date: startDate || null,
@@ -286,7 +286,7 @@ export async function POST(request: NextRequest) {
     if (application) {
       webhookOfferSent({
         offerId: offer.id,
-        applicationId: application_id,
+        application_id: application_id,
         candidate_id: application.candidate_id,
         salaryOffered: salary,
         currency: currency,
