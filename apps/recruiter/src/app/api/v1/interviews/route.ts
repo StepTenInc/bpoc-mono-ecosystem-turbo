@@ -311,7 +311,7 @@ export async function POST(request: NextRequest) {
     // scheduled_at_client_local = formatted string for client display
     // scheduled_at_ph = formatted string for PH display
     const insertData: Record<string, any> = {
-      applicationId: application_id,
+      application_id: application_id,
       interview_type: type,
       status: 'scheduled',
       scheduled_at: scheduledAtUTC || null, // UTC (TIMESTAMPTZ)
@@ -494,7 +494,7 @@ export async function POST(request: NextRequest) {
             // IMPORTANT: candidate auth id is candidates.id
             participant_user_id: candidateAuthId,
             job_id: app.job_id,
-            applicationId: application_id,
+            application_id: application_id,
             interviewId: interview.id,
             status: 'created',
             enable_recording: enableRecording,
@@ -590,7 +590,7 @@ export async function POST(request: NextRequest) {
     if (scheduledAtUTC) {
       webhookInterviewScheduled({
         interviewId: interview.id,
-        applicationId: application_id,
+        application_id: application_id,
         candidateId: applicationData?.candidate_id,
         scheduledAt: scheduledAtUTC,
         interviewType: type,
