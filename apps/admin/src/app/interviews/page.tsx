@@ -244,7 +244,7 @@ export default function InterviewsPage() {
                       <Avatar className="h-10 w-10">
                         <AvatarImage src={interview.candidateAvatar} />
                         <AvatarFallback className="bg-gradient-to-br from-purple-500 to-pink-600 text-white text-sm">
-                          {interview.candidateName.split(' ').map(n => n[0]).join('').slice(0, 2)}
+                          {(interview.candidateName || 'U').split(' ').map(n => n[0]).join('').slice(0, 2)}
                         </AvatarFallback>
                       </Avatar>
                       <div>

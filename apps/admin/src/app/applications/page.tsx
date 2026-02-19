@@ -185,7 +185,7 @@ export default function ApplicationsPage() {
                       <Avatar className="h-10 w-10">
                         <AvatarImage src={app.candidateAvatar} />
                         <AvatarFallback className="bg-gradient-to-br from-cyan-500 to-purple-600 text-white text-sm">
-                          {app.candidateName.split(' ').map(n => n[0]).join('').slice(0, 2)}
+                          {(app.candidateName || 'U').split(' ').map(n => n[0]).join('').slice(0, 2)}
                         </AvatarFallback>
                       </Avatar>
                       <div>

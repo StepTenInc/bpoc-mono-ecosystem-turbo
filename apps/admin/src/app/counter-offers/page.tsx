@@ -257,7 +257,7 @@ export default function AdminCounterOffersPage() {
                   <Avatar className="w-12 h-12 border-2 border-white/20">
                     <AvatarImage src={counterOffer.candidateAvatar} />
                     <AvatarFallback className="bg-cyan-500/20 text-cyan-400">
-                      {counterOffer.candidateName.split(' ').map(n => n[0]).join('').substring(0, 2)}
+                      {(counterOffer.candidateName || 'U').split(' ').map(n => n[0]).join('').substring(0, 2)}
                     </AvatarFallback>
                   </Avatar>
 

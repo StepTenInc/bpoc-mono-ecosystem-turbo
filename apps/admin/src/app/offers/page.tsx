@@ -227,7 +227,7 @@ export default function OffersPage() {
                       <Avatar className="h-10 w-10">
                         <AvatarImage src={offer.candidateAvatar} />
                         <AvatarFallback className="bg-gradient-to-br from-purple-500 to-pink-600 text-white text-sm">
-                          {offer.candidateName.split(' ').map(n => n[0]).join('').slice(0, 2)}
+                          {(offer.candidateName || 'U').split(' ').map(n => n[0]).join('').slice(0, 2)}
                         </AvatarFallback>
                       </Avatar>
                       <div>
